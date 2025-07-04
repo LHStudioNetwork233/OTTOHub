@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:padding="8dp"
+	android:layout_margin="5dp"
+	android:elevation="4dp"
+	android:background="@drawable/video_card_bg">
+
+	<ImageView
+		android:layout_width="match_parent"
+		android:layout_height="150dp"
+		android:id="@+id/video_cover"
+		android:adjustViewBounds="true"
+		android:scaleType="centerCrop"
+		android:src="@drawable/ic_def_video_cover"
+		android:background="@drawable/video_card_bg"
+		android:elevation="4dp"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/video_view_text"
+		android:background="@drawable/text_bg"
+		android:textColor="#FFFFFFFF"
+		android:layout_marginLeft="5dp"
+		android:padding="3dp"
+		android:layout_alignBottom="@id/video_cover"
+		android:layout_marginBottom="5dp"
+		android:elevation="5dp"
+		android:textSize="10sp"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/video_like_text"
+		android:layout_toEndOf="@id/video_view_text"
+		android:layout_marginLeft="5dp"
+		android:background="@drawable/text_bg"
+		android:textColor="#FFFFFFFF"
+		android:padding="3dp"
+		android:layout_alignBottom="@id/video_cover"
+		android:layout_marginBottom="5dp"
+		android:elevation="5dp"
+		android:textSize="10sp"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/video_favorite_text"
+		android:layout_toEndOf="@id/video_like_text"
+		android:layout_marginLeft="5dp"
+		android:background="@drawable/text_bg"
+		android:textColor="#FFFFFFFF"
+		android:padding="3dp"
+		android:layout_alignBottom="@id/video_cover"
+		android:layout_marginBottom="5dp"
+		android:elevation="5dp"
+		android:textSize="10sp"/>
+
+	<com.losthiro.ottohubclient.view.RoundImageView
+		android:layout_width="50dp"
+		android:layout_height="50dp"
+		android:src="@drawable/ic_unloading_user"
+		android:id="@+id/video_avatar"
+		android:elevation="4dp"
+		android:layout_below="@id/video_cover"
+		android:layout_marginTop="5dp"/>
+
+	<com.losthiro.ottohubclient.view.RunTextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textStyle="bold"
+		android:maxLines="1"
+		android:singleLine="true"
+		android:ellipsize="marquee"
+		android:fadingEdge="horizontal"
+		android:id="@+id/video_title"
+		android:layout_toRightOf="@id/video_avatar"
+		android:layout_below="@id/video_cover"
+		android:layout_marginTop="5dp"
+		android:layout_marginLeft="5dp"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:id="@+id/video_user"
+		android:layout_toRightOf="@id/video_avatar"
+		android:layout_below="@id/video_title"
+		android:layout_marginLeft="5dp"/>
+
+</RelativeLayout>
+

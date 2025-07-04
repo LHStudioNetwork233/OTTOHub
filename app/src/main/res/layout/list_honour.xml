@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:padding="5dp"
+	android:background="@drawable/btn_bg"
+	android:elevation="4dp"
+	android:layout_margin="5dp">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/honour_text"
+		android:textColor="#FFFFFFFF"
+		android:shadowColor="#FFACACAC"
+		android:shadowDx="4"
+		android:shadowDy="4"
+		android:shadowRadius="4"/>
+
+</LinearLayout>
+

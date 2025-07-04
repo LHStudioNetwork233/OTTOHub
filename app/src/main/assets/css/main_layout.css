@@ -1,0 +1,164 @@
+.colored-text {
+    display: inline;
+}
+
+html,
+body {
+    height: auto;
+    width: 100%;
+    line-height: 1.6;
+    color: black;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    font-family: sans-serif;
+}
+
+/*标题*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-top: 32px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: black;
+}
+
+h1 {
+    font-size: 1.3em;
+}
+
+h2 {
+    font-size: 1.2em;
+}
+
+h3 {
+    font-size: 1.1em;
+}
+
+h4 {
+    font-size: 1em;
+}
+
+h5 {
+    font-size: 0.9em;
+}
+
+h6 {
+    font-size: 0.8em;
+}
+
+/*文字*/
+
+p {
+    margin: 0;
+    word-break: break-word;
+}
+
+/*链接*/
+
+a {
+    color: #88d9fa;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: #48a9ba;
+    text-decoration: underline;
+}
+
+/*列表*/
+
+ul,
+ol {
+    margin: 0;
+    padding-left: 2em;
+    display: grid;
+}
+
+li {
+    margin: 0;
+}
+
+ul li {
+    list-style-type: disc;
+}
+
+ul ul li {
+    list-style-type: circle;
+}
+
+ol li {
+    list-style-type: decimal;
+}
+
+li p {
+    margin: 0;
+}
+
+/*代码块*/
+
+pre {
+    margin: 0.5em 0;
+    padding: 1.2em;
+    background-color: #f8f9fa;
+    border: 1px solid rgba(129, 212, 250, 0.3);
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+pre code {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #2f2f2f;
+}
+
+/*行内代码*/
+
+code {
+    padding: 0.2em 0.4em;
+    background-color: rgba(129, 212, 250, 0.15);
+    border-radius: 3px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
+/*图片*/
+
+img {
+    max-width: 100%;
+    height: auto;
+    margin: 1em 0;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/*表格*/
+
+table {
+    width: 100%;
+    margin: 0.5em 0;
+    border-collapse: collapse;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+th,
+td {
+    padding: 0.8em;
+    border: 1px solid rgba(129, 212, 250, 0.3);
+    text-align: left;
+}
+
+th {
+    background-color: rgba(129, 212, 250, 0.15);
+    font-weight: 600;
+}
+
+tr:nth-child(even) {
+    background-color: rgba(129, 212, 250, 0.05);
+}

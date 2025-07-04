@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="horizontal"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:background="@drawable/video_card_bg"
+	android:elevation="4dp"
+	android:padding="5dp"
+	android:layout_marginTop="5dp"
+	android:layout_marginBottom="5dp">
+
+	<com.losthiro.ottohubclient.view.RoundImageView
+		android:layout_width="50dp"
+		android:layout_height="50dp"
+        android:src="@drawable/ic_unloading_user"
+		android:id="@+id/user_avatar"/>
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="5dp"
+		android:layout_marginLeft="5dp"
+		android:layout_toRightOf="@id/user_avatar"
+		android:layout_weight="1.0">
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/main_user_name"
+			android:textColor="#FF000000"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:id="@+id/main_user_intro"/>
+
+	</LinearLayout>
+
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="灌注主播"
+		android:shadowDx="4"
+		android:shadowDy="4"
+		android:shadowColor="#FFC0C0C0"
+		android:shadowRadius="4"
+		android:textColor="#FFFFFFFF"
+		android:background="@drawable/btn_bg"
+		android:id="@+id/following_user"/>
+
+</LinearLayout>
+

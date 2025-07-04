@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:id="@+id/main_drawer_layout">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:orientation="vertical"
+		android:layout_height="match_parent">
+
+		<RelativeLayout
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:minHeight="150dp"
+			android:layout_weight="1.0">
+
+			<ImageView
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:id="@+id/main_user_cover"
+				android:adjustViewBounds="true"
+				android:cropToPadding="true"
+				android:layout_marginBottom="72dp"
+				android:src="@drawable/ic_def_user_cover"
+				android:scaleType="centerCrop"/>
+
+			<com.losthiro.ottohubclient.view.CricleImageView
+				android:layout_width="100dp"
+				android:layout_height="100dp"
+				android:src="@drawable/ic_unlogin_user"
+				android:id="@+id/main_user_avatar"
+				android:scaleType="centerCrop"
+				android:layout_margin="5dp"
+				android:layout_alignParentBottom="true"
+				android:layout_marginBottom="16dp"
+				android:layout_marginLeft="10dp"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_toRightOf="@id/main_user_avatar"
+				android:id="@+id/main_user_info"
+				android:layout_alignParentBottom="true"
+				android:layout_marginBottom="5dp"
+				android:textSize="10sp"
+				android:text="UID: 0 性别:棍母 注册日:0月0日"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/main_user_name"
+				android:layout_toRightOf="@id/main_user_avatar"
+				android:textColor="#FF000000"
+				android:textStyle="bold"
+				android:shadowRadius="4"
+				android:shadowDx="4"
+				android:shadowDy="4"
+				android:shadowColor="#FFC4C4C4"
+				android:text="棍母"
+				android:layout_above="@id/main_user_info"
+				android:layout_marginBottom="5dp"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/main_user_level"
+				android:layout_toRightOf="@id/main_user_name"
+				android:layout_above="@id/main_user_info"
+				android:layout_marginBottom="5dp"
+				android:layout_marginLeft="10dp"
+				android:padding="4dp"
+				android:textSize="10sp"
+				android:background="@drawable/text_bg"
+				android:text="ZERO"
+				android:textColor="#FFFFFFFF"/>
+
+			<androidx.recyclerview.widget.RecyclerView
+				android:layout_height="wrap_content"
+				android:layout_width="wrap_content"
+				android:id="@+id/main_user_honours"
+				android:layout_toRightOf="@id/main_user_level"
+				android:layout_above="@id/main_user_info"/>
+
+			<ImageButton
+				android:layout_width="wrap_content"
+				style="?android:attr/buttonBarButtonStyle"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_more"
+				android:layout_alignParentEnd="true"
+				android:layout_marginTop="10dp"
+				android:layout_marginRight="10dp"
+				android:id="@+id/main_slide_bar"/>
+
+		</RelativeLayout>
+
+		<View
+			android:background="#FFE5E5E5"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginLeft="3dp"
+			android:layout_marginRight="3dp"/>
+
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:gravity="center">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="5dp"
+				android:id="@+id/main_user_video_count"
+				android:gravity="center"
+				android:layout_weight="1.0"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="5dp"
+				android:id="@+id/main_user_blog_count"
+				android:gravity="center"
+				android:layout_weight="1.0"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="5dp"
+				android:id="@+id/main_user_following_count"
+				android:gravity="center"
+				android:layout_weight="1.0"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="5dp"
+				android:id="@+id/main_user_fans_count"
+				android:gravity="center"
+				android:layout_weight="1.0"/>
+
+		</LinearLayout>
+
+		<View
+			android:background="#FFE5E5E5"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginLeft="3dp"
+			android:layout_marginRight="3dp"/>
+
+		<TextView
+			android:layout_height="wrap_content"
+			android:layout_width="wrap_content"
+			android:textSize="16sp"
+			android:text="历史记录"
+			android:shadowDx="4"
+			android:shadowDy="4"
+			android:shadowRadius="4"
+			android:shadowColor="#FFC4C4C4"
+			android:layout_marginLeft="10dp"
+			android:layout_margin="5dp"/>
+
+		<View
+			android:background="#FFE5E5E5"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginLeft="3dp"
+			android:layout_marginRight="3dp"/>
+
+		<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:id="@+id/user_history_refresh"
+			android:layout_weight="1.0">
+
+			<androidx.recyclerview.widget.RecyclerView
+				android:layout_height="match_parent"
+				android:layout_width="match_parent"
+				android:layout_weight="1"
+				android:id="@+id/user_history_list"/>
+
+		</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:gravity="center"
+			android:layout_width="match_parent"
+			android:orientation="vertical"
+			android:id="@+id/more_onload"
+			android:visibility="gone">
+
+			<ProgressBar
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="别急，走位中..."
+				android:layout_gravity="center"
+				android:shadowColor="#FFC4C4C4"
+				android:textStyle="bold"
+				android:shadowRadius="4"
+				android:textColor="#FF88D9FA"
+				android:shadowDx="4"
+				android:shadowDy="4"
+				android:layout_marginBottom="10dp"/>
+
+		</LinearLayout>
+
+		<View
+			android:background="#FFE5E5E5"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginLeft="3dp"
+			android:layout_marginRight="3dp"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:background="@drawable/video_card_bg"
+			android:elevation="4dp"
+			android:gravity="center">
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:layout_weight="1.0"
+				android:textColor="#FF000000"
+				android:text="首页"
+				android:drawableTop="@drawable/ic_home_black"
+				android:padding="5dp"
+				android:layout_margin="5dp"
+				android:tag="main"
+				android:shadowRadius="4"
+				android:shadowDx="4"
+				android:shadowDy="4"
+				android:shadowColor="#FFC4C4C4"
+				android:textStyle="bold"/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:layout_weight="1.0"
+				android:textColor="#FF000000"
+				android:text="动态"
+				android:drawableTop="@drawable/ic_blog_black"
+				android:padding="5dp"
+				android:layout_margin="5dp"
+				android:tag="blog"
+				android:shadowDy="4"
+				android:shadowDx="4"
+				android:shadowRadius="4"
+				android:shadowColor="#FFC4C4C4"
+				android:textStyle="bold"/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:layout_weight="1.0"
+				android:textColor="#FF88D9FA"
+				android:text="账户"
+				android:drawableTop="@drawable/ic_user_black"
+				android:padding="5dp"
+				android:layout_margin="5dp"
+				android:tag="account"
+				android:shadowDy="4"
+				android:shadowDx="4"
+				android:shadowRadius="4"
+				android:shadowColor="#FFC4C4C4"
+				android:textStyle="bold"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_gravity="start"
+        android:layout_height="match_parent"
+        android:id="@+id/drawer_content"
+        android:choiceMode="singleChoice"
+        android:divider="#FFFFFF"
+        android:dividerHeight="1dp"
+        android:background="#FFFFFFFF"
+        android:minWidth="200dp">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/main_user_cover"
+                    android:adjustViewBounds="true"
+                    android:minHeight="160dp"
+                    android:src="@drawable/ic_def_user_cover"/>
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_down"
+                    android:onClick="switchAccountDia"
+                    android:layout_alignBottom="@id/main_user_cover"
+                    android:layout_alignParentEnd="true"/>
+
+            </RelativeLayout>
+
+            <ListView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/main_menu_list"
+                android:layout_weight="1.0"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:textSize="17dp"
+            android:textStyle="bold"
+            android:textColor="#FF000000"
+            android:layout_gravity="bottom|center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="©Copyright2025 | APP By Hiro"
+            android:singleLine="true"
+            android:layout_margin="10dp"/>
+
+	</LinearLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>
+

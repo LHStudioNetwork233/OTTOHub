@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OTTOHub</string>
+    <string name="error_name">错误内容: \n</string>
+    <string name="error_text">\n错误信息: \n</string>
+    <string name="error_toast">崩溃日志已保存为: </string>
+    <string name="error_upload">遇到了问题？不妨试试<a href="https://m.ottohub.cn/b/8263">点这里</a>查看解决方案</string>
+</resources>

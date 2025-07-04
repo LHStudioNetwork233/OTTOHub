@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:id="@+id/main_drawer_layout">
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="@color/colorAccent">
+
+			<ImageButton
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				style="?android:attr/buttonBarButtonStyle"
+				android:src="@drawable/ic_more"
+				android:layout_margin="5dp"
+				android:id="@+id/main_slide_bar"
+				android:layout_weight="1.0"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/app_name"
+				android:textColor="#FFFFFFFF"
+				android:shadowColor="#FFC4C4C4"
+				android:shadowRadius="4"
+				android:shadowDx="4"
+				android:shadowDy="4"
+				android:layout_gravity="center"
+				android:layout_marginLeft="10dp"
+				android:textSize="16sp"
+				android:textStyle="bold"
+				android:layout_weight="1.0"/>
+
+			<ImageButton
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_search"
+				style="?android:attr/buttonBarButtonStyle"
+				android:layout_margin="5dp"
+				android:onClick="searchVideo"
+				android:layout_weight="1.0"/>
+
+			<ImageButton
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				style="?android:attr/buttonBarButtonStyle"
+				android:src="@drawable/ic_upload_video"
+				android:onClick="upload"
+				android:layout_margin="5dp"
+				android:layout_weight="1.0"/>
+
+			<FrameLayout
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_margin="5dp"
+				android:layout_weight="1.0">
+
+				<ImageButton
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					style="?android:attr/buttonBarButtonStyle"
+					android:onClick="messageDetail"
+					android:src="@drawable/ic_message"/>
+
+				<TextView
+					android:id="@+id/main_message_count"
+					android:layout_width="27dp"
+					android:layout_height="27dp"
+					android:layout_gravity="bottom|end"
+					android:padding="2dp"
+					android:textColor="#FFFFFF"
+					android:visibility="gone"
+					android:gravity="center"/>
+
+			</FrameLayout>
+
+			<com.losthiro.ottohubclient.view.RoundImageView
+				android:layout_width="50dp"
+				android:layout_height="50dp"
+				android:layout_margin="5dp"
+				android:scaleType="centerCrop"
+				android:src="@drawable/ic_unlogin_user"
+				android:id="@+id/main_user_avatar"/>
+
+		</LinearLayout>
+
+		<HorizontalScrollView
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent">
+
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:padding="5dp">
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="推荐"
+					android:layout_marginRight="5dp"
+					android:padding="5dp"
+					android:tag="recommend"
+					android:textColor="#FFFFFFFF"
+					android:background="@drawable/btn_bg"/>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginRight="5dp"
+					android:padding="5dp"
+					android:textColor="#FF000000"
+					android:tag="new"
+					android:text="最新"
+					android:background="@drawable/btn_empty_bg"/>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_marginRight="5dp"
+					android:padding="5dp"
+					android:textColor="#FF000000"
+					android:layout_height="wrap_content"
+					android:tag="week"
+					android:text="本周热门"
+					android:background="@drawable/btn_empty_bg"/>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_marginRight="5dp"
+					android:padding="5dp"
+					android:textColor="#FF000000"
+					android:layout_height="wrap_content"
+					android:text="本月热门"
+					android:tag="month"
+					android:background="@drawable/btn_empty_bg"/>
+
+				<TextView
+					android:layout_marginRight="5dp"
+					android:layout_width="wrap_content"
+					android:padding="5dp"
+					android:textColor="#FF000000"
+					android:layout_height="wrap_content"
+					android:text="本季热门"
+					android:tag="quarterly"
+					android:background="@drawable/btn_empty_bg"/>
+
+				<TextView
+					android:layout_marginRight="5dp"
+					android:layout_width="wrap_content"
+					android:padding="5dp"
+					android:textColor="#FF000000"
+					android:layout_height="wrap_content"
+					android:tag="1"
+					android:text="鬼畜"
+					android:background="@drawable/btn_empty_bg"/>
+
+				<TextView
+					android:layout_marginRight="5dp"
+					android:padding="5dp"
+					android:textColor="#FF000000"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="音mad"
+					android:tag="2"
+					android:background="@drawable/btn_empty_bg"/>
+
+				<TextView
+					android:layout_marginRight="5dp"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:padding="5dp"
+					android:textColor="#FF000000"
+					android:tag="3"
+					android:text="人力vocaloid"
+					android:background="@drawable/btn_empty_bg"/>
+
+				<TextView
+					android:layout_marginRight="5dp"
+					android:padding="5dp"
+					android:textColor="#FF000000"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="剧场"
+					android:tag="4"
+					android:background="@drawable/btn_empty_bg"/>
+
+				<TextView
+					android:layout_marginRight="5dp"
+					android:layout_width="wrap_content"
+					android:padding="5dp"
+					android:textColor="#FF000000"
+					android:layout_height="wrap_content"
+					android:text="游戏"
+					android:tag="5"
+					android:background="@drawable/btn_empty_bg"/>
+
+				<TextView
+					android:layout_marginRight="5dp"
+					android:padding="5dp"
+					android:textColor="#FF000000"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="怀旧"
+					android:tag="6"
+					android:background="@drawable/btn_empty_bg"/>
+
+				<TextView
+					android:layout_marginRight="5dp"
+					android:padding="5dp"
+					android:textColor="#FF000000"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="音乐"
+					android:tag="7"
+					android:background="@drawable/btn_empty_bg"/>
+
+				<TextView
+					android:layout_marginRight="5dp"
+					android:padding="5dp"
+					android:textColor="#FF000000"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="其他"
+					android:tag="0"
+					android:background="@drawable/btn_empty_bg"/>
+
+			</LinearLayout>
+
+		</HorizontalScrollView>
+
+		<View
+			android:background="#FFE5E5E5"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginLeft="3dp"
+			android:layout_marginRight="3dp"/>
+
+		<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:id="@+id/video_refresh"
+			android:layout_weight="1.0">
+
+			<ScrollView
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+
+				<LinearLayout
+					android:orientation="vertical"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent">
+
+					<RelativeLayout
+						android:layout_width="match_parent"
+						android:layout_height="0dp"
+						android:layout_margin="10dp"
+						android:background="@drawable/video_card_bg"
+						android:padding="5dp"
+						android:layout_weight="0.2">
+
+						<androidx.viewpager.widget.ViewPager
+							android:layout_width="match_parent"
+							android:layout_height="match_parent"
+							android:id="@+id/popular_list"/>
+
+						<TextView
+							android:layout_width="match_parent"
+							android:layout_height="match_parent"
+							android:id="@+id/list_popular_title"
+							android:layout_alignBottom="@id/popular_list"
+							android:textColor="#FFFFFFFF"
+							android:padding="10dp"
+							android:background="@drawable/gradient_bg"
+							android:gravity="bottom|left"/>
+
+						<ImageButton
+							android:layout_width="wrap_content"
+							style="?android:attr/buttonBarButtonStyle"
+							android:layout_height="wrap_content"
+							android:src="@drawable/ic_left_arrow"
+							android:layout_centerVertical="true"
+							android:onClick="lastPopular"/>
+
+						<ImageButton
+							android:layout_width="wrap_content"
+							style="?android:attr/buttonBarButtonStyle"
+							android:layout_height="wrap_content"
+							android:src="@drawable/ic_right_arrow"
+							android:layout_centerVertical="true"
+							android:layout_alignParentRight="true"
+							android:onClick="nextPopular"/>
+
+					</RelativeLayout>
+
+					<androidx.recyclerview.widget.RecyclerView
+						android:layout_height="0dp"
+						android:layout_width="match_parent"
+						android:id="@+id/videos_list"
+						android:layout_weight="0.8"/>
+
+				</LinearLayout>
+
+			</ScrollView>
+
+		</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+		<LinearLayout
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:gravity="center"
+			android:layout_width="match_parent"
+			android:orientation="vertical"
+			android:id="@+id/more_onload"
+			android:visibility="gone">
+
+			<ProgressBar
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="别急，走位中..."
+				android:layout_gravity="center"
+				android:shadowColor="#FFC4C4C4"
+				android:textStyle="bold"
+				android:shadowRadius="4"
+				android:textColor="#FF88D9FA"
+				android:shadowDx="4"
+				android:shadowDy="4"
+				android:layout_marginBottom="10dp"/>
+
+		</LinearLayout>
+
+		<View
+			android:background="#FFE5E5E5"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"
+			android:layout_marginLeft="3dp"
+			android:layout_marginRight="3dp"/>
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:background="@drawable/video_card_bg"
+			android:elevation="4dp"
+			android:gravity="center">
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:layout_weight="1.0"
+				android:textColor="#FF88D9FA"
+				android:text="首页"
+				android:drawableTop="@drawable/ic_home_black"
+				android:padding="5dp"
+				android:layout_margin="5dp"
+				android:tag="main"
+				android:shadowRadius="4"
+				android:shadowDx="4"
+				android:shadowDy="4"
+				android:shadowColor="#FFC4C4C4"
+				android:textStyle="bold"/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:layout_weight="1.0"
+				android:textColor="#FF000000"
+				android:text="动态"
+				android:drawableTop="@drawable/ic_blog_black"
+				android:padding="5dp"
+				android:layout_margin="5dp"
+				android:tag="blog"
+				android:shadowDy="4"
+				android:shadowDx="4"
+				android:shadowRadius="4"
+				android:shadowColor="#FFC4C4C4"
+				android:textStyle="bold"/>
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:layout_weight="1.0"
+				android:textColor="#FF000000"
+				android:text="账户"
+				android:drawableTop="@drawable/ic_user_black"
+				android:padding="5dp"
+				android:layout_margin="5dp"
+				android:tag="account"
+				android:shadowDy="4"
+				android:shadowDx="4"
+				android:shadowRadius="4"
+				android:shadowColor="#FFC4C4C4"
+				android:textStyle="bold"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_gravity="start"
+		android:layout_height="match_parent"
+		android:id="@+id/drawer_content"
+		android:choiceMode="singleChoice"
+		android:divider="#FFFFFF"
+		android:dividerHeight="1dp"
+		android:background="#FFFFFFFF"
+		android:minWidth="200dp">
+
+		<LinearLayout
+			android:orientation="vertical"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1.0">
+
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+
+				<ImageView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/main_user_cover"
+					android:adjustViewBounds="true"
+					android:minHeight="160dp"
+					android:src="@drawable/ic_def_user_cover"/>
+
+				<ImageButton
+					android:layout_width="wrap_content"
+					style="?android:attr/buttonBarButtonStyle"
+					android:layout_height="wrap_content"
+					android:src="@drawable/ic_down"
+					android:onClick="switchAccountDia"
+					android:layout_alignBottom="@id/main_user_cover"
+					android:layout_alignParentEnd="true"/>
+
+			</RelativeLayout>
+
+			<ListView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:id="@+id/main_menu_list"
+				android:layout_weight="1.0"/>
+
+		</LinearLayout>
+
+		<TextView
+			android:textSize="17dp"
+			android:textStyle="bold"
+			android:textColor="#FF000000"
+			android:layout_gravity="bottom|center"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="©Copyright2025 | APP By Hiro"
+			android:singleLine="true"
+			android:layout_margin="10dp"/>
+
+	</LinearLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>
+

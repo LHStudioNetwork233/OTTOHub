@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:padding="10dp"
+	android:gravity="center"
+	android:elevation="4dp"
+	android:background="@drawable/video_card_bg"
+	android:layout_margin="10dp">
+
+	<Button
+		android:layout_width="wrap_content"
+		style="?android:attr/buttonBarButtonStyle"
+		android:layout_height="wrap_content"
+		android:text="冲刺! "
+		android:onClick="sendDanmaku"
+		android:layout_gravity="end"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="滚幕内容"
+		android:textSize="16sp"/>
+
+	<TextView
+		android:tag="danmaku_content"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="文本大小"
+		android:textSize="16sp"
+		android:layout_marginTop="5dp"/>
+
+	<TextView
+		android:tag="size_current"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:text="10px"/>
+
+	<SeekBar
+		android:tag="danmaku_size"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="文本类型"
+		android:textSize="16sp"
+		android:layout_marginTop="5dp"/>
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<TextView
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:text="请选择类型"
+			android:layout_gravity="center"
+			android:layout_weight="1.0"/>
+
+		<Button
+			android:layout_width="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_height="wrap_content"
+			android:text="滚动"
+			android:onClick="switchType"/>
+
+	</LinearLayout>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="文本颜色"
+		android:textSize="16sp"
+		android:layout_marginTop="5dp"/>
+
+	<EditText
+		android:tag="current_color"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="当前颜色，格式为#跟16进制颜色值"
+		android:imeOptions="actionDone"
+		android:maxLength="7"
+		android:maxLines="1"
+		android:layout_marginTop="5dp"/>
+
+	<com.losthiro.ottohubclient.view.ClientColorPicker
+		android:tag="color_picker_view"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="6dp"
+		android:layout_marginRight="6dp"
+		android:layerType="software"/>
+
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="高级设置"
+		android:textSize="16sp"
+		android:layout_marginTop="5dp"/>
+
+	<EditText
+        android:tag="danmaku_render"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="高级弹幕渲染语句，选填"/>
+
+</LinearLayout>
+

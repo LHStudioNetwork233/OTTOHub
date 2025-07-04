@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:orientation="vertical"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:padding="10dp"
+	android:gravity="center"
+    android:minWidth="400dp"
+	android:elevation="4dp"
+	android:background="@drawable/video_card_bg"
+	android:layout_margin="10dp">
+
+	<EditText
+		android:layout_width="match_parent"
+		android:ems="10"
+		android:tag="uid_input_edittext"
+		android:layout_height="wrap_content"
+		android:hint="UID/邮箱地址"
+		android:layout_marginBottom="10dp"/>
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginBottom="10dp">
+
+		<EditText
+			android:layout_width="wrap_content"
+			android:ems="10"
+			android:tag="pw_input_edittext"
+			android:layout_height="wrap_content"
+			android:inputType="textPassword"
+			android:hint="密码"
+			android:layout_weight="1.0"/>
+
+		<ImageButton
+			android:layout_width="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:layout_height="wrap_content"
+			android:src="@drawable/ic_hide_black"
+			android:tag="pw_input_switch"
+			android:layout_gravity="center"/>
+
+	</LinearLayout>
+
+	<TextView
+		android:layout_marginBottom="10dp"
+		android:layout_gravity="left"
+		android:drawableLeft="@drawable/ic_left_arrow"
+		android:tag="pw_input_callback"
+		android:layout_height="wrap_content"
+		android:layout_width="wrap_content"
+		android:visibility="gone"
+		android:text="唉密码怎么似了"
+		android:textColor="#FFF73838"/>
+
+	<Button
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="登录"
+		android:textColor="#FFFFFFFF"
+		android:elevation="4dp"
+		android:background="@drawable/btn_bg"
+		android:shadowDx="4"
+		android:shadowDy="4"
+		android:shadowRadius="4"
+		android:shadowColor="#FFC4C4C4"
+		android:layout_marginBottom="10dp"
+		android:onClick="login"/>
+
+	<Button
+		android:layout_width="wrap_content"
+		style="?android:attr/buttonBarButtonStyle"
+		android:layout_height="wrap_content"
+		android:text="忘了密码? 点击此处重置"
+		android:textSize="10sp"
+		android:gravity="top"
+		android:onClick="resetDialog"/>
+
+</LinearLayout>
+

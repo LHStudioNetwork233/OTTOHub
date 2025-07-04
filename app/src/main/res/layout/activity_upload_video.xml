@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:orientation="vertical"
+	android:layout_height="match_parent">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/colorAccent">
+
+		<ImageButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:src="@drawable/ic_left_arrow"
+			android:layout_margin="5dp"
+			android:onClick="quit"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="上传视频"
+			android:textColor="#FFFFFFFF"
+			android:shadowColor="#FFC4C4C4"
+			android:shadowRadius="4"
+			android:shadowDx="4"
+			android:shadowDy="4"
+			android:layout_gravity="center"
+			android:layout_marginLeft="10dp"
+			android:textSize="16sp"
+			android:layout_margin="5dp"
+			android:layout_weight="1.0"/>
+
+	</LinearLayout>
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
+
+			<TextView
+				android:textSize="16sp"
+				android:textColor="#FF666666"
+				android:layout_gravity="left"
+				android:paddingTop="10dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
+				android:text="基础"/>
+
+			<EditText
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="10dp"
+				android:id="@+id/video_upload_title"
+				android:hint="标题不能超过44字"/>
+
+			<EditText
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_marginBottom="10dp"
+				android:layout_marginEnd="10dp"
+				android:layout_marginStart="10dp"
+				android:hint="简介不能超过222字"
+				android:gravity="top"
+				android:layout_weight="1.0"
+				android:minHeight="200dp"
+				android:id="@+id/video_upload_intro"/>
+
+			<View
+				android:background="#FFE5E5E5"
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:layout_marginLeft="3dp"
+				android:layout_marginRight="3dp"/>
+
+			<TextView
+				android:textSize="16sp"
+				android:textColor="#FF666666"
+				android:layout_gravity="left"
+				android:paddingTop="10dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
+				android:text="标签"/>
+
+			<androidx.recyclerview.widget.RecyclerView
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:id="@+id/tags_list"/>
+
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="10dp">
+
+				<EditText
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_weight="1.0"
+					android:id="@+id/upload_tags_edit"
+					android:hint="标签文本"/>
+
+				<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="添加标签"
+					android:background="@drawable/btn_bg"
+					android:textColor="#FFFFFFFF"
+					android:layout_gravity="center"
+					android:elevation="4dp"
+					android:onClick="addTags"/>
+
+			</LinearLayout>
+
+			<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="清空标签"
+				android:layout_gravity="center"
+				android:layout_marginTop="10dp"
+				android:layout_marginLeft="5dp"
+				android:layout_marginRight="5dp"
+				android:onClick="clearTags"
+				android:background="@drawable/btn_bg"
+				android:textColor="#FFFFFFFF"/>
+
+			<View
+				android:background="#FFE5E5E5"
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:layout_marginLeft="3dp"
+				android:layout_marginRight="3dp"/>
+
+			<TextView
+				android:textSize="16sp"
+				android:textColor="#FF666666"
+				android:layout_gravity="left"
+				android:paddingTop="10dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
+				android:text="分区"/>
+
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="10dp">
+
+				<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_margin="10dp"
+					android:text="分区选择"
+					android:layout_gravity="center"
+					android:layout_weight="1.0"/>
+
+				<Button
+					android:layout_width="wrap_content"
+					style="?android:attr/buttonBarButtonStyle"
+					android:layout_height="wrap_content"
+					android:text="未选择"
+					android:tag="switch_category"/>
+
+			</LinearLayout>
+
+			<View
+				android:background="#FFE5E5E5"
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:layout_marginLeft="3dp"
+				android:layout_marginRight="3dp"/>
+
+			<TextView
+				android:textSize="16sp"
+				android:textColor="#FF666666"
+				android:layout_gravity="left"
+				android:paddingTop="10dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
+				android:text="版权"/>
+
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="10dp">
+
+				<TextView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_margin="10dp"
+					android:text="版权声明"
+					android:layout_gravity="center"
+					android:layout_weight="1.0"/>
+
+				<Button
+					android:layout_width="wrap_content"
+					style="?android:attr/buttonBarButtonStyle"
+					android:layout_height="wrap_content"
+					android:text="未选择"
+					android:tag="switch_copyright"/>
+
+			</LinearLayout>
+
+			<View
+				android:background="#FFE5E5E5"
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:layout_marginLeft="3dp"
+				android:layout_marginRight="3dp"/>
+
+			<TextView
+				android:textSize="16sp"
+				android:textColor="#FF666666"
+				android:layout_gravity="left"
+				android:paddingTop="10dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
+				android:text="封面图"/>
+
+			<RelativeLayout
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:layout_marginTop="10dp"
+				android:minHeight="160dp"
+				android:layout_weight="1.0">
+
+				<ImageView
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:id="@+id/video_cover"
+					android:layout_margin="10dp"/>
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_centerInParent="true"
+					android:tag="cover"
+					android:text="选择封面"
+					android:paddingEnd="10dp"
+					android:paddingStart="10dp"
+					android:paddingTop="5dp"
+					android:paddingBottom="5dp"/>
+
+			</RelativeLayout>
+
+			<TextView
+				android:textSize="16sp"
+				android:textColor="#FF666666"
+				android:layout_gravity="left"
+				android:paddingTop="10dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
+				android:text="文件信息"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
+				android:tag="uploader_info"
+				android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+			<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="重选视频"
+				android:layout_gravity="center"
+				android:layout_marginTop="10dp"
+				android:layout_marginLeft="5dp"
+				android:layout_marginRight="5dp"
+				android:onClick="videoPicker"
+				android:background="@drawable/btn_bg"
+				android:textColor="#FFFFFFFF"/>
+
+			<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="保存草稿"
+				android:layout_gravity="center"
+				android:layout_marginTop="10dp"
+				android:layout_marginLeft="5dp"
+				android:layout_marginRight="5dp"
+				android:onClick="saveVideo"
+				android:background="@drawable/btn_bg"
+				android:textColor="#FFFFFFFF"/>
+
+			<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="加载草稿"
+				android:layout_gravity="center"
+				android:layout_marginTop="10dp"
+				android:layout_marginLeft="5dp"
+				android:layout_marginRight="5dp"
+				android:onClick="loadVideo"
+				android:background="@drawable/btn_bg"
+				android:textColor="#FFFFFFFF"/>
+
+			<Button
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:text="冲刺冲刺"
+				android:layout_gravity="center"
+				android:layout_marginTop="10dp"
+				android:layout_marginLeft="5dp"
+				android:layout_marginRight="5dp"
+				android:background="@drawable/btn_bg"
+				android:textColor="#FFFFFFFF"
+				android:onClick="uploadVideo"/>
+
+			<TextView
+				android:textSize="17dp"
+				android:textStyle="bold"
+				android:textColor="#FF000000"
+				android:layout_gravity="center"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="10dp"
+				android:text="@string/error_upload"
+				android:tag="error"
+				android:linksClickable="true"
+				android:layout_marginTop="10dp"/>
+
+		</LinearLayout>
+
+	</ScrollView>
+
+</LinearLayout>
+

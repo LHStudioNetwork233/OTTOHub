@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:padding="5dp">
+
+	<com.losthiro.ottohubclient.view.RoundImageView
+		android:layout_width="50dp"
+		android:layout_height="50dp"
+		android:src="@drawable/ic_unloading_user"
+		android:id="@+id/user_avatar"
+		android:layout_marginRight="10dp"/>
+
+	<com.losthiro.ottohubclient.view.RunTextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/user_avatar"
+		android:textStyle="bold"
+		android:maxLines="1"
+		android:singleLine="true"
+		android:ellipsize="marquee"
+		android:fadingEdge="horizontal"
+		android:textColor="#FF000000"
+		android:id="@+id/blog_title"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/user_avatar"
+		android:layout_below="@id/blog_title"
+		android:id="@+id/blog_info"
+		android:textSize="10sp"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/user_avatar"
+		android:layout_below="@id/blog_info"
+		android:id="@+id/blog_content"
+        android:autoLink="web"
+		android:textIsSelectable="true"/>
+		
+	<View
+		android:background="#FFE5E5E5"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_below="@id/blog_content"/>
+
+</RelativeLayout>
+

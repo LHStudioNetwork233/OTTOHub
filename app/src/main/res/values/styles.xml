@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="@style/Theme.AppCompat">
+	</style>
+    <style name="Theme.AppCompat" parent="@style/Base.Theme.AppCompat" />
+    <style name="Base.Theme.AppCompat" parent="@style/Base.V7.Theme.AppCompat" />
+</resources>

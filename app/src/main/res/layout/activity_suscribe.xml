@@ -1,0 +1,51 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/buttonBarButtonStyle"
+            android:src="@drawable/ic_left_arrow"
+            android:layout_margin="5dp"
+            android:onClick="quit"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="关注列表"
+            android:textColor="#FFFFFFFF"
+            android:shadowColor="#FFC4C4C4"
+            android:shadowRadius="4"
+            android:shadowDx="4"
+            android:shadowDy="4"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:textSize="16sp"
+            android:layout_margin="5dp"
+            android:layout_weight="1.0"/>
+
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/refresh"
+        android:layout_weight="1.0">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:id="@+id/suscribe_list"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>
+
