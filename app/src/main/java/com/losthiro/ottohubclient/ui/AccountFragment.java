@@ -52,7 +52,7 @@ public class AccountFragment extends Fragment {
 		historyView = parent.findViewById(R.id.user_history_list);
 		historyRefresh = parent.findViewById(R.id.user_history_refresh);
         SlideDrawerManager drawer = SlideDrawerManager.getInstance();
-        drawer.registerDrawer(drawer.getLastParent(), (ImageButton) getView().findViewById(R.id.main_slide_bar));
+        drawer.registerDrawer(drawer.getLastParent(), (ImageButton) parent.findViewById(R.id.main_slide_bar));
         drawer.setOnAccountChangeListener(ctx, new AccountManager.AccountListener() {
                 @Override
                 public void onCurrentChange(Account newCurrent) {

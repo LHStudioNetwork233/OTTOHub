@@ -108,7 +108,7 @@ public class VideosFragment extends Fragment {
                 }
             });
         SlideDrawerManager slide = SlideDrawerManager.getInstance();
-        slide.registerDrawer(slide.getLastParent(), (ImageButton) getView().findViewById(R.id.main_slide_bar));
+        slide.registerDrawer(slide.getLastParent(), (ImageButton) parent.findViewById(R.id.main_slide_bar));
         slide.setOnAccountChangeListener(ctx, new AccountManager.AccountListener(){
                 @Override
                 public void onCurrentChange(Account newCurrent) {

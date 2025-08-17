@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.losthiro.ottohubclient"
+    android:versionCode="2025070101"
+    android:versionName="v1.1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="26"
+        android:targetSdkVersion="35" />
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.KEYSTORE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+
+    <application
+        android:name="com.losthiro.ottohubclient.Client"
+        android:allowBackup="true"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
+        android:resizeableActivity="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true" >
+        <activity
+            android:name="com.losthiro.ottohubclient.SplashActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleInstance" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="start"
+                    android:scheme="ottohub" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.losthiro.ottohubclient.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleInstance" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.losthiro.ottohubclient.LoginActivity"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name="com.losthiro.ottohubclient.AccountDetailActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.losthiro.ottohubclient.SuscribeActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.losthiro.ottohubclient.FansActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.losthiro.ottohubclient.MessageActivity"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name="com.losthiro.ottohubclient.MessageDetailActivity"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name="com.losthiro.ottohubclient.PlayerActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="user" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="play"
+                    android:scheme="ottohub" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.losthiro.ottohubclient.BlogDetailActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="blog"
+                    android:scheme="ottohub" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.losthiro.ottohubclient.SearchActivity"
+            android:configChanges="keyboardHidden"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name="com.losthiro.ottohubclient.AuditActivity"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name="com.losthiro.ottohubclient.AuditViewActivity"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name="com.losthiro.ottohubclient.SettingsActivity"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name="com.losthiro.ottohubclient.UploadBlogActivity"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name="com.losthiro.ottohubclient.UploadVideoActivity"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name="com.losthiro.ottohubclient.UploadManagerActivity"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name="com.losthiro.ottohubclient.ErrorActivity"
+            android:exported="true"
+            android:launchMode="singleInstance" />
+
+        <service
+            android:name="com.losthiro.ottohubclient.service.PlayerService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback" />
+
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="4.0" />
+    </application>
+
+</manifest>

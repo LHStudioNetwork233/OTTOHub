@@ -1,0 +1,400 @@
+# view res/layout/abc_alert_dialog_button_bar_material.xml #generated:43
+# view res/layout/abc_alert_dialog_material.xml #generated:52
+# view res/layout/abc_alert_dialog_material.xml #generated:66
+# view res/layout/abc_alert_dialog_title_material.xml #generated:56
+# view watch-v20/res/layout-watch-v20/abc_alert_dialog_title_material.xml #generated:53
+-keep class android.widget.Space { <init>(...); }
+
+# view res/layout/abc_select_dialog_material.xml #generated:23
+-keep class androidx.appcompat.app.AlertController$RecycleListView { <init>(...); }
+
+# view res/layout/abc_action_menu_item_layout.xml #generated:17
+-keep class androidx.appcompat.view.menu.ActionMenuItemView { <init>(...); }
+
+# view res/layout/abc_expanded_menu_layout.xml #generated:17
+-keep class androidx.appcompat.view.menu.ExpandedMenuView { <init>(...); }
+
+# view res/layout/abc_cascading_menu_item_layout.xml #generated:20
+# view res/layout/abc_list_menu_item_layout.xml #generated:17
+# view res/layout/abc_popup_menu_item_layout.xml #generated:17
+-keep class androidx.appcompat.view.menu.ListMenuItemView { <init>(...); }
+
+# view res/layout/abc_screen_toolbar.xml #generated:27
+# view v26/res/layout-v26/abc_screen_toolbar.xml #generated:27
+-keep class androidx.appcompat.widget.ActionBarContainer { <init>(...); }
+
+# view res/layout/abc_action_mode_bar.xml #generated:19
+# view res/layout/abc_screen_toolbar.xml #generated:43
+# view v26/res/layout-v26/abc_screen_toolbar.xml #generated:44
+-keep class androidx.appcompat.widget.ActionBarContextView { <init>(...); }
+
+# view res/layout/abc_screen_toolbar.xml #generated:17
+# view v26/res/layout-v26/abc_screen_toolbar.xml #generated:17
+-keep class androidx.appcompat.widget.ActionBarOverlayLayout { <init>(...); }
+
+# view res/layout/abc_action_menu_layout.xml #generated:17
+-keep class androidx.appcompat.widget.ActionMenuView { <init>(...); }
+
+# view res/layout/abc_activity_chooser_view.xml #generated:19
+-keep class androidx.appcompat.widget.ActivityChooserView$InnerLayout { <init>(...); }
+
+# view res/layout/abc_alert_dialog_material.xml #generated:18
+-keep class androidx.appcompat.widget.AlertDialogLayout { <init>(...); }
+
+# view res/layout/abc_alert_dialog_button_bar_material.xml #generated:26
+# view watch-v20/res/layout-watch-v20/abc_alert_dialog_button_bar_material.xml #generated:18
+-keep class androidx.appcompat.widget.ButtonBarLayout { <init>(...); }
+
+# view res/layout/abc_screen_content_include.xml #generated:19
+-keep class androidx.appcompat.widget.ContentFrameLayout { <init>(...); }
+
+# view res/layout/abc_alert_dialog_title_material.xml #generated:45
+# view watch-v20/res/layout-watch-v20/abc_alert_dialog_title_material.xml #generated:44
+-keep class androidx.appcompat.widget.DialogTitle { <init>(...); }
+
+# view res/layout/abc_screen_simple_overlay_action_mode.xml #generated:23
+-keep class androidx.appcompat.widget.FitWindowsFrameLayout { <init>(...); }
+
+# view res/layout/abc_dialog_title_material.xml #generated:22
+# view res/layout/abc_screen_simple.xml #generated:17
+-keep class androidx.appcompat.widget.FitWindowsLinearLayout { <init>(...); }
+
+# view res/layout/abc_search_view.xml #generated:75
+-keep class androidx.appcompat.widget.SearchView$SearchAutoComplete { <init>(...); }
+
+# view res/layout/abc_screen_toolbar.xml #generated:36
+# view v26/res/layout-v26/abc_screen_toolbar.xml #generated:37
+-keep class androidx.appcompat.widget.Toolbar { <init>(...); }
+
+# view res/layout/abc_screen_simple.xml #generated:25
+# view res/layout/abc_screen_simple_overlay_action_mode.xml #generated:32
+-keep class androidx.appcompat.widget.ViewStubCompat { <init>(...); }
+
+# view res/layout/abc_alert_dialog_material.xml #generated:41
+# view res/layout/activity_audit_view.xml #generated:43
+# view res/layout/activity_blog_detail.xml #generated:70
+# view res/layout/activity_message_detail.xml #generated:77
+# view res/layout/activity_upload_blog.xml #generated:57
+-keep class androidx.core.widget.NestedScrollView { <init>(...); }
+
+# view res/layout/activity_blog_detail.xml #generated:2
+# view res/layout/activity_main.xml #generated:8
+-keep class androidx.drawerlayout.widget.DrawerLayout { <init>(...); }
+
+# view res/layout/activity_account_detail.xml #generated:116
+# view res/layout/activity_account_detail.xml #generated:300
+# view res/layout/activity_account_detail.xml #generated:351
+# view res/layout/activity_account_detail.xml #generated:394
+# view res/layout/activity_audit.xml #generated:123
+# view res/layout/activity_audit_view.xml #generated:126
+# view res/layout/activity_blog_detail.xml #generated:203
+# view res/layout/activity_fans.xml #generated:44
+# view res/layout/activity_message.xml #generated:117
+# view res/layout/activity_player.xml #generated:122
+# view res/layout/activity_player.xml #generated:164
+# view res/layout/activity_player.xml #generated:331
+# view res/layout/activity_search.xml #generated:99
+# view res/layout/activity_suscribe.xml #generated:44
+# view res/layout/activity_upload_manager.xml #generated:102
+# view res/layout/activity_upload_video.xml #generated:93
+# view res/layout/dialog_child_comment.xml #generated:33
+# view res/layout/fragment_account.xml #generated:184
+# view res/layout/fragment_account.xml #generated:82
+# view res/layout/fragment_blogs.xml #generated:123
+# view res/layout/fragment_videos.xml #generated:298
+# view res/layout/list_comment.xml #generated:34
+# view res/layout/window_account_switch.xml #generated:30
+-keep class androidx.recyclerview.widget.RecyclerView { <init>(...); }
+
+# view res/layout/activity_account_detail.xml #generated:289
+# view res/layout/activity_audit.xml #generated:117
+# view res/layout/activity_blog_detail.xml #generated:64
+# view res/layout/activity_fans.xml #generated:38
+# view res/layout/activity_message.xml #generated:112
+# view res/layout/activity_player.xml #generated:117
+# view res/layout/activity_suscribe.xml #generated:38
+# view res/layout/activity_upload_manager.xml #generated:96
+# view res/layout/fragment_account.xml #generated:178
+# view res/layout/fragment_blogs.xml #generated:117
+# view res/layout/fragment_videos.xml #generated:245
+-keep class androidx.swiperefreshlayout.widget.SwipeRefreshLayout { <init>(...); }
+
+# view res/layout/activity_main.xml #generated:18
+# view res/layout/fragment_videos.xml #generated:264
+-keep class androidx.viewpager.widget.ViewPager { <init>(...); }
+
+# view AndroidManifest.xml #generated:68
+-keep class com.losthiro.ottohubclient.AccountDetailActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:133
+-keep class com.losthiro.ottohubclient.AuditActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:137
+-keep class com.losthiro.ottohubclient.AuditViewActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:108
+-keep class com.losthiro.ottohubclient.BlogDetailActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:22
+-keep class com.losthiro.ottohubclient.Client { <init>(...); }
+
+# view AndroidManifest.xml #generated:157
+-keep class com.losthiro.ottohubclient.ErrorActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:74
+-keep class com.losthiro.ottohubclient.FansActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:64
+-keep class com.losthiro.ottohubclient.LoginActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:55
+-keep class com.losthiro.ottohubclient.MainActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:77
+-keep class com.losthiro.ottohubclient.MessageActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:81
+-keep class com.losthiro.ottohubclient.MessageDetailActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:85
+-keep class com.losthiro.ottohubclient.PlayerActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:128
+-keep class com.losthiro.ottohubclient.SearchActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:141
+-keep class com.losthiro.ottohubclient.SettingsActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:34
+-keep class com.losthiro.ottohubclient.SplashActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:71
+-keep class com.losthiro.ottohubclient.SuscribeActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:145
+-keep class com.losthiro.ottohubclient.UploadBlogActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:153
+-keep class com.losthiro.ottohubclient.UploadManagerActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:149
+-keep class com.losthiro.ottohubclient.UploadVideoActivity { <init>(...); }
+
+# view AndroidManifest.xml #generated:162
+-keep class com.losthiro.ottohubclient.service.PlayerService { <init>(...); }
+
+# view res/layout/dialog_color_picker.xml #generated:99
+-keep class com.losthiro.ottohubclient.view.ClientColorPicker { <init>(...); }
+
+# view res/layout/activity_audit_view.xml #generated:74
+# view res/layout/activity_blog_detail.xml #generated:95
+# view res/layout/activity_message_detail.xml #generated:86
+# view res/layout/activity_upload_blog.xml #generated:77
+# view res/layout/list_comment.xml #generated:43
+-keep class com.losthiro.ottohubclient.view.ClientWebView { <init>(...); }
+
+# view res/layout/activity_account_detail.xml #generated:81
+# view res/layout/fragment_account.xml #generated:30
+-keep class com.losthiro.ottohubclient.view.CricleImageView { <init>(...); }
+
+# view res/layout/activity_blog_detail.xml #generated:226
+# view res/layout/activity_player.xml #generated:358
+# view res/layout/activity_player.xml #generated:85
+-keep class com.losthiro.ottohubclient.view.RandomTextEdit { <init>(...); }
+
+# view res/layout/activity_account_detail.xml #generated:89
+# view res/layout/activity_blog_detail.xml #generated:28
+# view res/layout/activity_login.xml #generated:31
+# view res/layout/activity_message_detail.xml #generated:45
+# view res/layout/activity_player.xml #generated:283
+# view res/layout/activity_search.xml #generated:28
+# view res/layout/fragment_blogs.xml #generated:31
+# view res/layout/fragment_videos.xml #generated:84
+# view res/layout/list_account.xml #generated:18
+# view res/layout/list_blog.xml #generated:9
+# view res/layout/list_blog_manager.xml #generated:9
+# view res/layout/list_comment.xml #generated:9
+# view res/layout/list_user.xml #generated:13
+# view res/layout/list_video.xml #generated:63
+-keep class com.losthiro.ottohubclient.view.RoundImageView { <init>(...); }
+
+# view res/layout/list_blog.xml #generated:16
+# view res/layout/list_blog_manager.xml #generated:16
+# view res/layout/list_video.xml #generated:72
+# view res/layout/list_video_detail.xml #generated:23
+# view res/layout/list_video_detail.xml #generated:40
+# view res/layout/list_video_manager.xml #generated:23
+# view res/layout/list_video_manager.xml #generated:40
+-keep class com.losthiro.ottohubclient.view.RunTextView { <init>(...); }
+
+# view res/layout/activity_login.xml #generated:20
+-keep class com.losthiro.ottohubclient.view.WaveView { <init>(...); }
+
+# view res/layout/activity_login.xml #generated:8
+# view res/layout/activity_player.xml #generated:27
+# view res/layout/activity_player_fullscreen.xml #generated:16
+-keep class master.flame.danmaku.ui.widget.DanmakuView { <init>(...); }
+
+# view res/layout/activity_splash.xml #generated:25
+# view res/layout/list_loading_char.xml #generated:9
+-keep class pl.droidsonroids.gif.GifImageView { <init>(...); }
+
+# onClick res/layout/window_account_switch.xml #generated:36
+-keepclassmembers class * { *** addAccount(...); }
+
+# onClick res/layout/activity_upload_blog.xml #generated:102
+-keepclassmembers class * { *** addImage(...); }
+
+# onClick res/layout/activity_upload_video.xml #generated:111
+-keepclassmembers class * { *** addTags(...); }
+
+# onClick res/layout/activity_audit_view.xml #generated:207
+-keepclassmembers class * { *** approveCurrent(...); }
+
+# onClick res/layout/activity_upload_video.xml #generated:123
+-keepclassmembers class * { *** clearTags(...); }
+
+# onClick res/layout/activity_player.xml #generated:249
+-keepclassmembers class * { *** downloadVideo(...); }
+
+# onClick res/layout/activity_error.xml #generated:38
+-keepclassmembers class * { *** exit_client(...); }
+
+# onClick res/layout/activity_settings.xml #generated:240
+-keepclassmembers class * { *** group(...); }
+
+# onClick res/layout/fragment_videos.xml #generated:279
+-keepclassmembers class * { *** lastPopular(...); }
+
+# onClick res/layout/activity_account_detail.xml #generated:366
+-keepclassmembers class * { *** loadFavoriteBlog(...); }
+
+# onClick res/layout/activity_account_detail.xml #generated:323
+-keepclassmembers class * { *** loadFavoriteVideo(...); }
+
+# onClick res/layout/activity_upload_video.xml #generated:300
+-keepclassmembers class * { *** loadVideo(...); }
+
+# onClick res/layout/dialog_login.xml #generated:59
+-keepclassmembers class * { *** login(...); }
+
+# onClick res/layout/activity_login.xml #generated:52
+# onClick res/layout/dialog_register.xml #generated:125
+-keepclassmembers class * { *** loginDialog(...); }
+
+# onClick res/layout/fragment_videos.xml #generated:65
+-keepclassmembers class * { *** messageDetail(...); }
+
+# onClick res/layout/fragment_videos.xml #generated:287
+-keepclassmembers class * { *** nextPopular(...); }
+
+# onClick res/layout/activity_account_detail.xml #generated:15
+# onClick res/layout/activity_audit.xml #generated:14
+# onClick res/layout/activity_audit_view.xml #generated:13
+# onClick res/layout/activity_blog_detail.xml #generated:53
+# onClick res/layout/activity_fans.xml #generated:13
+# onClick res/layout/activity_message.xml #generated:18
+# onClick res/layout/activity_message_detail.xml #generated:14
+# onClick res/layout/activity_settings.xml #generated:14
+# onClick res/layout/activity_suscribe.xml #generated:13
+# onClick res/layout/activity_upload_blog.xml #generated:14
+# onClick res/layout/activity_upload_manager.xml #generated:13
+# onClick res/layout/activity_upload_video.xml #generated:13
+-keepclassmembers class * { *** quit(...); }
+
+# onClick res/layout/dialog_register.xml #generated:112
+-keepclassmembers class * { *** register(...); }
+
+# onClick res/layout/dialog_reset.xml #generated:124
+-keepclassmembers class * { *** registerDialog(...); }
+
+# onClick res/layout/activity_audit_view.xml #generated:197
+-keepclassmembers class * { *** rejectCurrent(...); }
+
+# onClick res/layout/activity_blog_detail.xml #generated:180
+-keepclassmembers class * { *** reportBlog(...); }
+
+# onClick res/layout/activity_player.xml #generated:226
+-keepclassmembers class * { *** reportVideo(...); }
+
+# onClick res/layout/dialog_reset.xml #generated:111
+-keepclassmembers class * { *** reset(...); }
+
+# onClick res/layout/dialog_login.xml #generated:73
+-keepclassmembers class * { *** resetDialog(...); }
+
+# onClick res/layout/activity_error.xml #generated:26
+-keepclassmembers class * { *** restart_client(...); }
+
+# onClick res/layout/activity_upload_blog.xml #generated:114
+-keepclassmembers class * { *** saveCurrent(...); }
+
+# onClick res/layout/activity_settings.xml #generated:215
+-keepclassmembers class * { *** saveLog(...); }
+
+# onClick res/layout/dialog_message_edit.xml #generated:30
+-keepclassmembers class * { *** saveMsg(...); }
+
+# onClick res/layout/activity_upload_video.xml #generated:288
+-keepclassmembers class * { *** saveVideo(...); }
+
+# onClick res/layout/fragment_videos.xml #generated:41
+-keepclassmembers class * { *** searchVideo(...); }
+
+# onClick res/layout/activity_settings.xml #generated:234
+-keepclassmembers class * { *** sendApp(...); }
+
+# onClick res/layout/activity_upload_blog.xml #generated:126
+-keepclassmembers class * { *** sendBlog(...); }
+
+# onClick res/layout/activity_blog_detail.xml #generated:233
+# onClick res/layout/activity_player.xml #generated:365
+-keepclassmembers class * { *** sendComment(...); }
+
+# onClick res/layout/dialog_color_picker.xml #generated:14
+-keepclassmembers class * { *** sendDanmaku(...); }
+
+# onClick res/layout/dialog_message_edit.xml #generated:45
+-keepclassmembers class * { *** sendDia(...); }
+
+# onClick res/layout/activity_player.xml #generated:92
+-keepclassmembers class * { *** sendDialog(...); }
+
+# onClick res/layout/activity_message.xml #generated:132
+# onClick res/layout/activity_message_detail.xml #generated:92
+-keepclassmembers class * { *** sendMsg(...); }
+
+# onClick res/layout/dialog_reset.xml #generated:37
+-keepclassmembers class * { *** sendResetVerify(...); }
+
+# onClick res/layout/dialog_register.xml #generated:37
+-keepclassmembers class * { *** sendVerify(...); }
+
+# onClick res/layout/activity_settings.xml #generated:228
+-keepclassmembers class * { *** sendWeb(...); }
+
+# onClick res/layout/activity_blog_detail.xml #generated:157
+-keepclassmembers class * { *** shareBlog(...); }
+
+# onClick res/layout/activity_blog_detail.xml #generated:279
+# onClick res/layout/activity_main.xml #generated:124
+-keepclassmembers class * { *** switchAccountDia(...); }
+
+# onClick res/layout/activity_player.xml #generated:67
+-keepclassmembers class * { *** switchDanmaku(...); }
+
+# onClick res/layout/dialog_color_picker.xml #generated:73
+-keepclassmembers class * { *** switchType(...); }
+
+# onClick res/layout/fragment_videos.xml #generated:50
+-keepclassmembers class * { *** upload(...); }
+
+# onClick res/layout/activity_upload_video.xml #generated:312
+-keepclassmembers class * { *** uploadVideo(...); }
+
+# onClick res/layout/activity_player.xml #generated:272
+-keepclassmembers class * { *** userDetail(...); }
+
+# onClick res/layout/activity_upload_video.xml #generated:276
+-keepclassmembers class * { *** videoPicker(...); }
+

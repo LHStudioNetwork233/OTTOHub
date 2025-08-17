@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	package="com.losthiro.ottohubclient"
+	android:versionCode="2025070101"
+	android:versionName="v1.1.0">
+
+	<uses-sdk
+		android:minSdkVersion="26"
+		android:targetSdkVersion="35"/>
+
+	<uses-permission
+		android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+	<uses-permission
+		android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+	<uses-permission
+		android:name="android.permission.KEYSTORE"/>
+
+	<uses-permission
+		android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+
+	<uses-permission
+		android:name="android.permission.QUERY_ALL_PACKAGES"/>
+
+	<uses-permission
+		android:name="android.permission.INTERNET"/>
+
+	<uses-permission
+		android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+	<uses-permission
+		android:name="android.permission.WAKE_LOCK"/>
+
+	<uses-permission
+		android:name="android.permission.FOREGROUND_SERVICE"/>
+
+	<uses-permission
+		android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
+
+	<application
+		android:icon="@drawable/ic_launcher"
+		android:label="@string/app_name"
+		android:theme="@style/AppTheme"
+		android:name=".Client"
+		android:allowBackup="true"
+		android:largeHeap="true"
+		android:supportsRtl="true"
+		android:resizeableActivity="true"
+		android:requestLegacyExternalStorage="true"
+		android:usesCleartextTraffic="true">
+
+		<activity
+			android:name=".SplashActivity"
+			android:label="@string/app_name"
+			android:launchMode="singleInstance"
+			android:exported="true">
+
+			<intent-filter>
+
+				<action
+					android:name="android.intent.action.MAIN"/>
+
+				<category
+					android:name="android.intent.category.LAUNCHER"/>
+
+			</intent-filter>
+
+			<intent-filter>
+
+				<action
+					android:name="android.intent.action.VIEW"/>
+
+				<category
+					android:name="android.intent.category.DEFAULT"/>
+
+				<category
+					android:name="android.intent.category.BROWSABLE"/>
+
+				<data
+					android:scheme="ottohub"
+					android:host="start"/>
+
+			</intent-filter>
+
+		</activity>
+
+		<activity
+			android:name=".MainActivity"
+			android:label="@string/app_name"
+			android:exported="true"
+			android:launchMode="singleInstance">
+
+			<intent-filter>
+
+				<action
+					android:name="android.intent.action.MAIN"/>
+
+			</intent-filter>
+
+		</activity>
+
+		<activity
+			android:name=".LoginActivity"
+			android:exported="true"
+			android:launchMode="singleInstance"/>
+
+		<activity
+			android:name=".AccountDetailActivity"
+			android:exported="true"/>
+
+		<activity
+			android:name=".SuscribeActivity"
+			android:exported="true"/>
+
+		<activity
+			android:name=".FansActivity"
+			android:exported="true"/>
+
+		<activity
+			android:name=".MessageActivity"
+			android:exported="true"
+			android:launchMode="singleInstance"/>
+
+		<activity
+			android:name=".MessageDetailActivity"
+			android:exported="true"
+			android:launchMode="singleInstance"/>
+
+		<activity
+			android:name=".PlayerActivity"
+			android:exported="true"
+			android:screenOrientation="user"
+			android:hardwareAccelerated="true"
+			android:configChanges="keyboardHidden|orientation">
+
+			<intent-filter>
+
+				<action
+					android:name="android.intent.action.VIEW"/>
+
+				<category
+					android:name="android.intent.category.DEFAULT"/>
+
+				<category
+					android:name="android.intent.category.BROWSABLE"/>
+
+			</intent-filter>
+
+			<intent-filter>
+
+				<action
+					android:name="android.intent.action.VIEW"/>
+
+				<category
+					android:name="android.intent.category.DEFAULT"/>
+
+				<category
+					android:name="android.intent.category.BROWSABLE"/>
+
+				<data
+					android:scheme="ottohub"
+					android:host="play"/>
+
+			</intent-filter>
+
+		</activity>
+
+		<activity
+			android:name=".BlogDetailActivity"
+			android:exported="true">
+
+			<intent-filter>
+
+				<action
+					android:name="android.intent.action.VIEW"/>
+
+				<category
+					android:name="android.intent.category.DEFAULT"/>
+
+				<category
+					android:name="android.intent.category.BROWSABLE"/>
+
+			</intent-filter>
+
+			<intent-filter>
+
+				<action
+					android:name="android.intent.action.VIEW"/>
+
+				<category
+					android:name="android.intent.category.DEFAULT"/>
+
+				<category
+					android:name="android.intent.category.BROWSABLE"/>
+
+				<data
+					android:scheme="ottohub"
+					android:host="blog"/>
+
+			</intent-filter>
+
+		</activity>
+
+		<activity
+			android:name=".SearchActivity"
+			android:exported="true"
+			android:launchMode="singleInstance"
+			android:configChanges="keyboardHidden"/>
+
+		<activity
+			android:name=".AuditActivity"
+			android:exported="true"
+			android:launchMode="singleInstance"/>
+
+		<activity
+			android:name=".AuditViewActivity"
+			android:exported="true"
+			android:launchMode="singleInstance"/>
+
+		<activity
+			android:name=".SettingsActivity"
+			android:exported="true"
+			android:launchMode="singleInstance"/>
+
+		<activity
+			android:name=".UploadBlogActivity"
+			android:exported="true"
+			android:launchMode="singleInstance"/>
+
+		<activity
+			android:name=".UploadVideoActivity"
+			android:exported="true"
+			android:launchMode="singleInstance"/>
+
+		<activity
+			android:name=".UploadManagerActivity"
+			android:exported="true"
+			android:launchMode="singleInstance"/>
+
+		<activity
+			android:name=".ErrorActivity"
+			android:exported="true"
+			android:launchMode="singleInstance"/>
+
+		<service
+			android:name=".service.PlayerService"
+			android:enabled="true"
+			android:exported="false"
+			android:foregroundServiceType="mediaPlayback"/>
+
+		<meta-data
+			android:name="android.max_aspect"
+			android:value="4.0"/>
+
+	</application>
+
+</manifest>
+
