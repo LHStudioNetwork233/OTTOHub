@@ -29,11 +29,12 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/main_user_name"
-			android:textColor="#FF000000"/>
+			android:textColor="@color/colorSecondary"/>
 
 		<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+            android:textColor="@color/text_color"
 			android:id="@+id/main_user_intro"/>
 
 	</LinearLayout>

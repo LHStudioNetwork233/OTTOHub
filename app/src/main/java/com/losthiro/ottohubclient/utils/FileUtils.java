@@ -26,6 +26,10 @@ import android.os.Environment;
 import android.os.StatFs;
 import java.io.IOException;
 import java.io.*;
+import android.database.*;
+import android.provider.*;
+import android.os.*;
+import com.losthiro.ottohubclient.*;
 
 public class FileUtils {
 	private static final String TAG = "FileUtils";
@@ -41,6 +45,53 @@ public class FileUtils {
 		long bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
 		return bytesAvailable > 0;
 	}
+    
+    public static String getStorage(Context ctx, String path){
+        String oldStorage = BasicActivity.getCurrentStorage();
+        String newStorage = ctx.getExternalFilesDir(null).getPath();
+        String realStorage = DeviceUtils.getAndroidSDK() >= Build.VERSION_CODES.R ? newStorage : oldStorage;
+        if(path == null){
+            return realStorage;
+        }
+        return new File(realStorage, path).getPath();
+    }
+    
+    public static File getFile(Context ctx, Uri uri){
+        String path = null;
+        Cursor cursor = null;
+        try {
+            String[] projection = {MediaStore.Images.Media.DATA};
+            cursor = ctx.getContentResolver().query(uri, projection, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                path = cursor.getString(columnIndex);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return new File(path);
+    }
+    
+    public static String getSize(File f) {
+        // TODO: Implement this method
+        return formatSize(f.length());
+    }
+    
+    public static String formatSize(double size) {
+        // TODO: Implement this method
+        final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
+        int unitIndex = 0;
+        if(size<=0){
+            return "0B";
+        }
+        while (size >= 1024 && unitIndex < units.length - 1) {
+            size /= 1024;
+            unitIndex++;
+        }
+        return String.format("%.2f %s", size, units[unitIndex]);
+    }
 
 	public static boolean createDir(String path) {
 		File file = new File(path);
@@ -360,7 +411,7 @@ public class FileUtils {
 
 		public static Drawable getAssetsImage(Context c, String name) {
 			try {
-				return Drawable.createFromStream(ResourceUtils.getInstance(c).getAssetsFile(name), null);
+				return Drawable.createFromStream(ResourceUtils.getAssetsFile(name), null);
 			} catch (Exception e) {
 				Log.e(TAG, " open image error: ", e);
 				return null;
@@ -371,7 +422,7 @@ public class FileUtils {
 			StringBuilder content = new StringBuilder();
 			try {
 				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(ResourceUtils.getInstance(c).getAssetsFile(name)));
+						new InputStreamReader(ResourceUtils.getAssetsFile(name)));
 				String line;
 				while ((line = reader.readLine()) != null) {
 					content.append(line).append(System.lineSeparator());
@@ -385,7 +436,7 @@ public class FileUtils {
 
 		public static void copyFileAssets(Context c, String name, String destDir) {
 			try {
-				InputStream is = ResourceUtils.getInstance(c).getAssetsFile(name);
+				InputStream is = ResourceUtils.getAssetsFile(name);
 				FileOutputStream fos = new FileOutputStream(new File(destDir));
 				byte[] buffer = new byte[1145];
 				int bytesReader;
@@ -403,7 +454,7 @@ public class FileUtils {
 			File dir = new File(destDirPath);
 			createDir(destDirPath);
 			try {
-				ZipInputStream zis = new ZipInputStream(ResourceUtils.getInstance(c).getAssetsFile(name));
+				ZipInputStream zis = new ZipInputStream(ResourceUtils.getAssetsFile(name));
 				ZipEntry entry;
 				while ((entry = zis.getNextEntry()) != null) {
 					File f = new File(dir, entry.getName());

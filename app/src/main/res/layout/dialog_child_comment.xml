@@ -20,6 +20,7 @@
 		android:tag="comment_count"
 		android:shadowRadius="4"
 		android:textStyle="bold"
+        android:textColor="@color/colorSecondary"
 		android:layout_margin="5dp"/>
 
 	<View

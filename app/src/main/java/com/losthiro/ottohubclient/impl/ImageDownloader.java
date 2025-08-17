@@ -16,6 +16,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Color;
 import android.graphics.Xfermode;
 import android.view.ViewTreeObserver;
+import android.widget.*;
 
 /**
  * @Author Hiro

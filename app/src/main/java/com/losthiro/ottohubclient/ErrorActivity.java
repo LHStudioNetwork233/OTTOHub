@@ -8,7 +8,7 @@ import com.losthiro.ottohubclient.utils.StringUtils;
 import android.view.View;
 import com.losthiro.ottohubclient.utils.SystemUtils;
 
-public class ErrorActivity extends MainActivity{
+public class ErrorActivity extends BasicActivity{
     public static final String TAG = "ErrorActivity";
 
     @Override

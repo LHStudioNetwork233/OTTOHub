@@ -4,6 +4,10 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 import com.losthiro.ottohubclient.utils.StringUtils;
 import com.losthiro.ottohubclient.impl.danmaku.DefDanmakuManager;
+import com.losthiro.ottohubclient.utils.*;
+import com.losthiro.ottohubclient.R;
+import java.lang.reflect.*;
+import android.widget.*;
 
 /**
  * @Author Hiro

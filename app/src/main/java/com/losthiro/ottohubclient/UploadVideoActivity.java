@@ -29,8 +29,10 @@ import android.util.*;
 import android.os.AsyncTask;
 import java.net.*;
 import android.database.*;
+import com.losthiro.ottohubclient.view.dialog.*;
+import com.losthiro.ottohubclient.adapter.model.*;
 
-public class UploadVideoActivity extends MainActivity {
+public class UploadVideoActivity extends BasicActivity {
 	private Uri video;
 	private Uri cover;
 	private int videoCategory = -1;
@@ -38,7 +40,7 @@ public class UploadVideoActivity extends MainActivity {
 	private TagAdapter adapter;
 	private ImageView coverView;
 	private TextView text;
-    private TextView info;
+	private TextView info;
 	private Button categoryBtn;
 	private Button typeBtn;
 	private EditText title;
@@ -78,8 +80,8 @@ public class UploadVideoActivity extends MainActivity {
 				switchCopyrightDia();
 			}
 		});
-        info = parent.findViewWithTag("uploader_info");
-        
+		info = parent.findViewWithTag("uploader_info");
+
 		title = findViewById(R.id.video_upload_title);
 		intro = findViewById(R.id.video_upload_intro);
 		tag = findViewById(R.id.upload_tags_edit);
@@ -124,37 +126,71 @@ public class UploadVideoActivity extends MainActivity {
 		if (data != null && resultCode == RESULT_OK) {
 			if (requestCode == VIDEO_REQUEST_CODE) {
 				video = data.getData();
-                info.setText(getInfo());
+                if(checkVideo()){
+                    videoPicker();
+                    return;
+                }
+				info.setText(getInfo());
 			} else if (requestCode == IMAGE_REQUEST_CODE) {
 				cover = data.getData();
+                if(checkCover()){
+                    coverPicker();
+                    return;
+                }
 				coverView.setImageURI(cover);
 				text.setTextColor(Color.WHITE);
 				text.setBackgroundResource(R.drawable.text_bg);
-                info.setText(getInfo());
+				info.setText(getInfo());
 			}
-			Toast.makeText(getApplication(), data.getDataString(), Toast.LENGTH_SHORT).show();
+			//Toast.makeText(getApplication(), data.getDataString(), Toast.LENGTH_SHORT).show();
 		} else {
 			Toast.makeText(getApplication(), "请重新选择文件", Toast.LENGTH_SHORT).show();
 		}
 	}
-    
-    private static String getPath(Context ctx, Uri uri) {
-        String path = null;
-        Cursor cursor = null;
-        try {
-            String[] projection = {MediaStore.Images.Media.DATA};
-            cursor = ctx.getContentResolver().query(uri, projection, null, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                path = cursor.getString(columnIndex);
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return path;
-    }
+
+	private boolean checkVideo() {
+		File f = FileUtils.getFile(this, video);
+		if (!f.exists() || f.isDirectory()) {
+			Toast.makeText(getApplication(), "错误文件请重新选择", Toast.LENGTH_SHORT).show();
+			return true;
+		}
+		if (!f.getName().endsWith(".mp4")) {
+			Toast.makeText(getApplication(), "不支持的文件类型，请重新选择", Toast.LENGTH_SHORT).show();
+			return true;
+		}
+		if (f.length() > VIDEO_SIZE) {
+			StringBuilder msg = new StringBuilder("大小超过限制: ");
+			msg.append(FileUtils.getSize(f));
+			msg.append(" > ");
+			msg.append(FileUtils.formatSize(VIDEO_SIZE));
+			msg.append(" 请重新选择");
+			Toast.makeText(getApplication(), msg, Toast.LENGTH_SHORT).show();
+			return true;
+		}
+		return false;
+	}
+
+	private boolean checkCover() {
+		File f = FileUtils.getFile(this, cover);
+		if (!f.exists() || f.isDirectory()) {
+			Toast.makeText(getApplication(), "错误文件请重新选择", Toast.LENGTH_SHORT).show();
+			return true;
+		}
+		if (!f.getName().endsWith(".jpg")) {
+			Toast.makeText(getApplication(), "不支持的文件类型，请重新选择", Toast.LENGTH_SHORT).show();
+			return true;
+		}
+		if (f.length() > COVER_SIZE) {
+			StringBuilder msg = new StringBuilder("大小超过限制: ");
+			msg.append(FileUtils.getSize(f));
+			msg.append(" > ");
+			msg.append(FileUtils.formatSize(COVER_SIZE));
+			msg.append(" 请重新选择");
+			Toast.makeText(getApplication(), msg, Toast.LENGTH_SHORT).show();
+			return true;
+		}
+		return false;
+	}
 
 	private void videoPicker() {
 		Toast.makeText(getApplication(), "请选择要上传的视频文件(限定mp4)，大小不超过200MB", Toast.LENGTH_SHORT).show();
@@ -167,42 +203,29 @@ public class UploadVideoActivity extends MainActivity {
 		Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		startActivityForResult(i, IMAGE_REQUEST_CODE);
 	}
-    
-    private String getInfo(){
-        StringBuilder string = new StringBuilder();
-        if(cover==null){
-            string.append("未选择封面").append(System.lineSeparator());
-        }else{
-            File f=new File(getPath(this, cover));
-            Bitmap bitmap=BitmapFactory.decodeFile(f.getPath());
-            string.append("封面名称: ").append(f.getName()).append(System.lineSeparator());
-            string.append("封面大小: ").append(bitmap.getWidth()).append("x").append(bitmap.getHeight()).append(System.lineSeparator());
-            string.append("文件大小: ").append(getSize(f)).append(System.lineSeparator());
-        }
-        if(video==null){
-            string.append("未选择视频");
-        }else{
-            File f=new File(getPath(this, video));
-            string.append("视频名称: ").append(f.getName()).append(System.lineSeparator());
-            string.append("视频大小: ").append(getSize(f));
-        }
-        return string.toString();
-    }
 
-    private String getSize(File f) {
-        // TODO: Implement this method
-        final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
-        int unitIndex = 0;
-        double size = f.length();
-        if(size<=0){
-            return "0B";
-        }
-        while (size >= 1024 && unitIndex < units.length - 1) {
-            size /= 1024;
-            unitIndex++;
-        }
-        return String.format("%.2f %s", size, units[unitIndex]);
-    }
+	private String getInfo() {
+		StringBuilder string = new StringBuilder();
+		if (cover == null) {
+			string.append("未选择封面").append(System.lineSeparator());
+		} else {
+			File f = FileUtils.getFile(this, cover);
+			Bitmap bitmap = BitmapFactory.decodeFile(f.getPath());
+			string.append("封面名称: ").append(f.getName()).append(System.lineSeparator());
+			string.append("封面大小: ").append(bitmap.getWidth()).append("x").append(bitmap.getHeight())
+					.append(System.lineSeparator());
+			string.append("文件大小: ").append(FileUtils.getSize(f)).append(System.lineSeparator());
+		}
+		string.append(System.lineSeparator());
+		if (video == null) {
+			string.append("未选择视频");
+		} else {
+			File f = FileUtils.getFile(this, video);
+			string.append("视频名称: ").append(f.getName()).append(System.lineSeparator());
+			string.append("视频大小: ").append(FileUtils.getSize(f));
+		}
+		return string.toString();
+	}
 
 	private HashMap<String, Integer> initCategorys() {
 		HashMap<String, Integer> data = new HashMap<>();
@@ -238,14 +261,14 @@ public class UploadVideoActivity extends MainActivity {
 	}
 
 	private void switchCategoryDia() {
-		final Dialog cateDia = new Dialog(this);
+		ListView content = new ListView(this);
+		final BottomDialog cateDia = new BottomDialog(this, content);
 		final HashMap<String, Integer> map = initCategorys();
 		List<String> data = new ArrayList<>();
 		for (Map.Entry<String, Integer> entry : map.entrySet()) {
 			data.add(entry.getKey());
 		}
 		ArrayAdapter<String> category = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
-		ListView content = new ListView(this);
 		content.setBackgroundResource(R.drawable.video_card_bg);
 		content.setAdapter(category);
 		content.setOnItemClickListener(new OnItemClickListener() {
@@ -258,36 +281,18 @@ public class UploadVideoActivity extends MainActivity {
 				cateDia.dismiss();
 			}
 		});
-		cateDia.requestWindowFeature(1);
-		cateDia.setContentView(content);
-		ObjectAnimator ofFloat = ObjectAnimator.ofFloat(content, "translationY", 100.0f, 0.0f);
-		ofFloat.setDuration(1000L);
-		ofFloat.start();
-		Window window = cateDia.getWindow();
-		window.setFlags(4, 4);
-		if (window != null) {
-			window.setBackgroundDrawableResource(0x0106000d);
-		}
-		window.setGravity(80);
-		WindowManager.LayoutParams attributes = window.getAttributes();
-		attributes.y = 20;
-		attributes.dimAmount = 0.0f;
-		if (Build.VERSION.SDK_INT == 31) {
-			attributes.setBlurBehindRadius(20);
-		}
-		window.setAttributes(attributes);
 		cateDia.show();
 	}
 
 	private void switchCopyrightDia() {
-		final Dialog cateDia = new Dialog(this);
+		ListView content = new ListView(this);
+		final BottomDialog cateDia = new BottomDialog(this, content);
 		final HashMap<String, Integer> map = initCopyright();
 		List<String> data = new ArrayList<>();
 		for (Map.Entry<String, Integer> entry : map.entrySet()) {
 			data.add(entry.getKey());
 		}
 		ArrayAdapter<String> category = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
-		ListView content = new ListView(this);
 		content.setAdapter(category);
 		content.setBackgroundResource(R.drawable.video_card_bg);
 		content.setOnItemClickListener(new OnItemClickListener() {
@@ -300,24 +305,6 @@ public class UploadVideoActivity extends MainActivity {
 				cateDia.dismiss();
 			}
 		});
-		cateDia.requestWindowFeature(1);
-		cateDia.setContentView(content);
-		ObjectAnimator ofFloat = ObjectAnimator.ofFloat(content, "translationY", 100.0f, 0.0f);
-		ofFloat.setDuration(1000L);
-		ofFloat.start();
-		Window window = cateDia.getWindow();
-		window.setFlags(4, 4);
-		if (window != null) {
-			window.setBackgroundDrawableResource(0x0106000d);
-		}
-		window.setGravity(80);
-		WindowManager.LayoutParams attributes = window.getAttributes();
-		attributes.y = 20;
-		attributes.dimAmount = 0.0f;
-		if (Build.VERSION.SDK_INT == 31) {
-			attributes.setBlurBehindRadius(20);
-		}
-		window.setAttributes(attributes);
 		cateDia.show();
 	}
 
@@ -395,7 +382,7 @@ public class UploadVideoActivity extends MainActivity {
 	}
 
 	private void uploader(String uri) {
-		new VideoUploader(this, uri, new onUploaderCallback() {
+		new VideoUploader(this, uri, new NetworkUtils.HTTPCallback() {
 			@Override
 			public void onSuccess(String reslutURI) {
 				// TODO: Implement this method
@@ -514,9 +501,7 @@ public class UploadVideoActivity extends MainActivity {
 	}
 
 	public void saveVideo(View v) {
-		final String destDir = StringUtils.strCat(DeviceUtils.getAndroidSDK() >= Build.VERSION_CODES.R
-				? getExternalFilesDir(null).toString()
-				: "/sdcard/OTTOHub", "/draft/");
+		final String destDir = FileUtils.getStorage(this, PATH_DRAFT);
 		if (!new File(destDir).exists()) {
 			FileUtils.createDir(destDir);
 		}
@@ -555,10 +540,9 @@ public class UploadVideoActivity extends MainActivity {
 	}
 
 	public void loadVideo(View v) {
-		final Dialog cateDia = new Dialog(this);
-		final String dir = StringUtils.strCat(DeviceUtils.getAndroidSDK() >= Build.VERSION_CODES.R
-				? getExternalFilesDir(null).toString()
-				: "/sdcard/OTTOHub", "/draft/");
+		ListView content = new ListView(this);
+		final BottomDialog cateDia = new BottomDialog(this, content);
+		final String dir = FileUtils.getStorage(this, PATH_DRAFT);
 		FilenameFilter filter = new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
@@ -571,7 +555,6 @@ public class UploadVideoActivity extends MainActivity {
 			data.add(f.getName());
 		}
 		ArrayAdapter<String> category = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
-		ListView content = new ListView(this);
 		content.setAdapter(category);
 		content.setBackgroundResource(R.drawable.video_card_bg);
 		content.setOnItemClickListener(new OnItemClickListener() {
@@ -626,24 +609,6 @@ public class UploadVideoActivity extends MainActivity {
 			}
 		});
 		Toast.makeText(getApplication(), "点击加载，长按改名或删除", Toast.LENGTH_SHORT).show();
-		cateDia.requestWindowFeature(1);
-		cateDia.setContentView(content);
-		ObjectAnimator ofFloat = ObjectAnimator.ofFloat(content, "translationY", 100.0f, 0.0f);
-		ofFloat.setDuration(1000L);
-		ofFloat.start();
-		Window window = cateDia.getWindow();
-		window.setFlags(4, 4);
-		if (window != null) {
-			window.setBackgroundDrawableResource(0x0106000d);
-		}
-		window.setGravity(80);
-		WindowManager.LayoutParams attributes = window.getAttributes();
-		attributes.y = 20;
-		attributes.dimAmount = 0.0f;
-		if (Build.VERSION.SDK_INT == 31) {
-			attributes.setBlurBehindRadius(20);
-		}
-		window.setAttributes(attributes);
 		cateDia.show();
 	}
 
@@ -651,18 +616,13 @@ public class UploadVideoActivity extends MainActivity {
 		finish();
 	}
 
-	private static interface onUploaderCallback {
-		void onSuccess(String reslutURI);
-		void onFailed(String message);
-	}
-
 	private static class VideoUploader extends AsyncTask<Uri, Void, String> {
 		private String URI;
 		private Context ctx;
-		private onUploaderCallback cmd;
+		private NetworkUtils.HTTPCallback cmd;
 		private int requestCode;
 
-		public VideoUploader(Context c, String uri, onUploaderCallback callback) {
+		private VideoUploader(Context c, String uri, NetworkUtils.HTTPCallback callback) {
 			ctx = c;
 			URI = uri;
 			cmd = callback;
@@ -671,7 +631,7 @@ public class UploadVideoActivity extends MainActivity {
 		@Override
 		protected String doInBackground(Uri[] params) {
 			// TODO: Implement this method
-			File file = new File(getPath(ctx, params[0]));
+			File file = FileUtils.getFile(ctx, params[0]);
 			String boundary = UUID.randomUUID().toString();
 			String CRLF = "\r\n";
 			try {
@@ -683,47 +643,47 @@ public class UploadVideoActivity extends MainActivity {
 				connection.setRequestMethod("POST");
 				connection.setRequestProperty("Connection", "Keep-Alive");
 				connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
-				// Create the output stream
-				OutputStream outputStream = connection.getOutputStream();
-				PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
-				// Send file data
-				writer.append("--" + boundary).append(CRLF);
-				writer.append("Content-Disposition: form-data; name=\"image\"; filename=\"" + file.getName() + "\"")
-						.append(CRLF);
-				writer.append("Content-Type: image/" + getType(file)).append(CRLF);
-				writer.append(CRLF).flush();
-				InputStream cover = new FileInputStream(file);
-				byte[] buffer = new byte[4096];
-				int bytesRead;
-				while ((bytesRead = cover.read(buffer)) != -1) {
-					outputStream.write(buffer, 0, bytesRead);
-				}
-				outputStream.flush();
-				writer.append(CRLF).flush(); // End of file data
-				// Send file data
-				writer.append("--" + boundary).append(CRLF);
-				writer.append("Content-Disposition: form-data; name=\"image\"; filename=\"" + file.getName() + "\"")
-						.append(CRLF);
-				writer.append("Content-Type: video/" + getType(file)).append(CRLF);
-				writer.append(CRLF).flush();
-				InputStream inputStream = new FileInputStream(file);
-				byte[] buffer2 = new byte[4096];
-				int bytesRead2;
-				while ((bytesRead2 = inputStream.read(buffer2)) != -1) {
-					outputStream.write(buffer2, 0, bytesRead2);
-				}
-				outputStream.flush();
-				writer.append(CRLF).flush(); // End of file data
-				writer.append("--" + boundary + "--").append(CRLF).flush();
-				requestCode = connection.getResponseCode();
-				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				StringBuilder response = new StringBuilder();
-				String line;
-				while ((line = reader.readLine()) != null) {
-					response.append(line);
-				}
-				reader.close();
-				writer.close();
+				// 创建输出流
+                OutputStream outputStream = connection.getOutputStream();
+                PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
+                // 开始发送封面文件
+                writer.append("--" + boundary).append(CRLF);
+                writer.append("Content-Disposition: form-data; name=\"image\"; filename=\"" + file.getName() + "\"")
+                    .append(CRLF);
+                writer.append("Content-Type: image/" + getType(file)).append(CRLF);
+                writer.append(CRLF).flush();
+                InputStream cover = new FileInputStream(file);
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = cover.read(buffer)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                }
+                outputStream.flush();
+                writer.append(CRLF).flush(); // 封面文件发送完毕
+                // 开始发送视频文件
+                writer.append("--" + boundary).append(CRLF);
+                writer.append("Content-Disposition: form-data; name=\"image\"; filename=\"" + file.getName() + "\"")
+                    .append(CRLF);
+                writer.append("Content-Type: video/" + getType(file)).append(CRLF);
+                writer.append(CRLF).flush();
+                InputStream inputStream = new FileInputStream(file);
+                byte[] buffer2 = new byte[4096];
+                int bytesRead2;
+                while ((bytesRead2 = inputStream.read(buffer2)) != -1) {
+                    outputStream.write(buffer2, 0, bytesRead2);
+                }
+                outputStream.flush();
+                writer.append(CRLF).flush(); // 视频文件发送完毕
+                writer.append("--" + boundary + "--").append(CRLF).flush();
+                requestCode = connection.getResponseCode();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    response.append(line);
+                }
+                reader.close();
+                writer.close();
 				outputStream.close();
 				connection.disconnect();
 				return response.toString();

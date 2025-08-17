@@ -73,6 +73,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:textStyle="bold"
+        android:textColor="@color/colorSecondary"
 		android:maxLines="1"
 		android:singleLine="true"
 		android:ellipsize="marquee"
@@ -87,6 +88,7 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:id="@+id/video_user"
+        android:textColor="@color/text_color"
 		android:layout_toRightOf="@id/video_avatar"
 		android:layout_below="@id/video_title"
 		android:layout_marginLeft="5dp"/>

@@ -17,12 +17,13 @@ import android.util.*;
 import android.view.View.*;
 import java.io.File;
 import java.io.*;
+import com.losthiro.ottohubclient.adapter.model.*;
 
 /**
  * @Author Hiro
  * @Date 2025/06/13 19:18
  */
-public class UploadManagerActivity extends MainActivity {
+public class UploadManagerActivity extends BasicActivity {
 	public static final String TAG = "UploadManagerActivity";
 	private static final Semaphore request = new Semaphore(1);
 	private int currentCategory;
@@ -105,7 +106,7 @@ public class UploadManagerActivity extends MainActivity {
 						return;
 					}
 					for (int i = 0; i < 3; i++) {
-						categoryView[i].setTextColor(i == index ? Color.parseColor("#88d9fa") : Color.BLACK);
+						categoryView[i].setTextColor(i == index ? ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.colorSecondary));
 					}
 					currentCategory = index;
 					request(true);

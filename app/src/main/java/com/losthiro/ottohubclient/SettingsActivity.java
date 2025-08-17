@@ -8,7 +8,7 @@ import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.Switch;
 import android.widget.TextView;
-import com.losthiro.ottohubclient.adapter.Account;
+import com.losthiro.ottohubclient.adapter.model.Account;
 import com.losthiro.ottohubclient.impl.APIManager;
 import com.losthiro.ottohubclient.impl.AccountManager;
 import com.losthiro.ottohubclient.utils.ApplicationUtils;
@@ -32,17 +32,19 @@ import android.provider.*;
 import android.net.*;
 import com.losthiro.ottohubclient.impl.*;
 import android.content.*;
+import com.losthiro.ottohubclient.view.dialog.*;
+import com.losthiro.ottohubclient.utils.*;
 
 /**
  * @Author Hiro
  * @Date 2025/06/06 15:01
  */
-public class SettingsActivity extends MainActivity {
+public class SettingsActivity extends BasicActivity {
 	public static final String TAG = "SettingsActivity";
 	private LogView main;
 	private EditText text;
 	private PopupWindow window;
-	private Dialog resetDialog;
+	private BottomDialog resetDialog;
 	private TextView registerCallback;
 	private EditText resetInputEmail;
 	private EditText resetInputVerify;
@@ -282,9 +284,7 @@ public class SettingsActivity extends MainActivity {
 
 	private void editPwDia() {
 		View inflate = LayoutInflater.from(this).inflate(R.layout.dialog_reset, null);
-		resetDialog = new Dialog(this);
-		resetDialog.requestWindowFeature(1);
-		resetDialog.setContentView(inflate);
+		resetDialog = new BottomDialog(this, inflate);
 		resetInputEmail = inflate.findViewWithTag("email_input_edittext");
 		resetInputVerify = inflate.findViewWithTag("verify_input_edittext");
 		resetInputPassword = inflate.findViewWithTag("password_input_edittext");
@@ -340,22 +340,6 @@ public class SettingsActivity extends MainActivity {
 				isShow = true;
 			}
 		});
-		ObjectAnimator ofFloat = ObjectAnimator.ofFloat(inflate, "translationY", 100.0f, 0.0f);
-		ofFloat.setDuration(1000L);
-		ofFloat.start();
-		Window window = resetDialog.getWindow();
-		window.setFlags(4, 4);
-		if (window != null) {
-			window.setBackgroundDrawableResource(0x0106000d);
-		}
-		window.setGravity(80);
-		WindowManager.LayoutParams attributes = window.getAttributes();
-		attributes.y = 20;
-		attributes.dimAmount = 0.0f;
-		if (Build.VERSION.SDK_INT == 31) {
-			attributes.setBlurBehindRadius(20);
-		}
-		window.setAttributes(attributes);
 		resetDialog.show();
 	}
 
@@ -776,10 +760,8 @@ public class SettingsActivity extends MainActivity {
 
 	public void saveLog(View v) {
 		Object[] name = {
-				DeviceUtils.getAndroidSDK() >= Build.VERSION_CODES.R
-						? getExternalFilesDir(null).toString()
-						: "/sdcard/OTTOHub",
-				"/OTTOHub_runlog_", SystemUtils.getDate("yyyy_MM_dd_HH_mm_ss_"), SystemUtils.getTime(), ".log"};
+				FileUtils.getStorage(this, null),
+				"OTTOHub_runlog_", SystemUtils.getDate("yyyy_MM_dd_HH_mm_ss_"), SystemUtils.getTime(), ".log"};
 		if (main != null) {
 			main.saveLog(StringUtils.strCat(name));
 			Log.i(TAG, "log save success");

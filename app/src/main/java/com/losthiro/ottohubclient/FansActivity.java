@@ -19,8 +19,9 @@ import com.losthiro.ottohubclient.utils.*;
 import java.util.*;
 import java.util.concurrent.*;
 import org.json.*;
+import com.losthiro.ottohubclient.adapter.model.*;
 
-public class FansActivity extends MainActivity {
+public class FansActivity extends BasicActivity {
 	private static final Semaphore request = new Semaphore(1);
 	private long uid;
 	private int maxCount = 12;

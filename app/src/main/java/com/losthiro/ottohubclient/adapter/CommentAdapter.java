@@ -25,7 +25,7 @@ import com.losthiro.ottohubclient.BlogDetailActivity;
 import com.losthiro.ottohubclient.Client;
 import com.losthiro.ottohubclient.PlayerActivity;
 import com.losthiro.ottohubclient.R;
-import com.losthiro.ottohubclient.adapter.Comment;
+import com.losthiro.ottohubclient.adapter.model.Comment;
 import com.losthiro.ottohubclient.adapter.CommentAdapter;
 import com.losthiro.ottohubclient.impl.ClientString;
 import com.losthiro.ottohubclient.utils.StringUtils;
@@ -46,6 +46,8 @@ import com.losthiro.ottohubclient.utils.*;
 import org.json.*;
 import android.os.*;
 import android.widget.*;
+import com.losthiro.ottohubclient.view.dialog.*;
+import com.losthiro.ottohubclient.adapter.model.*;
 
 /**
  * @Author Hiro
@@ -285,30 +287,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 		}
 
 		public void showChildComment(List<Comment> childList, int count) {
-			Dialog commentDialog = new Dialog(ctx);
 			View inflate = LayoutInflater.from(ctx).inflate(R.layout.dialog_child_comment, null);
-			commentDialog.requestWindowFeature(1);
-			commentDialog.setContentView(inflate);
+            BottomDialog commentDialog = new BottomDialog(ctx, inflate);
 			((TextView) inflate.findViewWithTag("comment_count")).setText("总共" + count + "条评论");
 			RecyclerView view = inflate.findViewWithTag("child_comment_list");
 			view.setAdapter(new CommentAdapter(ctx, childList, false));
 			view.setLayoutManager(new GridLayoutManager(ctx, 1));
-			ObjectAnimator ofFloat = ObjectAnimator.ofFloat(inflate, "translationY", 100.0f, 0.0f);
-			ofFloat.setDuration(1000L);
-			ofFloat.start();
-			Window window = commentDialog.getWindow();
-			window.setFlags(4, 4);
-			if (window != null) {
-				window.setBackgroundDrawableResource(0x0106000d);
-			}
-			window.setGravity(80);
-			WindowManager.LayoutParams attributes = window.getAttributes();
-			attributes.y = 20;
-			attributes.dimAmount = 0.0f;
-			if (Build.VERSION.SDK_INT == 31) {
-				attributes.setBlurBehindRadius(20);
-			}
-			window.setAttributes(attributes);
 			commentDialog.show();
 		}
 	}

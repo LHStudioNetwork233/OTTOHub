@@ -11,7 +11,7 @@ import android.util.Log;
 import android.view.Window;
 import java.util.ArrayList;
 import java.util.List;
-import com.losthiro.ottohubclient.MainActivity;
+import com.losthiro.ottohubclient.BasicActivity;
 import com.losthiro.ottohubclient.SplashActivity;
 import java.text.DateFormat;
 import java.util.logging.SimpleFormatter;

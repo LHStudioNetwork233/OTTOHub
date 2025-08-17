@@ -19,12 +19,14 @@
 		android:id="@+id/comment_user_name"
 		android:layout_toRightOf="@id/comment_user_avatar"
 		android:layout_marginTop="5dp"
+        android:textColor="@color/colorSecondary"
 		android:textSize="16sp"/>
 
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:id="@+id/comment_info_text"
+        android:textColor="@color/text_color"
 		android:layout_toRightOf="@id/comment_user_avatar"
 		android:layout_below="@id/comment_user_name"
 		android:layout_marginBottom="5dp"/>
@@ -42,6 +44,8 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:id="@+id/comment_content"
+        android:background="@android:color/transparent"
+        android:layerType="software"
 		android:layout_below="@id/comment_info_text"
 		android:layout_toRightOf="@id/comment_user_avatar"
 		android:layout_alignParentRight="true"/>
@@ -52,7 +56,6 @@
 		android:layout_height="wrap_content"
 		android:text="举报"
 		android:id="@+id/comment_report"
-		android:textColor="#FF88D9FA"
 		android:layout_alignParentRight="true"
 		android:layout_below="@id/comment_content"/>
 
@@ -62,7 +65,6 @@
 		android:layout_height="wrap_content"
 		android:text="分享"
 		android:id="@+id/comment_share"
-		android:textColor="#FF88D9FA"
 		android:layout_toLeftOf="@id/comment_report"
 		android:layout_below="@id/comment_content"/>
     
@@ -72,7 +74,6 @@
         style="?android:attr/buttonBarButtonStyle"
         android:layout_height="wrap_content"
         android:text="删除"
-        android:textColor="#88D9FA"
         android:layout_below="@id/comment_content"
         android:layout_toStartOf="@id/comment_share"
         android:id="@+id/comment_delete"

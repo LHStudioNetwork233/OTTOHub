@@ -11,6 +11,7 @@ import java.util.*;
 import com.losthiro.ottohubclient.R;
 import android.content.*;
 import android.view.View.*;
+import android.graphics.*;
 
 public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
 	private final List<String> data = new ArrayList<>();
@@ -25,6 +26,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
 			super(v);
 			root = v;
 			content = v.findViewById(R.id.tag_content);
+            ((ImageView)v.findViewWithTag("color")).setColorFilter(Color.WHITE);
 		}
 	}
 

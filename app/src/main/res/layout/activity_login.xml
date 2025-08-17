@@ -34,12 +34,12 @@
 			android:layout_marginBottom="10dp"
 			android:elevation="4dp"
 			android:id="@+id/login_user_avatar"
-			android:src="@drawable/need_login"/>
+			android:src="@drawable/ic_need_login"/>
 
 		<TextView
 			android:layout_marginBottom="10dp"
 			android:shadowColor="#FFC4C4C4"
-			android:textColor="#FF88D9FA"
+			android:textColor="@color/colorAccent"
 			android:shadowDx="4"
 			android:shadowRadius="4"
 			android:shadowDy="4"

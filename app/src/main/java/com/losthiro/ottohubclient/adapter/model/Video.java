@@ -1,4 +1,4 @@
-package com.losthiro.ottohubclient.adapter;
+package com.losthiro.ottohubclient.adapter.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

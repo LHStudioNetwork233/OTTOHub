@@ -1,4 +1,4 @@
-package com.losthiro.ottohubclient.adapter;
+package com.losthiro.ottohubclient.adapter.model;
 import android.content.Context;
 import com.losthiro.ottohubclient.utils.StringUtils;
 import org.json.JSONObject;

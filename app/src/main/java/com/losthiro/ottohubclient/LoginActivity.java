@@ -19,10 +19,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.losthiro.ottohubclient.adapter.Account;
+import com.losthiro.ottohubclient.adapter.model.Account;
 import com.losthiro.ottohubclient.impl.APIManager;
 import com.losthiro.ottohubclient.impl.ImageDownloader;
-import com.losthiro.ottohubclient.impl.TypeManager;
 import com.losthiro.ottohubclient.utils.NetworkUtils;
 import java.util.HashMap;
 import master.flame.danmaku.controller.DrawHandler;
@@ -38,18 +37,19 @@ import android.widget.ImageButton;
 import android.graphics.Color;
 import android.text.InputType;
 import com.losthiro.ottohubclient.impl.AccountManager;
+import com.losthiro.ottohubclient.view.dialog.*;
 
 /**
  * @Author Hiro
  * @Date 2025/05/23 09:41
  */
-public class LoginActivity extends MainActivity {
+public class LoginActivity extends BasicActivity {
 	public static final String TAG = "LoginActivity";
 	private Intent loginAction;
 	private IDanmakuView bg;
-	private Dialog loginDialog;
-	private Dialog registerDialog;
-	private Dialog resetDialog;
+	private BottomDialog loginDialog;
+	private BottomDialog registerDialog;
+	private BottomDialog resetDialog;
 	private View callLDialog;
 	private Button quit;
 	private Button register;
@@ -184,7 +184,6 @@ public class LoginActivity extends MainActivity {
 		} else {
 			setResult(RESULT_CANCELED);
 		}
-		TypeManager.runTypeInstance(0);
 		finish();
 	}
 
@@ -198,9 +197,7 @@ public class LoginActivity extends MainActivity {
 		View inflate = LayoutInflater.from(this).inflate(R.layout.dialog_login, null);
 		if (loginDialog == null) {
 			callLDialog = v;
-			loginDialog = new Dialog(this);
-			loginDialog.requestWindowFeature(1);
-			loginDialog.setContentView(inflate);
+			loginDialog = new BottomDialog(this, inflate);
 			loginInputUID = inflate.findViewWithTag("uid_input_edittext");
 			loginInputPW = inflate.findViewWithTag("pw_input_edittext");
 			loginCallback = inflate.findViewWithTag("pw_input_callback");
@@ -237,22 +234,6 @@ public class LoginActivity extends MainActivity {
 				}
 			});
 		}
-		ObjectAnimator ofFloat = ObjectAnimator.ofFloat(inflate, "translationY", 100.0f, 0.0f);
-		ofFloat.setDuration(1000L);
-		ofFloat.start();
-		Window window = loginDialog.getWindow();
-		window.setFlags(4, 4);
-		if (window != null) {
-			window.setBackgroundDrawableResource(0x0106000d);
-		}
-		window.setGravity(80);
-		WindowManager.LayoutParams attributes = window.getAttributes();
-		attributes.y = 20;
-		attributes.dimAmount = 0.0f;
-		if (Build.VERSION.SDK_INT == 31) {
-			attributes.setBlurBehindRadius(20);
-		}
-		window.setAttributes(attributes);
 		loginDialog.show();
 	}
 
@@ -347,9 +328,7 @@ public class LoginActivity extends MainActivity {
 		}
 		View inflate = LayoutInflater.from(this).inflate(R.layout.dialog_register, null);
 		if (registerDialog == null) {
-			registerDialog = new Dialog(this);
-			registerDialog.requestWindowFeature(1);
-			registerDialog.setContentView(inflate);
+			registerDialog = new BottomDialog(this, inflate);
 			registerInputEmail = inflate.findViewWithTag("email_input_edittext");
 			registerInputVerify = inflate.findViewWithTag("verify_input_edittext");
 			registerInputPassword = inflate.findViewWithTag("password_input_edittext");
@@ -408,22 +387,6 @@ public class LoginActivity extends MainActivity {
 				}
 			});
 		}
-		ObjectAnimator ofFloat = ObjectAnimator.ofFloat(inflate, "translationY", 100.0f, 0.0f);
-		ofFloat.setDuration(1000L);
-		ofFloat.start();
-		Window window = registerDialog.getWindow();
-		window.setFlags(4, 4);
-		if (window != null) {
-			window.setBackgroundDrawableResource(0x0106000d);
-		}
-		window.setGravity(80);
-		WindowManager.LayoutParams attributes = window.getAttributes();
-		attributes.y = 20;
-		attributes.dimAmount = 0.0f;
-		if (Build.VERSION.SDK_INT == 31) {
-			attributes.setBlurBehindRadius(20);
-		}
-		window.setAttributes(attributes);
 		registerDialog.show();
 	}
 
@@ -540,9 +503,7 @@ public class LoginActivity extends MainActivity {
 		}
 		View inflate = LayoutInflater.from(this).inflate(R.layout.dialog_reset, null);
 		if (resetDialog == null) {
-			resetDialog = new Dialog(this);
-			resetDialog.requestWindowFeature(1);
-			resetDialog.setContentView(inflate);
+			resetDialog = new BottomDialog(this, inflate);
 			resetInputEmail = inflate.findViewWithTag("email_input_edittext");
 			resetInputVerify = inflate.findViewWithTag("verify_input_edittext");
 			resetInputPassword = inflate.findViewWithTag("password_input_edittext");
@@ -600,22 +561,6 @@ public class LoginActivity extends MainActivity {
 				}
 			});
 		}
-		ObjectAnimator ofFloat = ObjectAnimator.ofFloat(inflate, "translationY", 100.0f, 0.0f);
-		ofFloat.setDuration(1000L);
-		ofFloat.start();
-		Window window = resetDialog.getWindow();
-		window.setFlags(4, 4);
-		if (window != null) {
-			window.setBackgroundDrawableResource(0x0106000d);
-		}
-		window.setGravity(80);
-		WindowManager.LayoutParams attributes = window.getAttributes();
-		attributes.y = 20;
-		attributes.dimAmount = 0.0f;
-		if (Build.VERSION.SDK_INT == 31) {
-			attributes.setBlurBehindRadius(20);
-		}
-		window.setAttributes(attributes);
 		resetDialog.show();
 	}
 

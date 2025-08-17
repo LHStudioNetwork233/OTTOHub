@@ -4,36 +4,36 @@ import android.content.res.Resources;
 import android.content.res.AssetManager;
 import java.io.InputStream;
 import java.io.IOException;
+import android.os.*;
 
 public class ResourceUtils {
-    public static final String TAG = "ResourceUtils";
-    private static ResourceUtils resUtil;
-    private static String pkg;
-    private static AssetManager assets;
-    private static Resources res;
+	public static final String TAG = "ResourceUtils";
+	private static String pkg;
+	private static AssetManager assets;
+	private static Resources res;
+	private static Context c;
 
-    private ResourceUtils(Context ctx) {
-        pkg = ctx.getPackageName();
-        res = ctx.getResources();
-        assets = ctx.getAssets();
-    }
+	public static void init(Context ctx) {
+		c = ctx;
+		pkg = ctx.getPackageName();
+		res = ctx.getResources();
+		assets = ctx.getAssets();
+	}
 
-    public static final synchronized ResourceUtils getInstance(Context ctx) {
-        if (resUtil == null) {
-            resUtil = new ResourceUtils(ctx);
-        }
-        return resUtil;
-    }
+	public static int getResID(String name, String type) {
+		return getStroageID(name, type, pkg);
+	}
 
-    public int getResID(String name, String type) {
-        return getStroageID(name, type, pkg);
-    }
+	public static int getStroageID(String name, String type, String pack) {
+		return res.getIdentifier(name, type, pack);
+	}
 
-    public int getStroageID(String name, String type, String pack) {
-        return res.getIdentifier(name, type, pack);
-    }
+	public static int getColor(int resID) {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? c.getColor(resID) : res.getColor(resID);
+	}
 
-    public InputStream getAssetsFile(String path) throws IOException {
-        return assets.open(path);
-    }
+	public static InputStream getAssetsFile(String path) throws IOException {
+		return assets.open(path);
+	}
 }
+

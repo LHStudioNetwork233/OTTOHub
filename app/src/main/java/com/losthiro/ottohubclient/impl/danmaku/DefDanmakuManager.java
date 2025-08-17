@@ -17,6 +17,7 @@ import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
 import master.flame.danmaku.danmaku.util.DanmakuUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
+import com.losthiro.ottohubclient.*;
 
 /**
  * @Author Hiro
@@ -41,9 +42,9 @@ public class DefDanmakuManager {
     }
 
     private void initData() {
-        File f=new File(DeviceUtils.getAndroidSDK() >= Build.VERSION_CODES.R ?main.getExternalFilesDir(null).toString(): "/sdcard/OTTOHub/", "config/rng_danmaku_config.json");
+        File f=new File(FileUtils.getStorage(main, BasicActivity.FILE_DEF_DICTIONARY));
         if (!f.exists()) {
-            FileUtils.AssetUtils.copyFileAssets(main, "config/rng_danmaku_config.json", f.toString());
+            FileUtils.AssetUtils.copyFileAssets(main, BasicActivity.FILE_DEF_DICTIONARY, f.toString());
         }
         String content=FileUtils.readFile(main, f.toString());
         try {
@@ -91,6 +92,6 @@ public class DefDanmakuManager {
         if (data.isEmpty()) {
             return "棍母";
         }
-        return data.get(StringUtils.rng(0, data.size()));
+        return data.get(StringUtils.rng(0, data.size() - 1));
     }
 }

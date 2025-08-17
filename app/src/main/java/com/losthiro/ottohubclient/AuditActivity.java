@@ -15,12 +15,13 @@ import android.util.*;
 import org.json.*;
 import java.util.*;
 import android.content.*;
+import com.losthiro.ottohubclient.adapter.model.*;
 
 /**
  * @Author Hiro
  * @Date 2025/06/13 19:20
  */
-public class AuditActivity extends MainActivity {
+public class AuditActivity extends BasicActivity {
 	public static final String TAG = "AuditActivity";
 	private static final Semaphore request = new Semaphore(1);
 	private Account current;
@@ -108,7 +109,7 @@ public class AuditActivity extends MainActivity {
 						return;
 					}
 					for (int i = 0; i < 4; i++) {
-						main[i].setTextColor(i == currentIndex ? Color.WHITE : Color.BLACK);
+						main[i].setTextColor(i == currentIndex ? Color.WHITE : ResourceUtils.getColor(R.color.colorSecondary));
 						main[i].setBackgroundResource(i == currentIndex ? R.drawable.btn_bg : R.drawable.btn_empty_bg);
 					}
 					categoryIndex = currentIndex;

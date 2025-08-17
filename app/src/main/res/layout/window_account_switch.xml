@@ -5,7 +5,8 @@
 	android:orientation="vertical"
 	android:layout_width="wrap_content"
 	android:layout_height="wrap_content"
-	android:layout_margin="10dp">
+    android:background="@color/colorMain"
+	android:padding="10dp">
 
 	<TextView
 		android:layout_width="wrap_content"
@@ -16,6 +17,7 @@
 		android:shadowRadius="4"
 		android:shadowDx="4"
 		android:shadowDy="4"
+        android:textColor="@color/text_color"
 		android:textSize="16sp"/>
 
 	<View
@@ -48,7 +50,7 @@
 			android:layout_gravity="center"
 			android:textSize="14sp"
 			android:text="想换一个账号？点我添加新账号..."
-			android:textColor="#FF88D9FA"
+			android:textColor="@color/colorAccent"
 			android:shadowColor="#FFC4C4C4"
 			android:shadowDx="4"
 			android:shadowDy="4"

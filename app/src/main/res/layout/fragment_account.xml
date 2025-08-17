@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorMain"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:minHeight="150dp"
+            android:layout_weight="1.0">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/main_user_cover"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:layout_marginBottom="72dp"
+                android:src="@drawable/ic_def_user_cover"
+                android:scaleType="centerCrop"/>
+
+            <com.losthiro.ottohubclient.view.CricleImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/ic_unlogin_user"
+                android:id="@+id/main_user_avatar"
+                android:scaleType="centerCrop"
+                android:layout_margin="5dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/main_user_avatar"
+                android:id="@+id/main_user_info"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="5dp"
+                android:textSize="10sp"
+                android:textColor="@color/text_color"
+                android:text="UID: 0 性别:棍母 注册日:0月0日"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/main_user_name"
+                android:layout_toRightOf="@id/main_user_avatar"
+                android:textColor="@color/colorSecondary"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:shadowRadius="4"
+                android:shadowDx="4"
+                android:shadowDy="4"
+                android:shadowColor="#FFC4C4C4"
+                android:text="棍母"
+                android:layout_above="@id/main_user_info"
+                android:layout_marginBottom="5dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/main_user_level"
+                android:layout_toRightOf="@id/main_user_name"
+                android:layout_above="@id/main_user_info"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:padding="4dp"
+                android:textSize="10sp"
+                android:background="@drawable/text_bg"
+                android:text="ZERO"
+                android:textColor="#FFFFFFFF"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:id="@+id/main_user_honours"
+                android:layout_toRightOf="@id/main_user_level"
+                android:layout_above="@id/main_user_info"/>
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_more"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/main_slide_bar"/>
+
+        </RelativeLayout>
+
+        <View
+            android:background="#FFE5E5E5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"/>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:id="@+id/main_user_video_count"
+                android:textColor="@color/text_color"
+                android:gravity="center"
+                android:layout_weight="1.0"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:id="@+id/main_user_blog_count"
+                android:textColor="@color/text_color"
+                android:gravity="center"
+                android:layout_weight="1.0"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:id="@+id/main_user_following_count"
+                android:textColor="@color/text_color"
+                android:gravity="center"
+                android:layout_weight="1.0"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:id="@+id/main_user_fans_count"
+                android:textColor="@color/text_color"
+                android:gravity="center"
+                android:layout_weight="1.0"/>
+
+        </LinearLayout>
+
+        <View
+            android:background="#FFE5E5E5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"/>
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/text_color"
+            android:text="历史记录"
+            android:shadowDx="4"
+            android:shadowDy="4"
+            android:shadowRadius="4"
+            android:shadowColor="#FFC4C4C4"
+            android:layout_marginLeft="10dp"
+            android:layout_margin="5dp"/>
+
+        <View
+            android:background="#FFE5E5E5"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"/>
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:id="@+id/user_history_refresh"
+            android:layout_weight="1.0">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:id="@+id/user_history_list"/>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
+

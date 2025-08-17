@@ -12,6 +12,8 @@ import java.util.LinkedList;
 import com.losthiro.ottohubclient.impl.ImageDownloader;
 import com.losthiro.ottohubclient.impl.AccountManager;
 import com.losthiro.ottohubclient.impl.UploadManager;
+import java.util.*;
+import android.app.*;
 
 /**
  * @Author Hiro
@@ -28,7 +30,7 @@ public class Client extends Application {
         Context main=getApplicationContext();
         CrashManager.getInstance().register(main);
         UploadManager.getInstance(main).load();
-        ResourceUtils.getInstance(main);
+        ResourceUtils.init(main);
         Log.i(TAG, "client init complete");
         Log.i(TAG, "Hello OTTOHub!");
     }
@@ -78,5 +80,41 @@ public class Client extends Application {
             e.printStackTrace();
         }
         return false;
+    }
+    
+    public static Activity getCurrentActivity(Context context) {
+        try {
+            Class<?> cls = Class.forName("android.app.ActivityThread");
+            Method declaredMethod = cls.getDeclaredMethod("currentActivityThread", new Class[0]);
+            declaredMethod.setAccessible(true);
+            Object invoke = declaredMethod.invoke(null, new Object[0]);
+            Field declaredField = cls.getDeclaredField("mActivities");
+            declaredField.setAccessible(true);
+            Object obj = declaredField.get(invoke);
+            if (obj instanceof Map) {
+                Collection values = ((Map) obj).values();
+                for (Object obj2 : values) {
+                    if (obj2 != null) {
+                        Field declaredField2 = obj2.getClass().getDeclaredField("activity");
+                        declaredField2.setAccessible(true);
+                        Activity activity = (Activity) declaredField2.get(obj2);
+                        if (isCurrentActivity(activity, context)) {
+                            return activity;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static boolean isCurrentActivity(Activity activity, Context context) {
+        List<ActivityManager.RunningTaskInfo> runningTasks;
+        if (activity == null || (runningTasks = ((ActivityManager) context.getSystemService("activity")).getRunningTasks(1)) == null || runningTasks.size() <= 0) {
+            return false;
+        }
+        return activity.getClass().getName().equals(((TaskInfo) runningTasks.get(0)).topActivity.getClassName());
     }
 }

@@ -10,6 +10,8 @@ import android.util.AttributeSet;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
+import com.losthiro.ottohubclient.utils.*;
+import com.losthiro.ottohubclient.*;
 
 /**
  * @Author Hiro
@@ -17,8 +19,6 @@ import android.widget.LinearLayout;
  */
 public class WaveView extends LinearLayout {
     public static final String TAG = "WaveView";
-    public String MAINCOLOR_DEF="#ff88d9fa";
-    public String NEXTCOLOR_DEF="#8088d9fa";
     private Double anglenum= 0.017453292519943295d;
     private ValueAnimator animator;
     private ValueAnimator animatorh;
@@ -33,8 +33,6 @@ public class WaveView extends LinearLayout {
     private Paint mPaintMore;
     private Path mPath;
     private float mWidth;
-    private int mainColor;
-    private int nextColor;
     private float waveDeep=10f;
     private float waveDeepMax=20f;
     private float waveDeepmin=8f;
@@ -56,18 +54,16 @@ public class WaveView extends LinearLayout {
     }
 
     private void init() {
-        this.mainColor = Color.parseColor(this.MAINCOLOR_DEF);
-        this.nextColor = Color.parseColor(this.NEXTCOLOR_DEF);
         this.mPath = new Path();
         this.mPaint = new Paint();
-        this.mPaint.setColor(this.mainColor);
+        this.mPaint.setColor(ResourceUtils.getColor(R.color.colorAccent));
         this.mPaint.setAntiAlias(this.antiAlias.booleanValue());
         this.mPaint.setStyle(Paint.Style.FILL);
         this.mPaint.setAlpha(50);
         this.mPaintMore = new Paint();
         this.mPaintMore.setAntiAlias(this.antiAlias.booleanValue());
         this.mPaintMore.setStyle(Paint.Style.FILL);
-        this.mPaintMore.setColor(this.nextColor);
+        this.mPaintMore.setColor(ResourceUtils.getColor(R.color.colorAccent));
         this.mPaintMore.setAlpha(30);
         this.drawPoint = new PointF(0, 0);
         this.drawPoint2 = new PointF(0, 0);
@@ -152,14 +148,14 @@ public class WaveView extends LinearLayout {
         this.mPaint.setAntiAlias(bool.booleanValue());
         this.mPaintMore.setAntiAlias(bool.booleanValue());
     }
-
-    public void setMainWaveColor(int i) {
-        this.mainColor = i;
-        this.mPaint.setColor(i);
-    }
-
-    public void setSecondaryWaveColor(int i) {
-        this.nextColor = i;
-        this.mPaintMore.setColor(i);
-    }
+//
+//    public void setMainWaveColor(int i) {
+//        this.mainColor = i;
+//        this.mPaint.setColor(i);
+//    }
+//
+//    public void setSecondaryWaveColor(int i) {
+//        this.nextColor = i;
+//        this.mPaintMore.setColor(i);
+//    }
 }

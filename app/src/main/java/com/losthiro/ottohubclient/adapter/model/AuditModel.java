@@ -3,7 +3,7 @@
  * @Date 
  * @AIDE AIDE+ 
  */
-package com.losthiro.ottohubclient.adapter;
+package com.losthiro.ottohubclient.adapter.model;
 import org.json.*;
 
 public class AuditModel {

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<ImageView
+		android:layout_width="50dp"
+		android:layout_height="50dp"
+		android:layout_margin="5dp"
+		android:id="@+id/list_setting_icon"
+        android:src="@drawable/ic_settings_black"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toEndOf="@id/list_setting_icon"
+		android:layout_margin="5dp"
+		android:textColor="@color/colorSecondary"
+		android:shadowColor="#C4C4C4"
+		android:shadowDx="4"
+		android:shadowDy="4"
+		android:shadowRadius="4"
+		android:textStyle="bold"
+		android:textSize="16sp"
+		android:id="@+id/list_setting_title"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceSmall"
+		android:layout_toEndOf="@id/list_setting_icon"
+		android:layout_below="@id/list_setting_title"
+		android:layout_marginBottom="5dp"
+		android:layout_marginStart="5dp"
+		android:textSize="10sp"
+		android:gravity="center"
+		android:id="@+id/list_setting_text"/>
+
+	<SeekBar
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_below="@id/list_setting_icon"
+		android:layout_marginBottom="5dp"
+		android:id="@+id/list_setting_slider"/>
+
+</RelativeLayout>
+

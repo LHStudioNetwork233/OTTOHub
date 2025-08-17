@@ -7,6 +7,7 @@ import com.losthiro.ottohubclient.utils.StringUtils;
 import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import com.losthiro.ottohubclient.*;
 
 /**
  * @Author Hiro
@@ -38,7 +39,7 @@ public class UploadManager {
     }
 
     public void save() {
-        String path = StringUtils.strCat(DeviceUtils.getAndroidSDK() >= Build.VERSION_CODES.R ?ctx.getExternalFilesDir(null).toString(): "/sdcard/OTTOHub", "/config/content_cache.json");
+        String path = FileUtils.getStorage(ctx, BasicActivity.FILE_MSG_DRAFT);
         try {
             JSONArray config=new JSONArray();
             for (HashMap.Entry<Long, String> entry:msgCache.entrySet()) {
@@ -57,7 +58,7 @@ public class UploadManager {
     }
 
     public void load() {
-        String path = StringUtils.strCat(DeviceUtils.getAndroidSDK() >= Build.VERSION_CODES.R ?ctx.getExternalFilesDir(null).toString(): "/sdcard/OTTOHub", "/config/content_cache.json");
+        String path = FileUtils.getStorage(ctx, BasicActivity.FILE_MSG_DRAFT);
         try {
             String content = FileUtils.readFile(ctx, path);
             if (content == null) {

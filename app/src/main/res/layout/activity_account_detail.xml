@@ -3,6 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical"
+	android:background="@color/colorMain"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
@@ -56,7 +57,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:id="@+id/main_user_name"
-			android:textColor="#FF000000"
+			android:textColor="@color/colorSecondary"
 			android:textStyle="bold"
 			android:shadowRadius="4"
 			android:shadowDx="4"
@@ -93,7 +94,7 @@
 				android:scaleType="centerInside"
 				android:layout_margin="5dp"
 				android:visibility="gone"
-				android:background="#FFC4C4C4"
+				android:background="#FF545454"
 				android:id="@+id/avatar_edit"/>
 
 		</FrameLayout>
@@ -117,7 +118,6 @@
 			android:layout_width="wrap_content"
 			android:id="@+id/main_user_honours"
 			android:layout_toRightOf="@id/main_user_level"
-			android:layout_above="@id/main_user_info"
 			android:layout_alignParentBottom="true"
 			android:layout_margin="5dp"/>
 
@@ -133,6 +133,7 @@
 				android:layout_height="wrap_content"
 				android:layout_margin="5dp"
 				android:id="@+id/main_user_video_count"
+				android:textColor="@color/text_color"
 				android:gravity="center"
 				android:layout_weight="1.0"/>
 
@@ -141,6 +142,7 @@
 				android:layout_height="wrap_content"
 				android:layout_margin="5dp"
 				android:id="@+id/main_user_blog_count"
+				android:textColor="@color/text_color"
 				android:gravity="center"
 				android:layout_weight="1.0"/>
 
@@ -149,6 +151,7 @@
 				android:layout_height="wrap_content"
 				android:layout_margin="5dp"
 				android:id="@+id/main_user_following_count"
+				android:textColor="@color/text_color"
 				android:gravity="center"
 				android:layout_weight="1.0"/>
 
@@ -157,6 +160,7 @@
 				android:layout_height="wrap_content"
 				android:layout_margin="5dp"
 				android:id="@+id/main_user_fans_count"
+				android:textColor="@color/text_color"
 				android:gravity="center"
 				android:layout_weight="1.0"/>
 
@@ -182,6 +186,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="5dp"
+		android:textColor="@color/text_color"
 		android:id="@+id/account_exp_text"/>
 
 	<ProgressBar
@@ -202,6 +207,7 @@
 			android:layout_height="wrap_content"
 			android:id="@+id/main_user_detail"
 			android:maxLines="1"
+			android:textColor="@color/text_color"
 			android:singleLine="true"
 			android:ellipsize="marquee"
 			android:fadingEdge="horizontal"
@@ -214,6 +220,7 @@
 		android:layout_height="wrap_content"
 		android:layout_margin="5dp"
 		android:id="@+id/main_user_intro"
+		android:textColor="@color/text_color"
 		android:textIsSelectable="true"
 		android:autoLink="web"/>
 
@@ -235,7 +242,7 @@
 			android:layout_marginRight="5dp"
 			android:padding="5dp"
 			android:tag="videos"
-			android:textColor="#FF88D9FA"
+			android:textColor="@color/colorAccent"
 			android:layout_weight="1.0"
 			android:gravity="center"/>
 
@@ -244,7 +251,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginRight="5dp"
 			android:padding="5dp"
-			android:textColor="#FF000000"
+			android:textColor="@color/colorSecondary"
 			android:tag="blogs"
 			android:text="动态"
 			android:layout_weight="1.0"
@@ -255,7 +262,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginRight="5dp"
 			android:padding="5dp"
-			android:textColor="#FF000000"
+			android:textColor="@color/colorSecondary"
 			android:tag="favorite"
 			android:text="收藏"
 			android:layout_weight="1.0"
@@ -266,7 +273,7 @@
 			android:layout_height="wrap_content"
 			android:layout_marginRight="5dp"
 			android:padding="5dp"
-			android:textColor="#FF000000"
+			android:textColor="@color/colorSecondary"
 			android:tag="local"
 			android:text="缓存"
 			android:layout_weight="1.0"
@@ -330,6 +337,7 @@
 							<TextView
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
+								android:textColor="@color/text_color"
 								android:text="视频冷藏列表"
 								android:layout_margin="5dp"/>
 
@@ -372,6 +380,7 @@
 							<TextView
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
+								android:textColor="@color/text_color"
 								android:text="动态冷藏列表"
 								android:layout_margin="5dp"/>
 
@@ -421,7 +430,7 @@
 			android:shadowColor="#FFC4C4C4"
 			android:textStyle="bold"
 			android:shadowRadius="4"
-			android:textColor="#FF88D9FA"
+			android:textColor="@color/colorAccent"
 			android:shadowDx="4"
 			android:shadowDy="4"
 			android:layout_marginBottom="10dp"/>

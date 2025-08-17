@@ -18,6 +18,7 @@ import com.losthiro.ottohubclient.impl.*;
 import com.losthiro.ottohubclient.utils.*;
 import java.util.*;
 import org.json.*;
+import com.losthiro.ottohubclient.adapter.model.*;
 
 public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHolder> {
 	private Context main;

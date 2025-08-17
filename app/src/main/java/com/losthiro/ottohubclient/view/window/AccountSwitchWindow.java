@@ -19,6 +19,8 @@ import com.losthiro.ottohubclient.adapter.AccountAdapter;
 import android.widget.*;
 import android.graphics.*;
 import android.graphics.drawable.*;
+import com.losthiro.ottohubclient.view.drawer.*;
+import com.losthiro.ottohubclient.utils.*;
 
 /**
  * @Author Hiro
@@ -32,33 +34,33 @@ public class AccountSwitchWindow {
 	private View contentView;
 	private Context ctx;
 
-	private AccountSwitchWindow(Context c) {
+	private AccountSwitchWindow(Context c, SlideDrawerManager.UpdateDrawer action) {
 		ctx = c;
 		contentView = LayoutInflater.from(c).inflate(R.layout.window_account_switch, null);
 		window = new PopupWindow(contentView, LinearLayout.LayoutParams.WRAP_CONTENT,
 				LinearLayout.LayoutParams.WRAP_CONTENT, true);
-        window.setTouchable(true);
-        window.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+		window.setTouchable(true);
+        window.setBackgroundDrawable(new ColorDrawable(ResourceUtils.getColor(R.color.colorMain)));
 		accountList = contentView.findViewById(R.id.account_list);
 		accountList.setLayoutManager(new GridLayoutManager(c, 1));
-		accountList.setAdapter(new AccountAdapter(c));
+		accountList.setAdapter(new AccountAdapter(c, action));
 	}
 
-	public static final synchronized AccountSwitchWindow getInstance(Context c) {
+	public static final synchronized AccountSwitchWindow getInstance(Context c, SlideDrawerManager.UpdateDrawer action) {
 		if (INSTANCE == null) {
-			INSTANCE = new AccountSwitchWindow(c);
+			INSTANCE = new AccountSwitchWindow(c, action);
 		}
 		return INSTANCE;
 	}
 
 	public void switchShow(final View v) {
-        window.setOnDismissListener(new PopupWindow.OnDismissListener(){
-                @Override
-                public void onDismiss() {
-                    // TODO: Implement this method
-                    ((ImageButton) v).setImageResource(R.drawable.ic_down);
-                }
-            });
+		window.setOnDismissListener(new PopupWindow.OnDismissListener() {
+			@Override
+			public void onDismiss() {
+				// TODO: Implement this method
+				((ImageButton) v).setImageResource(R.drawable.ic_down);
+			}
+		});
 		ObjectAnimator anim = ObjectAnimator.ofFloat(v, "rotation", window == null ? 0f : 180f);
 		anim.setDuration(300L);
 		anim.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -75,6 +77,13 @@ public class AccountSwitchWindow {
 			}
 		});
 		anim.start();
+	}
+
+	public void setOnAccountChangeListener(AccountManager.AccountListener action) {
+		RecyclerView.Adapter adapter = accountList.getAdapter();
+		if (adapter != null && adapter instanceof AccountAdapter) {
+			((AccountAdapter) adapter).setOnAccountChangeListener(action);
+		}
 	}
 
 	public void update() {

@@ -13,7 +13,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.losthiro.ottohubclient.adapter.Account;
+import com.losthiro.ottohubclient.adapter.model.Account;
 import com.losthiro.ottohubclient.impl.APIManager;
 import com.losthiro.ottohubclient.impl.AccountManager;
 import com.losthiro.ottohubclient.impl.ImageDownloader;
@@ -24,15 +24,16 @@ import org.json.JSONObject;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.losthiro.ottohubclient.view.ClientWebView;
+import com.losthiro.ottohubclient.view.dialog.*;
 
 /**
  * @Author Hiro
  * @Date 2025/06/16 13:21
  */
-public class MessageDetailActivity extends MainActivity {
+public class MessageDetailActivity extends BasicActivity {
     public static final String TAG = "MessageDetailActivity";
     private long uid;
-    private Dialog msgDia;
+    private BottomDialog msgDia;
     private EditText UIDEdit;
     private EditText messageEdit;
 
@@ -162,7 +163,7 @@ public class MessageDetailActivity extends MainActivity {
         }
         View inflate = LayoutInflater.from(this).inflate(R.layout.dialog_message_edit, null);
         if (msgDia == null) {
-            msgDia = new Dialog(this);
+            msgDia = new BottomDialog(this, inflate);
             msgDia.requestWindowFeature(1);
             msgDia.setContentView(inflate);
             UIDEdit = inflate.findViewWithTag("uid_input_edittext");

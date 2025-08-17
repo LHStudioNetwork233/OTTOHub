@@ -8,6 +8,8 @@ import android.widget.TextView;
 import android.widget.ImageView;
 import android.view.LayoutInflater;
 import com.losthiro.ottohubclient.R;
+import com.losthiro.ottohubclient.utils.*;
+import android.graphics.*;
 
 /**
  * @Author Hiro
@@ -46,6 +48,7 @@ public class ImageAdapter extends ArrayAdapter {
         }
         ImageItem current=menuData.get(position);
         view.icon.setImageResource(current.getIconID());
+        view.icon.setColorFilter(ResourceUtils.getColor(R.color.colorSecondary), PorterDuff.Mode.SRC_IN);
         view.title.setText(current.getTitle());
         return convertView;
     }

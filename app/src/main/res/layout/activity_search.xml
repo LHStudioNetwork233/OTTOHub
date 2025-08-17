@@ -3,6 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:orientation="vertical"
+    android:background="@color/colorMain"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent">
 
@@ -65,7 +66,7 @@
 			android:tag="video"
 			android:text="视频"
 			android:background="@drawable/btn_empty_bg"
-			android:textColor="#FF000000"
+			android:textColor="@color/colorSecondary"
 			android:layout_weight="1.0"
 			android:gravity="center"/>
 
@@ -77,7 +78,7 @@
 			android:tag="blog"
 			android:text="动态"
 			android:background="@drawable/btn_empty_bg"
-			android:textColor="#FF000000"
+			android:textColor="@color/colorSecondary"
 			android:layout_weight="1.0"
 			android:gravity="center"/>
 
@@ -89,7 +90,7 @@
 			android:tag="user"
 			android:text="用户"
 			android:background="@drawable/btn_empty_bg"
-			android:textColor="#FF000000"
+			android:textColor="@color/colorSecondary"
 			android:layout_weight="1.0"
 			android:gravity="center"/>
 
@@ -122,7 +123,7 @@
             android:shadowColor="#FFC4C4C4"
             android:textStyle="bold"
             android:shadowRadius="4"
-            android:textColor="#FF88D9FA"
+            android:textColor="@color/colorAccent"
             android:shadowDx="4"
             android:shadowDy="4"
             android:layout_marginBottom="10dp"/>

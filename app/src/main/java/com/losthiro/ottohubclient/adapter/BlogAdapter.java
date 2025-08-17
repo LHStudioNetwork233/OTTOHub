@@ -27,15 +27,20 @@ import com.losthiro.ottohubclient.impl.*;
 import android.util.*;
 import org.json.*;
 import android.os.*;
+import com.losthiro.ottohubclient.adapter.model.*;
+import java.util.*;
 
 /**
  * @Author Hiro
  * @Date 2025/05/28 16:06
  */
-public class BlogAdapter extends RecyclerView.Adapter<BlogAdapter.ViewHolder> {
+public class BlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	public static final String TAG = "BlogAdapter";
+	private static final int STATUS_DEF = 0;
+	private static final int STATUS_LOADING = 1;
 	private Context main;
 	private List<Blog> data;
+	private boolean isLoading = false;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
 		public View root;
@@ -54,58 +59,81 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogAdapter.ViewHolder> {
 			content = v.findViewById(R.id.blog_content);
 		}
 	}
-    
-    public BlogAdapter(Context c, List<Blog> list) {
-        main = c;
-        data = new ArrayList<Blog>(new HashSet<Blog>(list));
+
+	public BlogAdapter(Context c, List<Blog> list) {
+		main = c;
+		data = new ArrayList<Blog>(new LinkedHashSet<Blog>(compare(list)));
+	}
+
+	private List<Blog> compare(List<Blog> list) {
+		List<Blog> newData = new ArrayList<Blog>(list);
+		Collections.sort(newData, new Comparator<Blog>() {
+			@Override
+			public int compare(Blog o1, Blog o2) {
+				return Integer.compare((int) o2.getBID(), (int) o1.getBID());
+			}
+		});
+		return newData;
 	}
 
 	@Override
 	public int getItemCount() {
-		return data.size();
+		return data.size() + (isLoading ? 1 : 0);
 	}
 
 	@Override
-	public void onBindViewHolder(final BlogAdapter.ViewHolder vH, int p) {
-		final Blog current = data.get(p);
-		ImageDownloader.loader(vH.avatar, current.getAvatarURI());
-		vH.avatar.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(main, AccountDetailActivity.class);
-				i.putExtra("uid", current.getUID());
-				Intent save = ((Activity) main).getIntent();
-				Client.saveActivity(save);
-				main.startActivity(i);
-			}
-		});
-		vH.title.setText(current.getTitle());
-		vH.info.setText(StringUtils.strCat(new Object[]{current.getLikeCount(), "获赞 - ", current.getFavoriteCount(),
-				"收藏 - ", current.getViewCount(), "浏览 - ", current.getTime()}));
-		final ClientString string = new ClientString(current.getContent());
-		string.load(vH.content, vH.isShowContent);
-		vH.content.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				vH.isShowContent = !vH.isShowContent;
-				string.load(vH.content, vH.isShowContent);
-			}
-		});
-		vH.root.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(main, BlogDetailActivity.class);
-				i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				i.putExtra("bid", current.getBID());
-				Intent save = ((Activity) main).getIntent();
-				Client.saveActivity(save);
-				main.startActivity(i);
-			}
-		});
+	public int getItemViewType(int position) {
+		// TODO: Implement this method
+		return (position == data.size() && isLoading) ? STATUS_LOADING : STATUS_DEF;
 	}
 
 	@Override
-	public BlogAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int p) {
+	public void onBindViewHolder(RecyclerView.ViewHolder vH, int p) {
+		if (vH instanceof ViewHolder) {
+			final ViewHolder holder = (ViewHolder) vH;
+			final Blog current = data.get(p);
+			ImageDownloader.loader(holder.avatar, current.getAvatarURI());
+			holder.avatar.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(main, AccountDetailActivity.class);
+					i.putExtra("uid", current.getUID());
+					Intent save = ((Activity) main).getIntent();
+					Client.saveActivity(save);
+					main.startActivity(i);
+				}
+			});
+			holder.title.setText(current.getTitle());
+			holder.info.setText(StringUtils.strCat(new Object[]{current.getLikeCount(), "获赞 - ",
+					current.getFavoriteCount(), "收藏 - ", current.getViewCount(), "浏览 - ", current.getTime()}));
+			final ClientString string = new ClientString(current.getContent());
+			string.load(holder.content, holder.isShowContent);
+			holder.content.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					holder.isShowContent = !holder.isShowContent;
+					string.load(holder.content, holder.isShowContent);
+				}
+			});
+			holder.root.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(main, BlogDetailActivity.class);
+					i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					i.putExtra("bid", current.getBID());
+					Intent save = ((Activity) main).getIntent();
+					Client.saveActivity(save);
+					main.startActivity(i);
+				}
+			});
+		}
+	}
+
+	@Override
+	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int p) {
+        if(p == STATUS_LOADING){
+            return new LoadingViewHolder(viewGroup);
+        }
 		return new ViewHolder(LayoutInflater.from(main).inflate(R.layout.list_blog, viewGroup, false));
 	}
 
@@ -122,8 +150,29 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogAdapter.ViewHolder> {
 		if (data.containsAll(newData)) {
 			return;
 		}
-		data.addAll(newData);
-		notifyItemRangeInserted(data.size() - newData.size(), newData.size());
+		data.addAll(compare(newData));
 	}
+
+	public void setData(List<Blog> newData) {
+		if (data.containsAll(newData)) {
+			return;
+		}
+		data.clear();
+		data.addAll(compare(newData));
+		notifyDataSetChanged();
+	}
+    
+    public void startLoading(){
+        if(isLoading){
+            return;
+        }
+        isLoading = true;
+        notifyItemInserted(data.size());
+    }
+
+    public void stopLoading(){
+        isLoading = false;
+        notifyItemRemoved(data.size());
+    }
 }
 

@@ -324,7 +324,7 @@
 			<TextView
 				android:textSize="17dp"
 				android:textStyle="bold"
-				android:textColor="#FF000000"
+				android:textColor="@color/colorSecondary"
 				android:layout_gravity="center"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"

@@ -19,10 +19,13 @@
 		android:shadowColor="#FFACACAC"
 		android:shadowDx="4"
 		android:shadowDy="4"
-		android:shadowRadius="4"/>
+		android:shadowRadius="4"
+		android:gravity="center"
+		android:layout_gravity="center"/>
 
 	<ImageView
 		android:src="@drawable/ic_close_black"
+        android:tag="color"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"/>
 

@@ -5,6 +5,7 @@
 	android:layout_width="match_parent"
 	android:layout_gravity="start"
 	android:orientation="vertical"
+    android:background="@color/colorMain"
 	android:layout_height="match_parent">
 
 	<LinearLayout
@@ -63,7 +64,7 @@
 				android:layout_height="wrap_content"
 				android:layout_marginRight="5dp"
 				android:padding="5dp"
-				android:textColor="#FF000000"
+				android:textColor="@color/colorSecondary"
 				android:tag="new"
 				android:text="最新"
 				android:background="@drawable/btn_empty_bg"
@@ -73,7 +74,7 @@
 				android:layout_width="wrap_content"
 				android:layout_marginRight="5dp"
 				android:padding="5dp"
-				android:textColor="#FF000000"
+				android:textColor="@color/colorSecondary"
 				android:layout_height="wrap_content"
 				android:tag="week"
 				android:text="本周热议"
@@ -84,7 +85,7 @@
 				android:layout_width="wrap_content"
 				android:layout_marginRight="5dp"
 				android:padding="5dp"
-				android:textColor="#FF000000"
+				android:textColor="@color/colorSecondary"
 				android:layout_height="wrap_content"
 				android:text="本月热议"
 				android:tag="month"
@@ -95,7 +96,7 @@
 				android:layout_marginRight="5dp"
 				android:layout_width="wrap_content"
 				android:padding="5dp"
-				android:textColor="#FF000000"
+				android:textColor="@color/colorSecondary"
 				android:layout_height="wrap_content"
 				android:text="本季热议"
 				android:tag="quarterly"
@@ -126,103 +127,6 @@
 			android:id="@+id/blogs_list"/>
 
 	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-	<LinearLayout
-		android:layout_height="wrap_content"
-		android:layout_gravity="center"
-		android:gravity="center"
-		android:layout_width="match_parent"
-		android:orientation="vertical"
-		android:id="@+id/more_onload"
-		android:visibility="gone">
-
-		<ProgressBar
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center"/>
-
-		<TextView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="别急，走位中..."
-			android:layout_gravity="center"
-			android:shadowColor="#FFC4C4C4"
-			android:textStyle="bold"
-			android:shadowRadius="4"
-			android:textColor="#FF88D9FA"
-			android:shadowDx="4"
-			android:shadowDy="4"
-			android:layout_marginBottom="10dp"/>
-
-	</LinearLayout>
-
-	<View
-		android:background="#FFE5E5E5"
-		android:layout_width="match_parent"
-		android:layout_height="1dp"
-		android:layout_marginLeft="3dp"
-		android:layout_marginRight="3dp"/>
-
-	<LinearLayout
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		android:background="@drawable/video_card_bg"
-		android:elevation="4dp"
-		android:gravity="center">
-
-		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:layout_weight="1.0"
-			android:textColor="#FF000000"
-			android:text="首页"
-            android:drawableTop="@drawable/ic_home_black"
-			android:padding="5dp"
-			android:layout_margin="5dp"
-			android:tag="main"
-			android:shadowRadius="4"
-			android:shadowDx="4"
-			android:shadowDy="4"
-			android:shadowColor="#FFC4C4C4"
-			android:textStyle="bold"/>
-
-		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:layout_weight="1.0"
-			android:textColor="#FF88D9FA"
-			android:text="动态"
-            android:drawableTop="@drawable/ic_blog_black"
-			android:padding="5dp"
-			android:layout_margin="5dp"
-			android:tag="blog"
-			android:shadowDy="4"
-			android:shadowDx="4"
-			android:shadowRadius="4"
-			android:shadowColor="#FFC4C4C4"
-			android:textStyle="bold"/>
-
-		<TextView
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:gravity="center"
-			android:layout_weight="1.0"
-			android:textColor="#FF000000"
-			android:text="账户"
-            android:drawableTop="@drawable/ic_user_black"
-			android:padding="5dp"
-			android:layout_margin="5dp"
-			android:tag="account"
-			android:shadowDy="4"
-			android:shadowDx="4"
-			android:shadowRadius="4"
-			android:shadowColor="#FFC4C4C4"
-			android:textStyle="bold"/>
-
-	</LinearLayout>
 
 </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.losthiro.ottohubclient.adapter;
+package com.losthiro.ottohubclient.adapter.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.losthiro.ottohubclient.R;
-import com.losthiro.ottohubclient.adapter.Comment;
+import com.losthiro.ottohubclient.adapter.model.Comment;
 import com.losthiro.ottohubclient.impl.APIManager;
 import com.losthiro.ottohubclient.impl.AccountManager;
 import com.losthiro.ottohubclient.impl.ImageDownloader;
@@ -28,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.losthiro.ottohubclient.impl.ClientString;
+import com.losthiro.ottohubclient.adapter.*;
 
 /**
  * @Author Hiro

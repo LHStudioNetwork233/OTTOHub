@@ -19,7 +19,7 @@
 		android:layout_height="wrap_content"
 		android:textAppearance="?android:attr/textAppearanceMedium"
 		android:id="@+id/menu_list_title"
-		android:textColor="#FF000000"
+		android:textColor="@color/colorSecondary"
 		android:textSize="16sp"
 		android:textStyle="bold"
 		android:padding="5dp"

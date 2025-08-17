@@ -41,6 +41,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:id="@+id/video_title"
+        android:textColor="@color/colorSecondary"
 		android:maxLines="1"
 		android:singleLine="true"
 		android:ellipsize="marquee"
@@ -53,6 +54,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:id="@+id/video_user"
+        android:textColor="@color/text_color"
 		android:layout_marginBottom="10dp"
 		android:layout_toRightOf="@id/video_cover"
 		android:layout_below="@id/video_title"
@@ -62,6 +64,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:id="@+id/video_detail_info"
+        android:textColor="@color/text_color"
 		android:layout_toRightOf="@id/video_cover"
 		android:layout_below="@id/video_user"
 		android:layout_marginLeft="5dp"/>

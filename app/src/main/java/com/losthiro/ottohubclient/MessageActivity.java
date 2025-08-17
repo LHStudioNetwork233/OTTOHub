@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.losthiro.ottohubclient.adapter.Account;
-import com.losthiro.ottohubclient.adapter.Message;
+import com.losthiro.ottohubclient.adapter.model.Account;
+import com.losthiro.ottohubclient.adapter.model.Message;
 import com.losthiro.ottohubclient.adapter.MessageAdapter;
 import com.losthiro.ottohubclient.impl.APIManager;
 import com.losthiro.ottohubclient.impl.AccountManager;
@@ -37,12 +37,15 @@ import com.losthiro.ottohubclient.utils.StringUtils;
 import com.losthiro.ottohubclient.impl.UploadManager;
 import android.text.TextWatcher;
 import android.text.Editable;
+import com.losthiro.ottohubclient.view.dialog.*;
+import com.losthiro.ottohubclient.adapter.model.*;
+import com.losthiro.ottohubclient.utils.*;
 
 /**
  * @Author Hiro
  * @Date 2025/06/12 17:07
  */
-public class MessageActivity extends MainActivity {
+public class MessageActivity extends BasicActivity {
     public static final String TAG = "MessageActivity";
     private static final Semaphore request=new Semaphore(1);
     private RecyclerView msgList;
@@ -51,7 +54,7 @@ public class MessageActivity extends MainActivity {
     private EditText UIDEdit;
     private EditText messageEdit;
     private Button msgRead;
-    private Dialog msgDia;
+    private BottomDialog msgDia;
     private int currentCategory;
 
     @Override
@@ -245,9 +248,9 @@ public class MessageActivity extends MainActivity {
                             return;
                         }
                         for (int i = 0; i < 4; i++) {
-                            categorys[i].setTextColor(i == index ?Color.parseColor("#88d9fa"): Color.BLACK);
+                            categorys[i].setTextColor(i == index ?ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.colorSecondary));
                         }
-                        msgRead.setVisibility(index == 3 ?View.VISIBLE: View.GONE);
+                        msgRead.setVisibility(index == 2 ?View.GONE: View.VISIBLE);
                         currentCategory = index;
                         request(true);
                     }
@@ -351,9 +354,7 @@ public class MessageActivity extends MainActivity {
         }
         View inflate = LayoutInflater.from(this).inflate(R.layout.dialog_message_edit, null);
         if (msgDia == null) {
-            msgDia = new Dialog(this);
-            msgDia.requestWindowFeature(1);
-            msgDia.setContentView(inflate);
+            msgDia = new BottomDialog(this, inflate);
             UIDEdit = inflate.findViewWithTag("uid_input_edittext");
             messageEdit = inflate.findViewWithTag("msg_input_edittext");
             UIDEdit.addTextChangedListener(new TextWatcher(){
@@ -374,22 +375,6 @@ public class MessageActivity extends MainActivity {
                     }
                 });
         }
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(inflate, "translationY", 100.0f, 0.0f);
-        ofFloat.setDuration(1000L);
-        ofFloat.start();
-        Window window = msgDia.getWindow();
-        window.setFlags(4, 4);
-        if (window != null) {
-            window.setBackgroundDrawableResource(0x0106000d);
-        }
-        window.setGravity(80);
-        WindowManager.LayoutParams attributes = window.getAttributes();
-        attributes.y = 20;
-        attributes.dimAmount = 0.0f;
-        if (Build.VERSION.SDK_INT == 31) {
-            attributes.setBlurBehindRadius(20);
-        }
-        window.setAttributes(attributes);
         msgDia.show();
     }
 

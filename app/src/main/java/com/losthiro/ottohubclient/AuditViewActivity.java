@@ -18,8 +18,9 @@ import com.losthiro.ottohubclient.view.*;
 import java.util.*;
 import android.util.*;
 import org.json.*;
+import com.losthiro.ottohubclient.adapter.model.*;
 
-public class AuditViewActivity extends MainActivity {
+public class AuditViewActivity extends BasicActivity {
 	private long currentID;
 	private int IDtype;
 

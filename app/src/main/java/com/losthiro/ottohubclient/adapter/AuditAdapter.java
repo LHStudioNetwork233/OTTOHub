@@ -14,6 +14,7 @@ import android.view.View.*;
 import android.app.*;
 import com.losthiro.ottohubclient.impl.*;
 import com.losthiro.ottohubclient.utils.*;
+import com.losthiro.ottohubclient.adapter.model.*;
 
 public class AuditAdapter extends RecyclerView.Adapter<AuditAdapter.ViewHolder> {
 	private Context main;

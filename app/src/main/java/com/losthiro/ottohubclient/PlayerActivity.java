@@ -28,10 +28,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.losthiro.ottohubclient.adapter.Comment;
+import com.losthiro.ottohubclient.adapter.model.Comment;
 import com.losthiro.ottohubclient.adapter.CommentAdapter;
 import com.losthiro.ottohubclient.adapter.HonourAdapter;
-import com.losthiro.ottohubclient.adapter.Video;
+import com.losthiro.ottohubclient.adapter.model.Video;
 import com.losthiro.ottohubclient.adapter.VideoAdapter;
 import com.losthiro.ottohubclient.impl.APIManager;
 import com.losthiro.ottohubclient.impl.AccountManager;
@@ -71,12 +71,15 @@ import android.widget.*;
 import android.widget.SeekBar.*;
 import android.widget.AdapterView.*;
 import android.graphics.drawable.*;
+import com.losthiro.ottohubclient.view.dialog.*;
+import com.losthiro.ottohubclient.adapter.model.*;
+import com.losthiro.ottohubclient.utils.*;
 
 /**
  * @Author Hiro
  * @Date 2025/05/23 00:54
  */
-public class PlayerActivity extends MainActivity {
+public class PlayerActivity extends BasicActivity {
 	public static final String TAG = "PlayerActivity";
 	private static final Semaphore request = new Semaphore(1);
 	private static final List<Comment> commentList = new ArrayList<>();
@@ -110,20 +113,38 @@ public class PlayerActivity extends MainActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_player);
+        long id;
 		final Intent i = getIntent();
 		if (savedInstanceState != null) {
 			videoPosition = savedInstanceState.getInt("video_current");
 			videoHeight = savedInstanceState.getInt("video_height");
 		}
+        Uri data = i.getData();
+        if (data != null) {
+            String idStr = data.getQueryParameter("vid");
+            if(idStr == null){
+                Log.e(TAG, "error start: not found video id or video id is empty");
+                return;
+            }
+            try{
+                id = Long.parseLong(idStr);
+                parser.isLocal = true;
+            }catch(NumberFormatException e){
+                Log.e(TAG, "error start: video id is not a number", e);
+                id = -1;
+            }
+		}else{
+            id = i.getLongExtra("vid", -1);
+            parser.isLocal = i.getBooleanExtra("is_local", false);
+        }
 		final Context c = getApplication();
 		final Handler h = new Handler();
 		final RecyclerView videoList = findViewById(R.id.video_detail_list);
 		videoList.setLayoutManager(new GridLayoutManager(c, 1));
-		final long vid = i.getLongExtra("vid", -1);
+		final long vid = id;
 		if (vid == -1) {
 			return;
 		}
-		parser.isLocal = i.getBooleanExtra("is_local", false);
 		Bundle callback = new Bundle();
 		callback.putParcelable("play_callback", getIntent());
 		player = new Intent(this, PlayerService.class);
@@ -332,6 +353,7 @@ public class PlayerActivity extends MainActivity {
 		parser.like = parser.isLocal ? mainfest.optString("like_count", "0获赞") : i.getStringExtra("like");
 		parser.favourite = parser.isLocal ? mainfest.optString("favorite_count", "0冷藏") : i.getStringExtra("favorite");
 		player.putExtra("video_source", current.getVideo());
+        int color = ResourceUtils.getColor(R.color.colorSecondary);
 		String info = StringUtils.strCat(new Object[]{parser.time, " - ", parser.view, " - ", type, " - OV", vid});
 		final String intro = parser.isLocal ? mainfest.optString("intro", "打野的走位我就觉得你妈逼离谱") : current.getIntro();
 		((TextView) findViewById(R.id.video_detail_info)).setText(info);
@@ -354,6 +376,8 @@ public class PlayerActivity extends MainActivity {
 		favouriteView.setText(parser.favourite);
 		((TextView) findViewById(R.id.videos_detail_user_name)).setText(parser.name);
 		((TextView) findViewById(R.id.video_detail_user_intro)).setText(userIntro);
+        ((ImageButton)findViewById(android.R.id.content).findViewWithTag("1")).setColorFilter(color);
+        ((ImageButton)findViewById(android.R.id.content).findViewWithTag("2")).setColorFilter(color);
 		List<String> tagList = parser.isLocal
 				? getLocalTags(mainfest.optJSONArray("tags"))
 				: Arrays.asList(current.getTags());
@@ -398,7 +422,7 @@ public class PlayerActivity extends MainActivity {
 				}
 			});
 			ImageButton likeBtn = findViewById(R.id.video_like_btn);
-			likeBtn.setColorFilter(current.isLike() ? Color.parseColor("#88d9fa") : Color.BLACK);
+			likeBtn.setColorFilter(current.isLike() ? ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.colorSecondary));
 			likeBtn.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -406,7 +430,7 @@ public class PlayerActivity extends MainActivity {
 				}
 			});
 			ImageButton favouriteBtn = findViewById(R.id.video_favorite_btn);
-			favouriteBtn.setColorFilter(current.isFavorite() ? Color.parseColor("#88d9fa") : Color.BLACK);
+			favouriteBtn.setColorFilter(current.isFavorite() ? ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.colorSecondary));
 			favouriteBtn.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -434,8 +458,8 @@ public class PlayerActivity extends MainActivity {
 			@Override
 			public void onClick(View v) {
 				if (isOnInfo) {
-					((Button) v).setTextColor(isOnInfo ? Color.parseColor("#88d9fa") : Color.GRAY);
-					infoBtn.setTextColor(isOnInfo ? Color.GRAY : Color.parseColor("#88d9fa"));
+					((Button) v).setTextColor(isOnInfo ? ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.text_color));
+					infoBtn.setTextColor(isOnInfo ? ResourceUtils.getColor(R.color.text_color) : ResourceUtils.getColor(R.color.colorAccent));
 					detailView.setVisibility(View.GONE);
 					commentRefresh.setVisibility(View.VISIBLE);
 					View parent = (View) commentEdit.getParent();
@@ -450,8 +474,8 @@ public class PlayerActivity extends MainActivity {
 				if (isOnInfo) {
 					return;
 				}
-				((Button) v).setTextColor(isOnInfo ? Color.GRAY : Color.parseColor("#88d9fa"));
-				commentBtn.setTextColor(isOnInfo ? Color.parseColor("#88d9fa") : Color.GRAY);
+				((Button) v).setTextColor(isOnInfo ? ResourceUtils.getColor(R.color.text_color) : ResourceUtils.getColor(R.color.colorAccent));
+				commentBtn.setTextColor(isOnInfo ? ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.text_color));
 				detailView.setVisibility(View.VISIBLE);
 				commentRefresh.setVisibility(View.GONE);
 				View parent = (View) commentEdit.getParent();
@@ -562,7 +586,6 @@ public class PlayerActivity extends MainActivity {
 						public void run() {
 							danmakuParser = new ClientDanmakuParser(root.optJSONArray("data"));
 							danmaku.prepare(danmakuParser, controller);
-							main.start();
 						}
 					});
 				} catch (JSONException e) {
@@ -575,6 +598,7 @@ public class PlayerActivity extends MainActivity {
 				Log.e("Network", cause);
 			}
 		});
+        main.start();
 	}
 
 	public static void setFollowingStatus(final Button followingBtn, long uid) {
@@ -669,7 +693,7 @@ public class PlayerActivity extends MainActivity {
 									@Override
 									public void run() {
 										((ImageButton) v)
-												.setColorFilter(isLike ? Color.parseColor("#88d9fa") : Color.BLACK);
+												.setColorFilter(isLike ? ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.colorSecondary));
 										likeCountView.setText(likeCount + "获赞");
 										String msg = isLike ? "点赞成功" : "取消点赞成功";
 										Toast.makeText(getApplication(), msg, Toast.LENGTH_SHORT).show();
@@ -721,7 +745,7 @@ public class PlayerActivity extends MainActivity {
 									@Override
 									public void run() {
 										((ImageButton) v)
-												.setColorFilter(isFav ? Color.parseColor("#88d9fa") : Color.BLACK);
+												.setColorFilter(isFav ? ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.colorSecondary));
 										favouriteView.setText(fCount + "冷藏");
 										String msg = isFav ? "冷藏成功" : "取消冷藏成功";
 										Toast.makeText(getApplication(), msg, Toast.LENGTH_SHORT).show();
@@ -822,7 +846,7 @@ public class PlayerActivity extends MainActivity {
 				isDanmakuOpen = false;
 				return;
 			}
-			((Button) v).setTextColor(Color.parseColor("#88d9fa"));
+			((Button) v).setTextColor(ResourceUtils.getColor(R.color.colorAccent));
 			danmaku.setVisibility(View.VISIBLE);
 			isDanmakuOpen = true;
 		}
@@ -921,9 +945,7 @@ public class PlayerActivity extends MainActivity {
 			return;
 		}
 		final View inflate = LayoutInflater.from(this).inflate(R.layout.dialog_color_picker, null);
-		Dialog loginDialog = new Dialog(this);
-		loginDialog.requestWindowFeature(1);
-		loginDialog.setContentView(inflate);
+		BottomDialog loginDialog = new BottomDialog(this, inflate);
 		SeekBar sizeProgress = inflate.findViewWithTag("danmaku_size");
 		sizeProgress.setMin(10);
 		sizeProgress.setMax(50);
@@ -985,22 +1007,6 @@ public class PlayerActivity extends MainActivity {
 			}
 		});
 		((TextView) inflate.findViewWithTag("danmaku_content")).setText(danmakuEdit.getText());
-		ObjectAnimator ofFloat = ObjectAnimator.ofFloat(inflate, "translationY", 100.0f, 0.0f);
-		ofFloat.setDuration(1000L);
-		ofFloat.start();
-		Window window = loginDialog.getWindow();
-		window.setFlags(4, 4);
-		if (window != null) {
-			window.setBackgroundDrawableResource(0x0106000d);
-		}
-		window.setGravity(80);
-		WindowManager.LayoutParams attributes = window.getAttributes();
-		attributes.y = 20;
-		attributes.dimAmount = 0.0f;
-		if (Build.VERSION.SDK_INT == 31) {
-			attributes.setBlurBehindRadius(20);
-		}
-		window.setAttributes(attributes);
 		loginDialog.show();
 		int color = danmakuPicker.getColor();
 		String rgb = StringUtils.convertToRGB(color).toUpperCase(Locale.getDefault());
@@ -1181,9 +1187,7 @@ public class PlayerActivity extends MainActivity {
 			Toast.makeText(getApplication(), "非网络视频不能下载到本地(｡･ω･｡)", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		String destDir = StringUtils.strCat(DeviceUtils.getAndroidSDK() >= Build.VERSION_CODES.R
-				? getExternalFilesDir(null).toString()
-				: "/sdcard/OTTOHub", "/save/");
+		String destDir = FileUtils.getStorage(this, PATH_SAVE);
 		if (!new File(destDir).exists()) {
 			FileUtils.createDir(destDir);
 		}

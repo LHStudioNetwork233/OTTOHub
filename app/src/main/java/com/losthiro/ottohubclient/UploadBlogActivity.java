@@ -16,12 +16,13 @@ import com.losthiro.ottohubclient.adapter.*;
 import android.app.*;
 import java.net.*;
 import java.nio.charset.*;
+import com.losthiro.ottohubclient.adapter.model.*;
 
 /**
  * @Author Hiro
  * @Date 2025/06/13 19:15
  */
-public class UploadBlogActivity extends MainActivity {
+public class UploadBlogActivity extends BasicActivity {
 	public static final String TAG = "UploadBlogActivity";
 	private EditText titleEdit;
 	private EditText contentEdit;

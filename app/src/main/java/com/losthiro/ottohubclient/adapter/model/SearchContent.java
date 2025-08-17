@@ -1,4 +1,4 @@
-package com.losthiro.ottohubclient.adapter;
+package com.losthiro.ottohubclient.adapter.model;
 
 /**
  * @Author Hiro

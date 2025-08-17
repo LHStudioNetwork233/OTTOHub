@@ -1,4 +1,4 @@
-package com.losthiro.ottohubclient.adapter;
+package com.losthiro.ottohubclient.adapter.model;
 import org.json.JSONObject;
 import com.losthiro.ottohubclient.utils.SystemUtils;
 import com.losthiro.ottohubclient.utils.StringUtils;

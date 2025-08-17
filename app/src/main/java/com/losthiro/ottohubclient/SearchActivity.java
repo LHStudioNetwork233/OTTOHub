@@ -21,11 +21,11 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.losthiro.ottohubclient.adapter.Blog;
+import com.losthiro.ottohubclient.adapter.model.Blog;
 import com.losthiro.ottohubclient.adapter.SearchAdapter;
-import com.losthiro.ottohubclient.adapter.SearchContent;
-import com.losthiro.ottohubclient.adapter.User;
-import com.losthiro.ottohubclient.adapter.Video;
+import com.losthiro.ottohubclient.adapter.model.SearchContent;
+import com.losthiro.ottohubclient.adapter.model.User;
+import com.losthiro.ottohubclient.adapter.model.Video;
 import com.losthiro.ottohubclient.impl.APIManager;
 import com.losthiro.ottohubclient.impl.AccountManager;
 import com.losthiro.ottohubclient.impl.ClientString;
@@ -40,16 +40,16 @@ import java.util.concurrent.Semaphore;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.losthiro.ottohubclient.impl.TypeManager;
 import com.losthiro.ottohubclient.utils.StringUtils;
 import com.losthiro.ottohubclient.utils.DeviceUtils;
 import android.os.Build;
+import com.losthiro.ottohubclient.utils.*;
 
 /**
  * @Author Hiro
  * @Date 2025/05/24 09:35
  */
-public class SearchActivity extends MainActivity {
+public class SearchActivity extends BasicActivity {
     public static final String TAG = "SearchActivity";
     private static final LinkedList<String> history=new LinkedList<>();
     private static final Semaphore request=new Semaphore(1);
@@ -188,7 +188,7 @@ public class SearchActivity extends MainActivity {
         for (int i = 0; i < 4; i++) {
             TextView current = categorys[i];
             current.setBackgroundResource(i == index ?R.drawable.btn_bg: R.drawable.btn_empty_bg);
-            current.setTextColor(i == index ?Color.WHITE: Color.BLACK);
+            current.setTextColor(i == index ?Color.WHITE: ResourceUtils.getColor(R.color.colorSecondary));
         }
         categoryIndex = index;
         request(search.getQuery().toString(), true);
@@ -535,7 +535,7 @@ public class SearchActivity extends MainActivity {
                             i.putExtra("view", v.getViewCount());
                             i.putExtra("like", v.getLikeCount());
                             i.putExtra("favorite", v.getFavoriteCount());
-                            Client.saveActivity(TypeManager.getCurrentActivity(c).getIntent());
+                            Client.saveActivity(Client.getCurrentActivity(c).getIntent());
                             c.startActivity(i);
                             return;
                         }
@@ -563,7 +563,7 @@ public class SearchActivity extends MainActivity {
     }
 
     private void saveHistory(Context c) {
-        String path = StringUtils.strCat(DeviceUtils.getAndroidSDK() >= Build.VERSION_CODES.R ?getExternalFilesDir(null).toString(): "/sdcard/OTTOHub", "/config/history_search.json");
+        String path = FileUtils.getStorage(c, FILE_SEARCH_HISTORY);
         try {
             JSONArray config=new JSONArray();
             for (String query:history) {
@@ -577,9 +577,9 @@ public class SearchActivity extends MainActivity {
             e.printStackTrace();
         }
     }
-
+;
     private void loadHistory(Context c) {
-        String path = StringUtils.strCat(DeviceUtils.getAndroidSDK() >= Build.VERSION_CODES.R ?getExternalFilesDir(null).toString(): "/sdcard/OTTOHub", "/config/history_search.json");
+        String path = FileUtils.getStorage(c, FILE_SEARCH_HISTORY);
         try {
             String content = FileUtils.readFile(c, path);
             if (content == null) {

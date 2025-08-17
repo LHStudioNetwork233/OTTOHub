@@ -7,6 +7,7 @@
 	android:id="@+id/main_drawer_layout">
 
 	<RelativeLayout
+        android:background="@color/colorMain"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
@@ -80,13 +81,14 @@
 						android:layout_height="wrap_content"
 						android:textAppearance="?android:attr/textAppearanceMedium"
 						android:layout_margin="5dp"
-						android:textColor="#FF000000"
+						android:textColor="@color/colorSecondary"
 						android:id="@+id/blog_title"/>
 
 					<TextView
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:textSize="10sp"
+                        android:textColor="@color/text_color"
 						android:layout_marginLeft="5dp"
 						android:id="@+id/blog_info"/>
 
@@ -118,6 +120,7 @@
 							<TextView
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
+                                android:textColor="@color/text_color"
 								android:id="@+id/blog_like_count"/>
 
 						</LinearLayout>
@@ -139,6 +142,7 @@
 							<TextView
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
+                                android:textColor="@color/text_color"
 								android:id="@+id/blog_favorite_count"/>
 
 						</LinearLayout>
@@ -155,11 +159,13 @@
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
 								style="?android:attr/buttonBarButtonStyle"
+                                android:tag="1"
 								android:onClick="shareBlog"/>
 
 							<TextView
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
+                                android:textColor="@color/text_color"
 								android:text="分享"/>
 
 						</LinearLayout>
@@ -176,11 +182,13 @@
 								android:layout_width="wrap_content"
 								style="?android:attr/buttonBarButtonStyle"
 								android:layout_height="wrap_content"
+                                android:tag="2"
 								android:onClick="reportBlog"/>
 
 							<TextView
 								android:layout_width="wrap_content"
 								android:layout_height="wrap_content"
+                                android:textColor="@color/text_color"
 								android:text="举报"/>
 
 						</LinearLayout>
@@ -245,9 +253,9 @@
         android:layout_height="match_parent"
         android:id="@+id/drawer_content"
         android:choiceMode="singleChoice"
-        android:divider="#FFFFFF"
+        android:divider="@color/colorMain"
         android:dividerHeight="1dp"
-        android:background="#FFFFFFFF"
+        android:background="@color/colorMain"
         android:minWidth="200dp">
 
         <LinearLayout
@@ -290,7 +298,7 @@
         <TextView
             android:textSize="17dp"
             android:textStyle="bold"
-            android:textColor="#FF000000"
+            android:textColor="@color/colorSecondary"
             android:layout_gravity="bottom|center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

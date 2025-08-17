@@ -18,10 +18,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import com.losthiro.ottohubclient.adapter.Blog;
+import com.losthiro.ottohubclient.adapter.model.Blog;
 import com.losthiro.ottohubclient.adapter.BlogAdapter;
 import com.losthiro.ottohubclient.adapter.HonourAdapter;
-import com.losthiro.ottohubclient.adapter.Video;
+import com.losthiro.ottohubclient.adapter.model.Video;
 import com.losthiro.ottohubclient.adapter.VideoAdapter;
 import com.losthiro.ottohubclient.impl.APIManager;
 import com.losthiro.ottohubclient.impl.AccountManager;
@@ -48,12 +48,14 @@ import com.losthiro.ottohubclient.adapter.*;
 import android.widget.*;
 import android.graphics.drawable.*;
 import android.graphics.*;
+import com.losthiro.ottohubclient.adapter.model.*;
+import com.losthiro.ottohubclient.utils.*;
 
 /**
  * @Author Hiro
  * @Date 2025/06/01 14:54
  */
-public class AccountDetailActivity extends MainActivity {
+public class AccountDetailActivity extends BasicActivity {
 	public static final String TAG = "AccountDetailActivity";
 	private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 	private static final Semaphore request = new Semaphore(1);
@@ -265,10 +267,11 @@ public class AccountDetailActivity extends MainActivity {
 				startActivity(i);
 			}
 		});
-		new ClientString(videoCount).colorTo((TextView) findViewById(R.id.main_user_video_count), 0xff88d9fa);
-		new ClientString(blogCount).colorTo((TextView) findViewById(R.id.main_user_blog_count), 0xff88d9fa);
-		new ClientString(followingCount).colorTo(suscribeView, 0xff88d9fa);
-		new ClientString(fansCount).colorTo(fansView, 0xff88d9fa);
+        int color = ResourceUtils.getColor(R.color.colorAccent);
+		new ClientString(videoCount).colorTo((TextView) findViewById(R.id.main_user_video_count), color);
+		new ClientString(blogCount).colorTo((TextView) findViewById(R.id.main_user_blog_count), color);
+		new ClientString(followingCount).colorTo(suscribeView, color);
+		new ClientString(fansCount).colorTo(fansView, color);
 		onloadView = findViewById(R.id.more_onload);
 		favoriteCategory = findViewById(R.id.favorite_categorys);
 		refresh = findViewById(R.id.refresh);
@@ -279,6 +282,7 @@ public class AccountDetailActivity extends MainActivity {
 				request(true);
 			}
 		});
+        int scolor = ResourceUtils.getColor(R.color.colorSecondary);
 		GridLayoutManager layout = new GridLayoutManager(AccountDetailActivity.this, 1);
 		layout.setInitialPrefetchItemCount(6);
 		layout.setItemPrefetchEnabled(true);
@@ -332,8 +336,8 @@ public class AccountDetailActivity extends MainActivity {
 		});
 		videoStatus = content.findViewWithTag("favorite_video_status");
 		blogStatus = content.findViewWithTag("favorite_blog_status");
-		videoStatus.setColorFilter(Color.BLACK);
-		blogStatus.setColorFilter(Color.BLACK);
+		videoStatus.setColorFilter(scolor);
+		blogStatus.setColorFilter(scolor);
 		Button followingBtn = findViewById(R.id.following_user);
 		followingBtn.setOnClickListener(new OnClickListener() {
 			@Override
@@ -366,7 +370,7 @@ public class AccountDetailActivity extends MainActivity {
 		main[1] = parent.findViewWithTag("blogs");
 		main[2] = parent.findViewWithTag("favorite");
 		main[3] = parent.findViewWithTag("local");
-		final int color = Color.parseColor("#88d9fa");
+		final int color = ResourceUtils.getColor(R.color.colorAccent);
 		final GradientDrawable bg = new GradientDrawable();
 		bg.setColor(Color.TRANSPARENT);
 		bg.setStroke(2, color);
@@ -385,7 +389,7 @@ public class AccountDetailActivity extends MainActivity {
 							main[i].setTextColor(color);
 							main[i].setCompoundDrawables(null, null, null, bg);
 						} else {
-							main[i].setTextColor(Color.BLACK);
+							main[i].setTextColor(ResourceUtils.getColor(R.color.colorSecondary));
 							main[i].setCompoundDrawables(null, null, null, null);
 						}
 					}
@@ -609,9 +613,7 @@ public class AccountDetailActivity extends MainActivity {
 				blogShow = false;
 				videoShow = false;
 				videos.clear();
-				String path = StringUtils.strCat(DeviceUtils.getAndroidSDK() >= Build.VERSION_CODES.R
-						? getExternalFilesDir(null).toString()
-						: "/sdcard/OTTOHub", "/save/");
+				String path = FileUtils.getStorage(this, PATH_SAVE);
 				if (!new File(path).exists()) {
 					FileUtils.createDir(path);
 				}

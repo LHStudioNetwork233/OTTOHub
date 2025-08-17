@@ -3,31 +3,47 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-    android:orientation="vertical"
+	android:orientation="vertical"
+	android:background="@drawable/bg_splash"
 	android:gravity="center">
 
-    <ImageView
-        android:src="@drawable/ic_launcher"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginBottom="10dp"/>
+	<RelativeLayout
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:padding="10dp"
+		android:background="@drawable/gradient_bg"
+		android:elevation="4dp">
 
-    <ProgressBar
-        android:layout_width="250dp"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_height="wrap_content"
-        android:id="@+id/splash_progress"/>
+		<ProgressBar
+			android:layout_width="match_parent"
+			style="?android:attr/progressBarStyleHorizontal"
+			android:layout_height="wrap_content"
+			android:id="@+id/splash_progress"
+			android:layout_alignParentBottom="true"
+			android:layout_marginBottom="10dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Welcome to OTTOHub!"
-        android:layout_marginTop="5dp"
-        android:textColor="#FF88D9FA"
-        android:shadowColor="#FFC4C4C4"
-        android:shadowDx="4"
-        android:shadowDy="4"
-        android:shadowRadius="4"/>
-    
+		<pl.droidsonroids.gif.GifImageView
+			android:src="@drawable/loading"
+			android:elevation="4dp"
+			android:layout_width="100dp"
+			android:layout_height="100dp"
+			android:layout_marginBottom="10dp"
+			android:layout_alignParentEnd="true"
+			android:layout_above="@id/splash_progress"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="Welcome to OTTOHub!"
+			android:textColor="@color/colorAccent"
+			android:shadowColor="#FFC4C4C4"
+			android:shadowDx="4"
+			android:shadowDy="4"
+			android:shadowRadius="4"
+			android:layout_above="@id/splash_progress"
+			android:layout_margin="5dp"/>
+
+	</RelativeLayout>
+
 </LinearLayout>
 

@@ -22,7 +22,7 @@
 		android:singleLine="true"
 		android:ellipsize="marquee"
 		android:fadingEdge="horizontal"
-		android:textColor="#FF000000"
+		android:textColor="@color/colorSecondary"
 		android:id="@+id/blog_title"/>
 
 	<TextView
@@ -31,6 +31,7 @@
 		android:layout_toRightOf="@id/user_avatar"
 		android:layout_below="@id/blog_title"
 		android:id="@+id/blog_info"
+        android:textColor="@color/text_color"
 		android:textSize="10sp"/>
 
 	<TextView
@@ -39,6 +40,7 @@
 		android:layout_toRightOf="@id/user_avatar"
 		android:layout_below="@id/blog_info"
 		android:id="@+id/blog_content"
+        android:textColor="@color/text_color"
 		android:autoLink="web"
 		android:textIsSelectable="true"/>
 

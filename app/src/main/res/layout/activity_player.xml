@@ -6,6 +6,7 @@
 
 	<LinearLayout
 		android:orientation="vertical"
+        android:background="@color/colorMain"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
@@ -51,7 +52,7 @@
 					android:text="详情"
 					style="?android:attr/buttonBarButtonStyle"
 					android:layout_marginLeft="5dp"
-					android:textColor="#FF88D9FA"
+					android:textColor="@color/colorAccent"
 					android:id="@+id/video_detail_info_btn"/>
 
 				<Button
@@ -60,7 +61,7 @@
 					android:text="评论"
 					style="?android:attr/buttonBarButtonStyle"
 					android:layout_marginLeft="5dp"
-					android:textColor="#FF777777"
+					android:textColor="@color/text_color"
 					android:id="@+id/video_detail_comment_btn"/>
 
 				<Button
@@ -70,7 +71,7 @@
 					style="?android:attr/buttonBarButtonStyle"
 					android:layout_marginLeft="5dp"
 					android:onClick="switchDanmaku"
-					android:textColor="#FF88D9FA"/>
+					android:textColor="@color/colorAccent"/>
 
 				<LinearLayout
 					android:orientation="horizontal"
@@ -143,12 +144,14 @@
 							android:layout_height="wrap_content"
 							android:textAppearance="?android:attr/textAppearanceMedium"
 							android:textStyle="bold"
+                            android:textColor="@color/colorSecondary"
 							android:id="@+id/video_detail_title"/>
 
 						<TextView
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 							android:textIsSelectable="true"
+                            android:textColor="@color/text_color"
 							android:id="@+id/video_detail_info"/>
 
 						<TextView
@@ -156,7 +159,7 @@
 							android:layout_height="wrap_content"
 							android:autoLink="web"
 							android:id="@+id/video_detail_intro"
-							android:textColor="#FF000000"/>
+							android:textColor="@color/text_color"/>
 
 						<androidx.recyclerview.widget.RecyclerView
 							android:layout_height="wrap_content"
@@ -186,6 +189,7 @@
 								<TextView
 									android:layout_width="wrap_content"
 									android:layout_height="wrap_content"
+                                    android:textColor="@color/text_color"
 									android:id="@+id/video_like_count"/>
 
 							</LinearLayout>
@@ -207,6 +211,7 @@
 								<TextView
 									android:layout_width="wrap_content"
 									android:layout_height="wrap_content"
+                                    android:textColor="@color/text_color"
 									android:id="@+id/video_favorite_count"/>
 
 							</LinearLayout>
@@ -223,11 +228,13 @@
 									android:layout_width="wrap_content"
 									style="?android:attr/buttonBarButtonStyle"
 									android:layout_height="wrap_content"
+                                    android:tag="1"
 									android:onClick="reportVideo"/>
 
 								<TextView
 									android:layout_width="wrap_content"
 									android:layout_height="wrap_content"
+                                    android:textColor="@color/text_color"
 									android:text="举报"/>
 
 							</LinearLayout>
@@ -244,11 +251,13 @@
 									android:layout_width="wrap_content"
 									style="?android:attr/buttonBarButtonStyle"
 									android:layout_height="wrap_content"
+                                    android:tag="2"
 									android:onClick="downloadVideo"/>
 
 								<TextView
 									android:layout_width="wrap_content"
 									android:layout_height="wrap_content"
+                                    android:textColor="@color/text_color"
 									android:text="缓存"/>
 
 							</LinearLayout>
@@ -290,11 +299,12 @@
 									android:layout_width="wrap_content"
 									android:layout_height="wrap_content"
 									android:id="@+id/videos_detail_user_name"
-									android:textColor="#FF000000"/>
+									android:textColor="@color/colorSecondary"/>
 
 								<TextView
 									android:layout_width="wrap_content"
 									android:layout_height="wrap_content"
+                                    android:textColor="@color/text_color"
 									android:id="@+id/video_detail_user_intro"/>
 
 							</LinearLayout>
