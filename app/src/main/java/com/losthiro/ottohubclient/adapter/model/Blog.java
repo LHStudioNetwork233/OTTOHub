@@ -84,4 +84,10 @@ public class Blog {
         }
         return false;
     }
+
+    @Override
+    public int hashCode() {
+        // TODO: Implement this method
+        return (int)getBID();
+    }
 }

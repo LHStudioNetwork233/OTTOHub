@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:gravity="top|center">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:background="@color/colorAccent">
+
+		<ImageButton
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			style="?android:attr/buttonBarButtonStyle"
+			android:src="@drawable/ic_left_arrow"
+			android:layout_margin="5dp"
+			android:onClick="quit"/>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="@string/app_name"
+			android:textColor="#FFFFFFFF"
+			android:shadowColor="#FFC4C4C4"
+			android:shadowRadius="4"
+			android:shadowDx="4"
+			android:shadowDy="4"
+			android:layout_gravity="center"
+			android:layout_marginLeft="10dp"
+			android:textSize="16sp"
+			android:layout_margin="5dp"
+			android:layout_weight="1.0"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:gravity="center"
+		android:orientation="horizontal"
+		android:padding="5dp"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="30dp"
+		android:layout_alignParentLeft="true">
+
+		<ImageView
+			android:layout_width="100dp"
+			android:layout_height="100dp"
+			android:src="@drawable/ic_launcher"
+			android:layout_marginStart="30dp"/>
+
+		<LinearLayout
+			android:gravity="center|left"
+			android:orientation="vertical"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="20dp">
+
+			<TextClock
+				android:textSize="44sp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:shadowDx="1.0"
+				android:shadowDy="1.0"
+				android:shadowRadius="10.0"
+				android:format12Hour="hh:mm:ss"
+				android:format24Hour="HH:mm:ss"
+				android:textColor="@color/colorSecondary"
+				android:textStyle="bold"/>
+
+			<TextClock
+				android:textSize="11sp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:shadowDx="1.0"
+				android:shadowDy="1.0"
+				android:shadowRadius="10.0"
+				android:format12Hour="yyyy.MM.dd  EEa"
+				android:format24Hour="yyyy.MM.dd  EEa"
+				android:textColor="@color/colorSecondary"/>
+
+		</LinearLayout>
+
+	</LinearLayout>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/app_name"
+		android:textColor="@color/colorAccent"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:layout_marginTop="10dp"
+		android:shadowColor="@color/colorAccent"
+		android:shadowDy="2"
+		android:shadowRadius="4"
+		android:shadowDx="2"
+		android:textStyle="bold"
+		android:textSize="21sp"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:tag="device_info"
+		android:layout_marginTop="10dp"
+		android:layout_marginStart="10dp"
+		android:layout_gravity="start"/>
+
+	<TextView
+		android:layout_gravity="start"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/infos"
+		android:tag="links"
+		android:linksClickable="true"
+		android:layout_marginTop="10dp"
+		android:layout_marginStart="10dp"/>
+
+</LinearLayout>
+

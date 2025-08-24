@@ -5,22 +5,19 @@
 	android:layout_height="wrap_content">
 
 	<ImageView
-		android:layout_width="50dp"
-		android:layout_height="50dp"
-		android:layout_margin="5dp"
-		android:id="@+id/list_setting_icon"
-		android:src="@drawable/ic_settings_black"/>
-
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id="@+id/list_setting_icon"
+        android:src="@drawable/ic_settings_black"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"/>
+    
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_toEndOf="@id/list_setting_icon"
 		android:layout_margin="5dp"
 		android:textColor="@color/colorSecondary"
-		android:shadowColor="#C4C4C4"
-		android:shadowDx="4"
-		android:shadowDy="4"
-		android:shadowRadius="4"
 		android:textStyle="bold"
 		android:textSize="16sp"
 		android:id="@+id/list_setting_title"/>
@@ -37,13 +34,24 @@
 		android:gravity="center"
 		android:id="@+id/list_setting_text"/>
 
+	<Button
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="确定"
+		android:layout_below="@id/list_setting_icon"
+		android:layout_alignParentEnd="true"
+		android:id="@+id/list_setting_edit_btn"
+		android:background="@drawable/btn_bg"
+		android:textColor="#FFFFFF"/>
+
 	<EditText
 		android:layout_width="match_parent"
 		android:ems="10"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/list_setting_icon"
 		android:layout_marginBottom="5dp"
-		android:id="@+id/list_setting_edit"/>
+		android:id="@+id/list_setting_edit"
+		android:layout_toStartOf="@id/list_setting_edit_btn"
+		android:layout_below="@id/list_setting_icon"/>
 
 </RelativeLayout>
 

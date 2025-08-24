@@ -47,11 +47,14 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 		if (current instanceof SettingEdittext) {
 			return SettingBasic.TYPE_EDITTEXT;
 		}
+		if (current instanceof SettingTitle) {
+			return SettingBasic.TYPE_TITLE;
+		}
 		return SettingBasic.TYPE_ACTION;
 	}
 
 	@Override
-	public void onBindViewHolder(SettingsAdapter.ViewHolder vH, int p) {
+	public void onBindViewHolder(final SettingsAdapter.ViewHolder vH, final int p) {
 		// TODO: Implement this method
 		int type = getItemViewType(p);
 		final SettingBasic current = data.get(p);
@@ -59,7 +62,12 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 		vH.text.setText(current.getText());
 		vH.icon.setColorFilter(ResourceUtils.getColor(R.color.colorSecondary));
 		Drawable icon = current.getIcon();
-		if (icon != null) {
+		if (icon == null) {
+			int id = current.getIconID();
+			if (id != 0) {
+				vH.icon.setImageResource(id);
+			}
+		} else {
 			vH.icon.setImageDrawable(icon);
 		}
 		switch (type) {
@@ -73,11 +81,25 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 				});
 				break;
 			case SettingBasic.TYPE_TOGGLE :
+				vH.toggle.setChecked(((SettingToggle) current).isToggle());
 				vH.toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 						// TODO: Implement this method
-						((SettingToggle) current).setToggle(isChecked);
+						Toast.makeText(mContext, isChecked ? "已开启" : "已关闭", Toast.LENGTH_SHORT).show();
+						SettingToggle toggle = (SettingToggle) current;
+						toggle.setToggle(isChecked);
+						if (toggle.isGroup()) {
+							List<SettingBasic> child = ((SettingToggle) current).getChildList();
+							int startPos = p + 1;
+							if (isChecked) {
+								data.addAll(startPos, child);
+								notifyItemRangeInserted(startPos, child.size());
+							} else {
+								data.removeAll(child);
+								notifyItemRangeRemoved(startPos, child.size());
+							}
+						}
 					}
 				});
 				break;
@@ -89,24 +111,17 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 				SettingEdittext edit = (SettingEdittext) current;
 				vH.edit.setHint(edit.getHint());
 				vH.edit.setText(edit.getContent());
-				vH.edit.addTextChangedListener(new TextWatcher() {
+				vH.editBtn.setOnClickListener(new OnClickListener() {
 					@Override
-					public void afterTextChanged(Editable s) {
+					public void onClick(View v) {
 						// TODO: Implement this method
-						((SettingEdittext) current).setContent(s.toString());
-					}
-
-					@Override
-					public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-						// TODO: Implement this method
-					}
-
-					@Override
-					public void onTextChanged(CharSequence s, int start, int before, int count) {
-						// TODO: Implement this method
+						((SettingEdittext) current).setContent(vH.edit.getText().toString());
 					}
 				});
 				break;
+			case SettingBasic.TYPE_TITLE :
+				vH.icon.setVisibility(View.GONE);
+				vH.text.setVisibility(View.GONE);
 		}
 	}
 
@@ -138,6 +153,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 		TextView text;
 		Switch toggle;
 		EditText edit;
+		Button editBtn;
 
 		public ViewHolder(View root, int type) {
 			super(root);
@@ -151,6 +167,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 					break;
 				case SettingBasic.TYPE_EDITTEXT :
 					edit = root.findViewById(R.id.list_setting_edit);
+					editBtn = root.findViewById(R.id.list_setting_edit_btn);
 					break;
 			}
 		}

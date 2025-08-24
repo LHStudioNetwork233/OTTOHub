@@ -112,6 +112,10 @@ public class SystemUtils {
     public static long getJVMmaxMemory(){
         return Runtime.getRuntime().maxMemory();
     }
+    
+    public static boolean clearCache(Context context) {
+        return FileUtils.deleteDir(context.getCacheDir().getPath()) && (context.getExternalCacheDir() != null ? FileUtils.deleteDir(context.getExternalCacheDir().getPath()) : true);
+    }
 
     public static int getStatusBarHeight(Context context) {
         Rect rectangle = new Rect();

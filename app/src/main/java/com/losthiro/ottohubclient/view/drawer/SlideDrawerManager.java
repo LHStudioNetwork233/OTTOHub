@@ -111,16 +111,16 @@ public class SlideDrawerManager {
 			});
 		}
 		final Context main = parent.getContext();
+        final ImageView cover = (ImageView) parent.findViewById(R.id.main_user_cover);
+        action = new UpdateDrawer() {
+            @Override
+            public void update(Account now) {
+                // TODO: Implement this method
+                ImageDownloader.loader(cover, now.getCoverURI());
+            }
+        };
 		AccountManager manager = AccountManager.getInstance(main);
 		if (manager.isLogin()) {
-			final ImageView cover = (ImageView) parent.findViewById(R.id.main_user_cover);
-			action = new UpdateDrawer() {
-				@Override
-				public void update(Account now) {
-					// TODO: Implement this method
-					ImageDownloader.loader(cover, now.getCoverURI());
-				}
-			};
 			ImageDownloader.loader(cover, manager.getAccount().getCoverURI());
 			AccountSwitchWindow.getInstance(parent.getContext(), action).update();
 		}

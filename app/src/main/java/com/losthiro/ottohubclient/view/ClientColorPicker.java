@@ -5,7 +5,6 @@
  */
 package com.losthiro.ottohubclient.view;
 import android.view.*;
-import androidx.annotation.*;
 import java.lang.annotation.*;
 import android.graphics.*;
 import android.content.*;
@@ -13,10 +12,6 @@ import android.util.*;
 
 public class ClientColorPicker extends View {
 
-	@IntDef({
-        PANEL.SAT_VAL, 
-        PANEL.HUE
-    })
 	@Retention(RetentionPolicy.SOURCE)
 	@interface PANEL {
 		int SAT_VAL = 0;

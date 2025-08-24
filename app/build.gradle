@@ -8,8 +8,8 @@ android {
         applicationId "com.losthiro.ottohubclient"
         minSdkVersion 26
         targetSdkVersion 35
-        versionCode 2025070101
-        versionName "v1.1.0"
+        versionCode 2025082403
+        versionName "v1.2.0"
     }
 
     buildTypes {
@@ -24,6 +24,7 @@ dependencies {
 	api project(':../DanmakuFlameMaster-master/DanmakuFlameMaster/')
     implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.29'
+	implementation 'cn.jzvd:jiaozivideoplayer:7.7.0'
     implementation 'androidx.drawerlayout:drawerlayout:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
 	implementation 'androidx.lifecycle:lifecycle-livedata:2.0.0'

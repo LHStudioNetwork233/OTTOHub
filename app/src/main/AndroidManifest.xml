@@ -165,6 +165,11 @@
             android:name=".UploadManagerActivity"
             android:exported="true"
             android:launchMode="singleInstance"/>
+        
+        <activity
+            android:name=".InfoActivity"
+            android:exported="true"
+            android:launchMode="singleInstance"/>
 
         <activity
             android:name=".ErrorActivity"

@@ -62,18 +62,7 @@ public class BlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	public BlogAdapter(Context c, List<Blog> list) {
 		main = c;
-		data = new ArrayList<Blog>(new LinkedHashSet<Blog>(compare(list)));
-	}
-
-	private List<Blog> compare(List<Blog> list) {
-		List<Blog> newData = new ArrayList<Blog>(list);
-		Collections.sort(newData, new Comparator<Blog>() {
-			@Override
-			public int compare(Blog o1, Blog o2) {
-				return Integer.compare((int) o2.getBID(), (int) o1.getBID());
-			}
-		});
-		return newData;
+		data = new ArrayList<Blog>(new LinkedHashSet<Blog>(list));
 	}
 
 	@Override
@@ -131,9 +120,9 @@ public class BlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int p) {
-        if(p == STATUS_LOADING){
-            return new LoadingViewHolder(viewGroup);
-        }
+		if (p == STATUS_LOADING) {
+			return new LoadingViewHolder(viewGroup);
+		}
 		return new ViewHolder(LayoutInflater.from(main).inflate(R.layout.list_blog, viewGroup, false));
 	}
 
@@ -150,7 +139,7 @@ public class BlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 		if (data.containsAll(newData)) {
 			return;
 		}
-		data.addAll(compare(newData));
+		data.addAll(newData);
 	}
 
 	public void setData(List<Blog> newData) {
@@ -158,21 +147,21 @@ public class BlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 			return;
 		}
 		data.clear();
-		data.addAll(compare(newData));
+		data.addAll(newData);
 		notifyDataSetChanged();
 	}
-    
-    public void startLoading(){
-        if(isLoading){
-            return;
-        }
-        isLoading = true;
-        notifyItemInserted(data.size());
-    }
 
-    public void stopLoading(){
-        isLoading = false;
-        notifyItemRemoved(data.size());
-    }
+	public void startLoading() {
+		if (isLoading) {
+			return;
+		}
+		isLoading = true;
+		notifyItemInserted(data.size());
+	}
+
+	public void stopLoading() {
+		isLoading = false;
+		notifyItemRemoved(data.size());
+	}
 }
 

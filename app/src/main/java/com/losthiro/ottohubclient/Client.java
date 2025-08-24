@@ -14,6 +14,7 @@ import com.losthiro.ottohubclient.impl.AccountManager;
 import com.losthiro.ottohubclient.impl.UploadManager;
 import java.util.*;
 import android.app.*;
+import com.losthiro.ottohubclient.impl.*;
 
 /**
  * @Author Hiro
@@ -31,6 +32,7 @@ public class Client extends Application {
         CrashManager.getInstance().register(main);
         UploadManager.getInstance(main).load();
         ResourceUtils.init(main);
+        initSettings(main);
         Log.i(TAG, "client init complete");
         Log.i(TAG, "Hello OTTOHub!");
     }
@@ -41,6 +43,15 @@ public class Client extends Application {
         super.onTerminate();
         activitys.clear();
         ImageDownloader.release();
+    }
+    
+    public static void initSettings(Context c){
+        ClientSettings settings = ClientSettings.getInstance();
+        try {
+            settings.register(c);
+        } catch (Exception e) {
+            Log.e(TAG, "setting register failed", e);
+        }
     }
 
     public static void saveActivity(Intent i) {

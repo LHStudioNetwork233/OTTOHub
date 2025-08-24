@@ -61,12 +61,14 @@ public class WebBean {
 		HtmlRenderer renderer = HtmlRenderer.builder(options).build();
 		String text = content;
 		try {
+            if(!ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.MSG_MARKDOWN_SURPPORT)){
+                throw new Exception();
+            }
 			text = renderer.render(parser.parse(content));
 			text = text.replace("\n", "<br/>");
 			//Toast.makeText(ctx, text, Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
 			Log.i(TAG, e.toString());
-			text = content;
 			//            text = text.replace("&amp;", "&");
 			//            text = text.replace("&lt;", "<");
 			//            text = text.replace("&gt;", ">");

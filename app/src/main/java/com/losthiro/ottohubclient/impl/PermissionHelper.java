@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 
 public class PermissionHelper {
@@ -50,7 +49,7 @@ public class PermissionHelper {
         return true;
     }
 
-    public static void handleResult(Activity host, int requestCode, @NonNull int[] grantResults) {
+    public static void handleResult(Activity host, int requestCode, int[] grantResults) {
         if (requestCode != REQ_CODE || callback == null) return;
 
         boolean allGranted = true;

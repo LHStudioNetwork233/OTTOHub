@@ -25,16 +25,19 @@ public class SettingToggle extends SettingBasic {
 		isToggle = defState;
 	}
 
-	public SettingToggle(String title, String text, List<SettingBasic> child, boolean defState) {
+	public SettingToggle(String title, String text, List<SettingBasic> child) {
 		super(title, text);
 		childList = child;
-		isToggle = defState;
 		hasChild = true;
 	}
 
 	public boolean isToggle() {
 		return isToggle;
 	}
+    
+    public boolean isGroup() {
+        return hasChild;
+    }
 
 	public List<SettingBasic> getChildList() {
 		return childList;

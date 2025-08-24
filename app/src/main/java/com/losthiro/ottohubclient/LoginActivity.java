@@ -443,7 +443,7 @@ public class LoginActivity extends BasicActivity {
 		verify(v, true);
 	}
 
-	private void verify(View v, boolean isReset) {
+	private void verify(final View v, boolean isReset) {
 		String email = isReset ? resetInputEmail.getText().toString() : registerInputEmail.getText().toString();
 		if (email.isEmpty()) {
 			((Button) v).setText("拉了胯");
@@ -477,11 +477,15 @@ public class LoginActivity extends BasicActivity {
 								if (message.equals("error_email")) {
 									Toast.makeText(getApplication(), "baka! 是邮箱吗你就发", Toast.LENGTH_SHORT).show();
 								}
+                                if (message.equals("error_qq_email")) {
+                                    Toast.makeText(getApplication(), "QQ邮箱只支持QQ号+@qq.com的格式捏", Toast.LENGTH_SHORT).show();
+								}
+                                ((Button) v).setText("拉了胯");
 								return;
 							}
 							Toast.makeText(getApplication(), "已发送~记得检查邮箱或垃圾邮件哦qwq", Toast.LENGTH_SHORT).show();
 						} catch (JSONException e) {
-							e.printStackTrace();
+							onFailed(e.toString());
 						}
 					}
 				});

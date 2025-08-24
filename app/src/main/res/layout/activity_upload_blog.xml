@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
-    android:background="@color/colorMain"
+	android:background="@color/colorMain"
 	android:orientation="vertical">
 
 	<LinearLayout
@@ -99,29 +99,71 @@
 		android:padding="10dp"
 		android:id="@+id/blog_upload_switch"/>
 
-	<Button
-		android:layout_width="match_parent"
+	<TextView
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="添加图片"
-		android:layout_gravity="center"
-		android:layout_marginTop="10dp"
-		android:layout_marginLeft="5dp"
-		android:layout_marginRight="5dp"
-		android:onClick="addImage"
-		android:background="@drawable/btn_bg"
-		android:textColor="#FFFFFFFF"/>
+		android:text="手动添加图片uri"
+		android:textColor="@color/colorSecondary"
+		android:layout_margin="10dp"
+		android:textStyle="bold"/>
 
-	<Button
+	<LinearLayout
+		android:orientation="horizontal"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="保存草稿"
-		android:layout_gravity="center"
-		android:layout_marginTop="10dp"
-		android:layout_marginLeft="5dp"
-		android:layout_marginRight="5dp"
-		android:onClick="saveCurrent"
-		android:background="@drawable/btn_bg"
-		android:textColor="#FFFFFFFF"/>
+		android:gravity="center">
+
+		<EditText
+			android:layout_width="match_parent"
+			android:ems="10"
+			android:layout_height="wrap_content"
+			android:hint="图片uri"
+			android:layout_weight="1.0"
+			android:layout_margin="5dp"
+			android:id="@+id/blog_upload_uri"/>
+
+		<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="确定"
+			android:textColor="#FFFFFF"
+			android:background="@drawable/btn_bg"
+			android:layout_marginRight="5dp"
+			android:onClick="addImageURI"/>
+
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center">
+
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="选择图片"
+			android:onClick="addImage"
+			android:background="@drawable/btn_bg"
+			android:textColor="#FFFFFFFF"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:layout_marginTop="5dp"
+			android:layout_weight="1.0"/>
+
+		<Button
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:text="保存草稿"
+			android:layout_gravity="center"
+			android:layout_marginTop="5dp"
+			android:layout_marginRight="5dp"
+			android:onClick="saveCurrent"
+			android:background="@drawable/btn_bg"
+			android:textColor="#FFFFFFFF"
+			android:layout_weight="1.0"/>
+
+	</LinearLayout>
 
 	<Button
 		android:layout_width="match_parent"

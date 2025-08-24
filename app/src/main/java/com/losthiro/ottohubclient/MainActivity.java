@@ -114,11 +114,17 @@ public class MainActivity extends BasicActivity {
 		if (!FileUtils.isStorageAvailable()) {
 			Toast.makeText(getApplication(), "你的内存不够保存东西了", Toast.LENGTH_SHORT).show();
 		}
+        VideosFragment.setOnAccountChangeListener(new Runnable(){
+                @Override
+                public void run() {
+                    // TODO: Implement this method
+                    ((PagesAdapter)mainPage.getAdapter()).addPage(AccountFragment.newInstance());
+                }
+            });
 		SlideDrawerManager.getInstance().saveLastParent(findViewById(android.R.id.content));
 		DefDanmakuManager.getInstance(this);
 		requestPreDialog(this);
 		initPageView();
-        initSettings(this);
 	}
 
 	@Override
@@ -231,15 +237,6 @@ public class MainActivity extends BasicActivity {
 			});
 		}
 	}
-    
-    private static void initSettings(Context c){
-        ClientSettings settings = ClientSettings.getInstance();
-        try {
-            settings.register(c);
-        } catch (Exception e) {
-            Log.e(TAG, "setting register failed", e);
-        }
-    }
 
 	private void updatePage(int index) {
 		int colorAccent = ResourceUtils.getColor(R.color.colorAccent);
@@ -326,7 +323,8 @@ public class MainActivity extends BasicActivity {
 
 	public static void requestPreDialog(final Activity a) {
 		SharedPreferences sharedPreferences = a.getSharedPreferences("Settings", 0);
-		if (new Boolean(sharedPreferences.getBoolean("First", true)).booleanValue()) {
+        boolean check = ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.SYSTEM_CHECK_PERMISSION);
+		if (new Boolean(sharedPreferences.getBoolean("First", true)).booleanValue() || check) {
 			sharedPreferences.edit().putBoolean("First", false).commit();
 			AlertDialog.Builder dialog = new AlertDialog.Builder(a);
 			dialog.setTitle("权限请求");
@@ -334,21 +332,7 @@ public class MainActivity extends BasicActivity {
 			dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dia, int which) {
-					PermissionHelper.requestPermissions(a,
-							new String[]{"android.permission.WRITE_EXTERNAL_STORAGE",
-									"android.permission.READ_EXTERNAL_STORAGE"},
-							new PermissionHelper.PermissionCallback() {
-								@Override
-								public void onAllGranted() {
-									Toast.makeText(a, "权限授予成功", Toast.LENGTH_SHORT).show();
-                                    initSettings(a);
-								}
-
-								@Override
-								public void onDeniedWithNeverAsk() {
-									Toast.makeText(a, "权限已拒绝(后续可在设置重新授予)", Toast.LENGTH_SHORT).show();
-								}
-							});
+					SettingsActivity.checkPermission(a);
 				}
 			});
 			dialog.setNegativeButton(android.R.string.cancel, null);

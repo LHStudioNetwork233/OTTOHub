@@ -30,7 +30,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 	private static final int STATUS_DEF = 0;
 	private static final int STATUS_LOADING = 1;
 	private Context main;
-    private int currectType;
+	private int currectType;
 	private List<Video> dataList;
 	private boolean isLoading = false;
 
@@ -66,23 +66,12 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 	public VideoAdapter(Context c, List<Video> data) {
 		main = c;
-		dataList = new ArrayList<Video>(new LinkedHashSet<Video>(compare(data)));
-        if(data.isEmpty()){
-            currectType = Video.VIDEO_DEF;
-        }else{
-            currectType = data.get(0).getType();
-        }
-	}
-
-	private List<Video> compare(List<Video> list) {
-		List<Video> newData = new ArrayList<Video>(list);
-		Collections.sort(newData, new Comparator<Video>() {
-			@Override
-			public int compare(Video o1, Video o2) {
-				return Integer.compare((int) o2.getVID(), (int) o1.getVID());
-			}
-		});
-		return newData;
+		dataList = new ArrayList<Video>(new LinkedHashSet<Video>(data));
+		if (data.isEmpty()) {
+			currectType = Video.VIDEO_DEF;
+		} else {
+			currectType = data.get(0).getType();
+		}
 	}
 
 	@Override
@@ -100,7 +89,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 	public void onBindViewHolder(RecyclerView.ViewHolder vH, int p) {
 		if (vH instanceof VideoAdapter.ViewHolder) {
 			final Video currect = dataList.get(p);
-            final VideoAdapter.ViewHolder holder = (VideoAdapter.ViewHolder)vH;
+			final VideoAdapter.ViewHolder holder = (VideoAdapter.ViewHolder) vH;
 			if (currect.isLocal()) {
 				try {
 					JSONObject mainfest = currect.getInfos(main);
@@ -226,9 +215,9 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int p) {
-        if(p == STATUS_LOADING){
-            return new LoadingViewHolder(viewGroup);
-        }
+		if (p == STATUS_LOADING) {
+			return new LoadingViewHolder(viewGroup);
+		}
 		int id = currectType == Video.VIDEO_DEF ? R.layout.list_video : R.layout.list_video_detail;
 		return new ViewHolder(LayoutInflater.from(main).inflate(id, viewGroup, false), currectType);
 	}
@@ -246,7 +235,7 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 		if (dataList.containsAll(newData)) {
 			return;
 		}
-		dataList.addAll(compare(newData));
+		dataList.addAll(newData);
 		//notifyItemRangeInserted(dataList.size() - newData.size(), newData.size());
 	}
 
@@ -255,26 +244,26 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 			return;
 		}
 		dataList.clear();
-		dataList.addAll(compare(newData));
-        currectType = dataList.get(0).getType();
+		dataList.addAll(newData);
+		currectType = dataList.get(0).getType();
 		notifyDataSetChanged();
 	}
-    
-    public List<Video> getCurrentData(){
-        return dataList;
-    }
-    
-    public void startLoading(){
-        if(isLoading){
-            return;
-        }
-        isLoading = true;
-        notifyItemInserted(dataList.size());
-    }
-    
-    public void stopLoading(){
-        isLoading = false;
-        notifyItemRemoved(dataList.size());
-    }
+
+	public List<Video> getCurrentData() {
+		return dataList;
+	}
+
+	public void startLoading() {
+		if (isLoading) {
+			return;
+		}
+		isLoading = true;
+		notifyItemInserted(dataList.size());
+	}
+
+	public void stopLoading() {
+		isLoading = false;
+		notifyItemRemoved(dataList.size());
+	}
 }
 

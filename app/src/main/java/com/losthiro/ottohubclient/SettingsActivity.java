@@ -34,6 +34,12 @@ import com.losthiro.ottohubclient.impl.*;
 import android.content.*;
 import com.losthiro.ottohubclient.view.dialog.*;
 import com.losthiro.ottohubclient.utils.*;
+import androidx.recyclerview.widget.*;
+import com.losthiro.ottohubclient.adapter.setting.*;
+import com.losthiro.ottohubclient.adapter.model.*;
+import java.util.*;
+import android.graphics.drawable.*;
+import androidx.core.graphics.drawable.*;
 
 /**
  * @Author Hiro
@@ -41,7 +47,8 @@ import com.losthiro.ottohubclient.utils.*;
  */
 public class SettingsActivity extends BasicActivity {
 	public static final String TAG = "SettingsActivity";
-	private LogView main;
+	private RecyclerView main;
+	private LogView mainLog;
 	private EditText text;
 	private PopupWindow window;
 	private BottomDialog resetDialog;
@@ -56,22 +63,13 @@ public class SettingsActivity extends BasicActivity {
 		super.onCreate(savedInstanceState);
 		Log.i(TAG, "setting activity create");
 		setContentView(R.layout.activity_settings);
+		main = findViewById(R.id.settings_list);
+		main.setLayoutManager(new GridLayoutManager(this, 1));
+		main.setAdapter(new SettingsAdapter(this, initSettings()));
 		View content = findViewById(android.R.id.content);
 		Switch sw = content.findViewWithTag("show_log_switch");
-		Switch auto = content.findViewWithTag("auto_login_switch");
-		TextView tv = content.findViewWithTag("device_info");
 		text = content.findViewWithTag("text_input");
 		final AccountManager manager = AccountManager.getInstance(this);
-		String pack = ApplicationUtils.getPackage(this);
-		Object[] infos = {"android版本: android", DeviceUtils.getAndroidVersion(), "\nSDK版本: ",
-				DeviceUtils.getAndroidSDK(), "\n设备型号: ", DeviceUtils.getDeviceModel(), "\n屏幕尺寸: ",
-				DeviceUtils.getWindowHeight(this), "x", DeviceUtils.getWindowWidth(this), "\n内存大小: ",
-				DeviceUtils.getAvailableMemory(this), "\n应用包名: ", pack, "\n应用名: ", ApplicationUtils.getName(this, pack),
-				"\n版本号: ", ApplicationUtils.getVersionCode(this, pack), "\n当前版本: ",
-				ApplicationUtils.getVersionName(this, pack), "\n目标SDK: ", ApplicationUtils.getTargetSDK(this, pack),
-				"\n最小支持SDK: ", ApplicationUtils.getMinSDK(this, pack), "\n最大JVM内存: ", SystemUtils.getJVMmaxMemory(),
-				"\n当前时间戳: ", SystemUtils.getTime(), "\n当前时间: ", SystemUtils.getDate("yyyy_MM_dd_HH_mm_ss")};
-		tv.setText(StringUtils.strCat(infos));
 		sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -80,14 +78,6 @@ public class SettingsActivity extends BasicActivity {
 					return;
 				}
 				window.dismiss();
-			}
-		});
-		auto.setChecked(manager.isAuto());
-		auto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				Toast.makeText(getApplication(), "自动登录已更新为" + isChecked, Toast.LENGTH_SHORT).show();
-				manager.setAuto(isChecked);
 			}
 		});
 		Account current = manager.getAccount();
@@ -101,14 +91,19 @@ public class SettingsActivity extends BasicActivity {
 
 	@Override
 	protected void onDestroy() {
+		try {
+			ClientSettings.getInstance().release();
+		} catch (Exception e) {
+			Log.e(TAG, "release setting failed", e);
+		}
 		super.onDestroy();
 		Intent last = Client.getLastActivity();
 		if (last != null && Client.isFinishingLast(last)) {
 			Client.removeActivity();
 			startActivity(last);
 		}
-		if (main != null) {
-			main.stopLogging();
+		if (mainLog != null) {
+			mainLog.stopLogging();
 		}
 	}
 
@@ -159,6 +154,115 @@ public class SettingsActivity extends BasicActivity {
 		}
 	}
 
+	private List<SettingBasic> initSettings() {
+		final ClientSettings setting = ClientSettings.getInstance();
+		List<SettingBasic> data = new ArrayList<>();
+		data.add(new SettingTitle("客户端设置"));
+		SettingToggle autoLogin = new SettingToggle("自动登录", "每次打开时自动登录上次的账号",
+				setting.getBoolean(ClientSettings.SettingPool.ACCOUNT_AUTO_LOGIN));
+		autoLogin.setIcon(R.drawable.ic_login_black);
+		autoLogin.setOnToggleChangeListener(new SettingToggle.OnToggleChangeListener() {
+			@Override
+			public void onChange(boolean isToggle) {
+				// TODO: Implement this method
+				setting.putValue(ClientSettings.SettingPool.ACCOUNT_AUTO_LOGIN, isToggle);
+			}
+		});
+		data.add(autoLogin);
+		SettingToggle removeAccount = new SettingToggle("账号移除", "退出登录时移除列表中的当前账号",
+				setting.getBoolean(ClientSettings.SettingPool.ACCOUNT_AUTO_REMOVE));
+		removeAccount.setIcon(R.drawable.ic_remove_account);
+		removeAccount.setOnToggleChangeListener(new SettingToggle.OnToggleChangeListener() {
+			@Override
+			public void onChange(boolean isToggle) {
+				// TODO: Implement this method
+				setting.putValue(ClientSettings.SettingPool.ACCOUNT_AUTO_REMOVE, isToggle);
+			}
+		});
+		data.add(removeAccount);
+		SettingToggle permissionCheck = new SettingToggle("权限检查", "每次启动时检查权限，而不仅是第一次启动时检查",
+				setting.getBoolean(ClientSettings.SettingPool.SYSTEM_CHECK_PERMISSION));
+		permissionCheck.setIcon(R.drawable.ic_inspection_black);
+		permissionCheck.setOnToggleChangeListener(new SettingToggle.OnToggleChangeListener() {
+			@Override
+			public void onChange(boolean isToggle) {
+				// TODO: Implement this method
+				setting.putValue(ClientSettings.SettingPool.SYSTEM_CHECK_PERMISSION, isToggle);
+			}
+		});
+		data.add(permissionCheck);
+		SettingToggle useMarkdown = new SettingToggle("解析Markdown格式", "关闭后将不会处理markdown格式的内容",
+				setting.getBoolean(ClientSettings.SettingPool.MSG_MARKDOWN_SURPPORT));
+		useMarkdown.setIcon(R.drawable.ic_mark_black);
+		useMarkdown.setOnToggleChangeListener(new SettingToggle.OnToggleChangeListener() {
+			@Override
+			public void onChange(boolean isToggle) {
+				// TODO: Implement this method
+				setting.putValue(ClientSettings.SettingPool.MSG_MARKDOWN_SURPPORT, isToggle);
+			}
+		});
+		data.add(useMarkdown);
+		SettingAction cleanCache = new SettingAction("清理缓存", "点击清理APP缓存目录", new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				String msg = SystemUtils.clearCache(getApplication()) ? "缓存清理成功" : "缓存清理失败";
+				Toast.makeText(getApplication(), msg, Toast.LENGTH_SHORT).show();
+			}
+		});
+		cleanCache.setIcon(R.drawable.ic_clear_black);
+		data.add(cleanCache);
+		SettingAction settingReset = new SettingAction("重置设置", "手动将所有设置项恢复为默认设置", new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				Toast.makeText(getApplication(), "操作成功", Toast.LENGTH_SHORT).show();
+				setting.reset();
+			}
+		});
+		settingReset.setIcon(R.drawable.ic_reset_black);
+		data.add(settingReset);
+		SettingAction checkPermission = new SettingAction("申请权限", "手动申请应用所需权限", new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				checkPermission(SettingsActivity.this);
+			}
+		});
+		checkPermission.setIcon(R.drawable.ic_permission_black);
+		data.add(checkPermission);
+		SettingAction group = new SettingAction("加入群聊", "点击加入APP开发交流", new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				SystemUtils.loadUri(getApplication(),
+						"http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=q8rrsHOdfjuh53isV_itsduydqiWgyUK&authKey=Dlb5xiPw0nwjBP%2BYg0rRv%2BBVRjLrS3Ogzzo2PuItgKJyOeVU6PP5qBhnY%2B72HomV&noverify=0&group_code=1039356559");
+			}
+		});
+		group.setIcon(R.drawable.ic_qgroup_black);
+		data.add(group);
+		SettingAction logout = new SettingAction("退出登录", new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				Toast.makeText(getApplication(), "退出登录成功", Toast.LENGTH_SHORT).show();
+				AccountManager.getInstance(getApplication()).logout();
+			}
+		});
+		logout.setIcon(R.drawable.ic_logout_black);
+		data.add(logout);
+		SettingAction appinfo = new SettingAction("关于我们", new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				startActivity(new Intent(SettingsActivity.this, InfoActivity.class));
+			}
+		});
+		appinfo.setIcon(R.drawable.ic_info_black);
+		data.add(appinfo);
+		return data;
+	}
+
 	private void loadUI(Account current) {
 		NetworkUtils.getNetwork.getNetworkJson(APIManager.ProfileURI.getUserProfileURI(current.getToken()),
 				new NetworkUtils.HTTPCallback() {
@@ -173,7 +277,6 @@ public class SettingsActivity extends BasicActivity {
 									@Override
 									public void run() {
 										// TODO: Implement this method
-										Toast.makeText(getApplication(), content, Toast.LENGTH_SHORT).show();
 										Object[] text = {"UID: ", profile.opt("uid"), "\n邮箱: ", profile.opt("email"),
 												"\n注册日: ", profile.opt("time"), "\n称号: ", profile.opt("honour")};
 										((TextView) findViewById(R.id.account_info)).setText(StringUtils.strCat(text));
@@ -351,7 +454,7 @@ public class SettingsActivity extends BasicActivity {
 			@Override
 			public void onClick(DialogInterface dia, int which) {
 				phoneRequest(phone);
-                dia.dismiss();
+				dia.dismiss();
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, null);
@@ -402,7 +505,7 @@ public class SettingsActivity extends BasicActivity {
 			@Override
 			public void onClick(DialogInterface dia, int which) {
 				qqRequest(qq);
-                dia.dismiss();
+				dia.dismiss();
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, null);
@@ -458,7 +561,7 @@ public class SettingsActivity extends BasicActivity {
 			@Override
 			public void onClick(DialogInterface dia, int which) {
 				nameRequest(name);
-                dia.dismiss();
+				dia.dismiss();
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, null);
@@ -509,7 +612,7 @@ public class SettingsActivity extends BasicActivity {
 			@Override
 			public void onClick(DialogInterface dia, int which) {
 				sexRequest(sex);
-                dia.dismiss();
+				dia.dismiss();
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, null);
@@ -560,7 +663,7 @@ public class SettingsActivity extends BasicActivity {
 			@Override
 			public void onClick(DialogInterface dia, int which) {
 				introRequest(intro);
-                dia.dismiss();
+				dia.dismiss();
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, null);
@@ -604,8 +707,8 @@ public class SettingsActivity extends BasicActivity {
 	}
 
 	private void initWindow() {
-		main = new LogView(this);
-		main.startLogging();
+		mainLog = new LogView(this);
+		mainLog.startLogging();
 		window = new PopupWindow(-1, -1);
 		window.setContentView(main);
 		window.setTouchable(false);
@@ -758,12 +861,28 @@ public class SettingsActivity extends BasicActivity {
 		});
 	}
 
+	public static void checkPermission(final Activity a) {
+		PermissionHelper.requestPermissions(a,
+				new String[]{"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE"},
+				new PermissionHelper.PermissionCallback() {
+					@Override
+					public void onAllGranted() {
+						Toast.makeText(a, "权限授予成功", Toast.LENGTH_SHORT).show();
+						Client.initSettings(a);
+					}
+
+					@Override
+					public void onDeniedWithNeverAsk() {
+						Toast.makeText(a, "权限已拒绝(后续可在设置重新授予)", Toast.LENGTH_SHORT).show();
+					}
+				});
+	}
+
 	public void saveLog(View v) {
-		Object[] name = {
-				FileUtils.getStorage(this, null),
-				"OTTOHub_runlog_", SystemUtils.getDate("yyyy_MM_dd_HH_mm_ss_"), SystemUtils.getTime(), ".log"};
-		if (main != null) {
-			main.saveLog(StringUtils.strCat(name));
+		Object[] name = {FileUtils.getStorage(this, null), "OTTOHub_runlog_",
+				SystemUtils.getDate("yyyy_MM_dd_HH_mm_ss_"), SystemUtils.getTime(), ".log"};
+		if (mainLog != null) {
+			mainLog.saveLog(StringUtils.strCat(name));
 			Log.i(TAG, "log save success");
 		}
 	}
@@ -774,12 +893,6 @@ public class SettingsActivity extends BasicActivity {
 
 	public void sendApp(View v) {
 		send(5788);
-	}
-
-	public void group(View v) {
-		Toast.makeText(getApplication(), "捣乱的别来，只欢迎对OTTOHub开发感兴趣的", Toast.LENGTH_SHORT).show();
-		SystemUtils.loadUri(this,
-				"http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=q8rrsHOdfjuh53isV_itsduydqiWgyUK&authKey=Dlb5xiPw0nwjBP%2BYg0rRv%2BBVRjLrS3Ogzzo2PuItgKJyOeVU6PP5qBhnY%2B72HomV&noverify=0&group_code=1039356559");
 	}
 
 	public void quit(View v) {

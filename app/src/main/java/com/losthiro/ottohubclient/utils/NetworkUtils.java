@@ -148,13 +148,8 @@ public class NetworkUtils {
 						connection.setDoOutput(true);
 						connection.setConnectTimeout(timeOut);
 						connection.setReadTimeout(timeOut);
-                        connection.setRequestProperty("Host", "api.ottohub.cn");
-                        connection.setRequestProperty("Origin", "https://m.ottohub.cn");
-                        connection.setRequestProperty("Referer", "https://m.ottohub.cn/");
 						connection.setRequestProperty("Content-Type",
 								"application/x-www-form-urlencoded; charset=UTF-8");
-						connection.setRequestProperty("User-Agent",
-								"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3");
 						try (OutputStream os = connection.getOutputStream()) {
 							byte[] input = postData.getBytes(StandardCharsets.UTF_8);
 							os.write(input, 0, input.length);

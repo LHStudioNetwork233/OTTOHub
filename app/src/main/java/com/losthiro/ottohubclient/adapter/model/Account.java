@@ -30,8 +30,8 @@ public class Account {
         if (root == null) {
             return -1;
         }
-        String stringID=root.optString("uid", "-1");
-        return stringID == null || stringID.isEmpty() ? root.optLong("uid", -1): Long.parseLong(stringID);
+        String stringID=root.optString("uid", null);
+        return stringID == null ? root.optLong("uid", -1): Long.parseLong(stringID);
     }
 
     public String getName() {

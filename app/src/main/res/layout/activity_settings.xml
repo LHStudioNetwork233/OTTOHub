@@ -36,6 +36,11 @@
 
 	</LinearLayout>
 
+	<androidx.recyclerview.widget.RecyclerView
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:id="@+id/settings_list"/>
+
 	<ScrollView
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
@@ -45,64 +50,6 @@
 			android:orientation="vertical"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content">
-
-			<LinearLayout
-				android:gravity="center"
-				android:orientation="horizontal"
-				android:padding="5dp"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginLeft="30dp"
-				android:layout_marginTop="30dp"
-				android:layout_alignParentLeft="true">
-
-				<ImageView
-					android:layout_width="100dp"
-					android:layout_height="100dp"
-					android:src="@drawable/ic_launcher"/>
-
-				<LinearLayout
-					android:gravity="center|left"
-					android:orientation="vertical"
-					android:layout_width="match_parent"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="20dp">
-
-					<TextClock
-						android:textSize="44sp"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:shadowDx="1.0"
-						android:shadowDy="1.0"
-						android:shadowRadius="10.0"
-						android:format12Hour="hh:mm:ss"
-						android:format24Hour="HH:mm:ss"
-						android:textColor="#FF000000"
-						android:textStyle="bold"/>
-
-					<TextClock
-						android:textSize="11sp"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:shadowDx="1.0"
-						android:shadowDy="1.0"
-						android:shadowRadius="10.0"
-						android:format12Hour="yyyy.MM.dd  EEa"
-						android:format24Hour="yyyy.MM.dd  EEa"
-						android:textColor="#FF000000"/>
-
-				</LinearLayout>
-
-			</LinearLayout>
-
-			<Space
-				android:layout_width="match_parent"
-				android:layout_height="20dp"/>
-
-			<View
-				android:background="#FFE5E5E5"
-				android:layout_width="match_parent"
-				android:layout_height="1dp"/>
 
 			<TextView
 				android:textSize="16sp"
@@ -180,24 +127,24 @@
 				android:layout_margin="10dp"
 				android:id="@+id/settings_edit_cover"
 				android:visibility="gone"/>
-            
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="20dp"/>
 
-            <View
-                android:background="#FFE5E5E5"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
+			<Space
+				android:layout_width="match_parent"
+				android:layout_height="20dp"/>
 
-            <TextView
-                android:textSize="16sp"
-                android:textColor="#FF666666"
-                android:layout_gravity="left"
-                android:paddingTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+			<View
+				android:background="#FFE5E5E5"
+				android:layout_width="match_parent"
+				android:layout_height="1dp"/>
+
+			<TextView
+				android:textSize="16sp"
+				android:textColor="#FF666666"
+				android:layout_gravity="left"
+				android:paddingTop="10dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
 				android:text="客户端设置"/>
 
 			<Switch
@@ -242,11 +189,6 @@
 				android:layout_height="wrap_content"
 				android:text="加入开发者交流群"
 				android:onClick="group"/>
-
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:tag="device_info"/>
 
 			<TextView
 				android:textSize="17dp"

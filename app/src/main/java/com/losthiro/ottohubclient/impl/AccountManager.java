@@ -2,6 +2,7 @@ package com.losthiro.ottohubclient.impl;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Looper;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 import com.losthiro.ottohubclient.adapter.model.Account;
@@ -11,6 +12,8 @@ import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.losthiro.ottohubclient.view.drawer.*;
+import java.util.*;
 
 /**
  * @Author Hiro
@@ -18,11 +21,13 @@ import org.json.JSONObject;
  */
 public class AccountManager {
 	public static final String TAG = "AccountManager";
-	private static final HashMap<Account, String> data = new HashMap<>();
+	private static final Handler uiThread = new Handler(Looper.getMainLooper());
+	private static final HashMap<Long, String> data = new HashMap<>();
 	private static AccountManager INSTANCE;
 	private Context main;
 	private SharedPreferences prefs;
-	private boolean isAuto = true;
+	private Runnable callback;
+	private Account current;
 	private int keyUpdateTime = 30;
 
 	private AccountManager(Context ctx) {
@@ -42,69 +47,91 @@ public class AccountManager {
 	}
 
 	public Account getAccount() {
-		for (HashMap.Entry<Account, String> account : data.entrySet()) {
-			Account a = account.getKey();
-			if (a.isCurrent()) {
-				return a;
-			}
-		}
-		return null;
+		return current;
 	}
 
-	public Account getAccount(int pos) {
-		int i = 0;
-		for (HashMap.Entry<Account, String> account : data.entrySet()) {
-			Account a = account.getKey();
-			if (i == pos) {
-				return a;
-			} else {
-				i++;
+	public long getAccountID(int pos) {
+		int index = 0;
+		for (Long key : data.keySet()) {
+			if (index == pos) {
+				return key;
 			}
+			index++;
 		}
-		return null;
+		return -1;
 	}
 
 	public boolean isLogin() {
-		if (data.isEmpty()) {
-			return false;
-		}
-		for (HashMap.Entry<Account, String> account : data.entrySet()) {
-			Account current = account.getKey();
-			if (current.isCurrent()) {
-				return true;
-			}
-		}
-		return false;
+		return current != null;
 	}
 
-	public boolean isAuto() {
-		return isAuto;
+	public void login(long uid, final String password) {
+		NetworkUtils.getNetwork.getNetworkJson(APIManager.AccountURI.getLoginURI(uid, password),
+				new NetworkUtils.HTTPCallback() {
+					@Override
+					public void onSuccess(String content) {
+						if (content == null || content.isEmpty()) {
+							onFailed("empty content");
+							return;
+						}
+						try {
+							final JSONObject root = new JSONObject(content);
+							String status = root.optString("status", "error");
+							if (status.equals("success")) {
+								String token = root.optString("token");
+								String stringID = root.optString("uid");
+								long uid = stringID == null || stringID.isEmpty()
+										? root.optLong("uid", -1)
+										: Long.parseLong(stringID);
+								loadUserDetail(uid, token, password);
+								return;
+							}
+							onFailed(root.optString("message"));
+						} catch (JSONException e) {
+							onFailed(e.toString());
+						}
+					}
+
+					@Override
+					public void onFailed(final String cause) {
+						Log.e("Network", cause);
+						uiThread.post(new Runnable(){
+                                @Override
+                                public void run() {
+                                    // TODO: Implement this method
+                                    Toast.makeText(main, cause, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+					}
+				});
 	}
 
-	public void login(Account a, String password) {
-		if (data.size() >= 5) {
-			Toast.makeText(main, "关联账户最多只能有五个哦", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		data.put(a, password);
+	public void login(long uid) {
+		login(uid, data.get(uid));
 	}
-    
-    public void logout(){
-        for (HashMap.Entry<Account, String> account : data.entrySet()) {
-            Account current = account.getKey();
-            if (current.isCurrent()) {
-                current.setCurrent(false);
-                return;
-            }
-		}
-    }
 
-	public void setAuto(boolean v) {
-		isAuto = v;
+	public void login(Account a, String pw) {
+		current = a;
+		data.put(a.getUID(), pw);
+        callback.run();
+	}
+
+	public void logout() {
+        if(ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.ACCOUNT_AUTO_REMOVE)){
+            data.remove(current.getUID());
+        }
+        current = null;
 	}
 
 	public void removeAccount(int index) {
-		data.remove(index);
+        int pos = 0;
+		for(Long key: data.keySet()) {
+            if(pos == index) {
+                data.remove(key);
+                return;
+            }
+            pos++;
+        }
 	}
 
 	public int accountCount() {
@@ -113,12 +140,16 @@ public class AccountManager {
 
 	public void resetLogin() {
 		Toast.makeText(main, "登录状态失效，请重新登录", Toast.LENGTH_SHORT).show();
-		prefs.edit().putBoolean("login_saved", false).apply();
+		//		prefs.edit().putBoolean("login_saved", false).apply();
+	}
+
+	public void setLoginCallback(Runnable listener) {
+		callback = listener;
 	}
 
 	public void autoLogin() {
-		boolean isSaved = prefs.getBoolean("login_saved", false);
-		if (isSaved && isAuto) {
+		//boolean isSaved = prefs.getBoolean("login_saved", false);
+		if (ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.ACCOUNT_AUTO_LOGIN)) {
 			String content = prefs.getString("accounts", null);
 			if (content == null) {
 				resetLogin();
@@ -135,35 +166,11 @@ public class AccountManager {
 						resetLogin();
 						break;
 					}
-					NetworkUtils.getNetwork.getNetworkJson(APIManager.AccountURI.getLoginURI(uid, pw),
-							new NetworkUtils.HTTPCallback() {
-								@Override
-								public void onSuccess(String content) {
-									if (content == null || content.isEmpty()) {
-										onFailed("empty content");
-										return;
-									}
-									try {
-										final JSONObject root = new JSONObject(content);
-										String status = root.optString("status", "error");
-										if (status.equals("success")) {
-											String token = root.optString("token");
-											String stringID = root.optString("uid");
-											long uid = stringID == null || stringID.isEmpty()
-													? root.optLong("uid", -1)
-													: Long.parseLong(stringID);
-											loadUserDetail(uid, token, pw, isCurrent);
-										}
-									} catch (JSONException e) {
-										onFailed(e.toString());
-									}
-								}
-
-								@Override
-								public void onFailed(String cause) {
-									Log.e("Network", cause);
-								}
-							});
+					if (isCurrent) {
+						login(uid, pw);
+					} else {
+						data.put(uid, pw);
+					}
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
@@ -174,14 +181,18 @@ public class AccountManager {
 
 	public void saveAccounts() {
 		JSONArray array = new JSONArray();
-		for (HashMap.Entry<Account, String> entry : data.entrySet()) {
-			Account a = entry.getKey();
+		for (HashMap.Entry<Long, String> entry : data.entrySet()) {
+			long uid = entry.getKey();
 			String pw = entry.getValue();
 			JSONObject account = new JSONObject();
 			try {
-				account.put("uid", a.getUID());
+				boolean isCurrent = false;
+				if (isLogin()) {
+					isCurrent = current.getUID() == uid;
+				}
+				account.put("uid", uid);
 				account.put("user_password", pw);
-				account.put("is_current", a.isCurrent());
+				account.put("is_current", isCurrent);
 				array.put(account);
 			} catch (JSONException e) {
 				Toast.makeText(main, e.toString(), Toast.LENGTH_SHORT).show();
@@ -193,11 +204,11 @@ public class AccountManager {
 		edit.putString("accounts", array.toString());
 		//edit.putString("user_password", password);
 		//edit.putLong("key_last_update", SystemUtils.getTime());
-		edit.putBoolean("login_saved", true);
+		//		edit.putBoolean("login_saved", true);
 		edit.commit();
 	}
 
-	private void loadUserDetail(long uid, final String token, final String pw, final boolean isCurrent) {
+	private void loadUserDetail(long uid, final String token, final String pw) {
 		NetworkUtils.getNetwork.getNetworkJson(APIManager.UserURI.getUserDetail(uid), new NetworkUtils.HTTPCallback() {
 			@Override
 			public void onSuccess(final String content) {
@@ -206,9 +217,9 @@ public class AccountManager {
 					return;
 				}
 				try {
-					Account a = new Account(main, new JSONObject(content), token);
-					a.setCurrent(isCurrent);
-					login(a, pw);
+                    current = new Account(main, new JSONObject(content), token);
+					data.put(current.getUID(), pw);
+					uiThread.post(callback);
 				} catch (JSONException e) {
 					onFailed(e.toString());
 				}

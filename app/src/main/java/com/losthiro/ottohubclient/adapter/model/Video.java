@@ -207,5 +207,11 @@ public class Video {
 		}
 		return false;
 	}
+
+	@Override
+	public int hashCode() {
+		// TODO: Implement this method
+		return isLocal ? getVideo().hashCode() : (int) getVID();
+	}
 }
 

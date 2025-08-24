@@ -17,6 +17,7 @@ import android.app.*;
 import java.net.*;
 import java.nio.charset.*;
 import com.losthiro.ottohubclient.adapter.model.*;
+import com.losthiro.ottohubclient.view.dialog.*;
 
 /**
  * @Author Hiro
@@ -26,6 +27,7 @@ public class UploadBlogActivity extends BasicActivity {
 	public static final String TAG = "UploadBlogActivity";
 	private EditText titleEdit;
 	private EditText contentEdit;
+	private EditText uriEdit;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,7 @@ public class UploadBlogActivity extends BasicActivity {
 		}
 		titleEdit = findViewById(R.id.blog_upload_title);
 		contentEdit = findViewById(R.id.blog_upload_content);
+		uriEdit = findViewById(R.id.blog_upload_uri);
 		final View parent = findViewById(R.id.blog_upload_view);
 		Switch mode = findViewById(R.id.blog_upload_switch);
 		mode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -55,7 +58,7 @@ public class UploadBlogActivity extends BasicActivity {
 					parent.setVisibility(View.VISIBLE);
 					((TextView) findViewById(R.id.blog_title)).setText(titleEdit.getText());
 					((ClientWebView) findViewById(R.id.blog_content_view))
-							.loadTextData(contentEdit.getText().toString());
+                        .loadTextData(contentEdit.getText().toString());
 				} else {
 					titleEdit.setVisibility(View.VISIBLE);
 					contentEdit.setVisibility(View.VISIBLE);
@@ -89,37 +92,57 @@ public class UploadBlogActivity extends BasicActivity {
 		// TODO: Implement this method
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == IMAGE_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-			Uri uri = data.getData();
-			new ImageMarker(this, new NetworkUtils.HTTPCallback() {
-				@Override
-				public void onSuccess(String reslutURI) {
-					// TODO: Implement this method
-					try {
-						JSONObject json = new JSONObject(reslutURI);
-						JSONObject data = json.optJSONObject("data");
-						if (data == null) {
-							onFailed("data==null");
-							return;
-						}
-						String name = data.optString("name", "");
-						String uri = data.optString("url");
-						String currentContent = contentEdit.getText().toString();
-						Object[] array = {currentContent, System.lineSeparator(), "![", name, "](", uri, ")"};
-						String newContent = StringUtils.strCat(array);
-						contentEdit.setText(newContent);
-					} catch (Exception e) {
-						onFailed(e.toString());
-					}
-				}
-
-				@Override
-				public void onFailed(String message) {
-					// TODO: Implement this method
-					Log.e("Network", message);
-					Toast.makeText(getApplication(), "上传失败，请检查是否已连接网络，如一切正常请上报至开发者", Toast.LENGTH_SHORT).show();
-				}
-			}).execute(uri);
+			loadMarker(data.getData());
 		}
+	}
+
+	private void loadMarker(Uri uri) {
+		if (!NetworkUtils.isNetworkAvailable(this)) {
+			Toast.makeText(getApplication(), "唉服务器怎么似了", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		final AlertDialog dialog = new UploadDialog(this).create();
+		new ImageMarker(this, new NetworkUtils.HTTPCallback() {
+			@Override
+			public void onSuccess(String reslutURI) {
+				// TODO: Implement this method
+				try {
+					JSONObject json = new JSONObject(reslutURI);
+					String msg = json.optString("message");
+					if (!json.optBoolean("status", false)) {
+						onFailed(msg);
+						return;
+					}
+					JSONObject data = json.optJSONObject("data");
+					if (data == null) {
+						onFailed(msg);
+						return;
+					}
+					JSONObject links = data.optJSONObject("links");
+					if (links == null) {
+						onFailed(msg);
+						return;
+					}
+					String currentContent = contentEdit.getText().toString();
+					Object[] array = {currentContent, System.lineSeparator(), links.optString("markdown"),
+							System.lineSeparator()};
+					String newContent = StringUtils.strCat(array);
+					contentEdit.setText(newContent);
+					dialog.dismiss();
+				} catch (Exception e) {
+					onFailed(e.toString());
+				}
+			}
+
+			@Override
+			public void onFailed(String message) {
+				// TODO: Implement this method
+				Log.e("Network", message);
+				dialog.dismiss();
+				Toast.makeText(getApplication(), "上传失败，请检查是否已连接网络，如一切正常请上报至开发者", Toast.LENGTH_SHORT).show();
+			}
+		}).execute(uri);
+		dialog.show();
 	}
 
 	private void loadCurrent() {
@@ -198,8 +221,10 @@ public class UploadBlogActivity extends BasicActivity {
 	private void send() {
 		Account a = AccountManager.getInstance(this).getAccount();
 		if (a == null) {
+			Toast.makeText(getApplication(), "那我缺的登录这一块", Toast.LENGTH_SHORT).show();
 			return;
 		}
+		final AlertDialog dialog = new UploadDialog(this).create();
 		NetworkUtils.postNetwork.postJSON("https://api.ottohub.cn/module/creator/submit_blog.php", APIManager.CreatorURI
 				.getSubmitBlogURI(a.getToken(), titleEdit.getText().toString(), contentEdit.getText().toString()),
 				new NetworkUtils.HTTPCallback() {
@@ -217,6 +242,7 @@ public class UploadBlogActivity extends BasicActivity {
 										int type = status == null
 												? json.optInt("if_add_experience")
 												: Integer.parseInt(status);
+										dialog.dismiss();
 										Toast.makeText(getApplication(), type == 1 ? "经验+20~冲刺冲刺" : "动态发布成功~冲刺冲刺",
 												Toast.LENGTH_SHORT).show();
 									}
@@ -235,6 +261,7 @@ public class UploadBlogActivity extends BasicActivity {
 						Log.e("Network", cause);
 					}
 				});
+		dialog.show();
 	}
 
 	public void quit(View v) {
@@ -272,6 +299,18 @@ public class UploadBlogActivity extends BasicActivity {
 	public void addImage(View v) {
 		Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		startActivityForResult(i, IMAGE_REQUEST_CODE);
+	}
+
+	public void addImageURI(View v) {
+		String uri = uriEdit.getText().toString();
+		if (uri.isEmpty()) {
+			Toast.makeText(this, "不能输入棍母uri", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		String currentContent = contentEdit.getText().toString();
+		Object[] array = {currentContent, System.lineSeparator(), "![](", uri, ")", System.lineSeparator()};
+		String newContent = StringUtils.strCat(array);
+		contentEdit.setText(newContent);
 	}
 }
 

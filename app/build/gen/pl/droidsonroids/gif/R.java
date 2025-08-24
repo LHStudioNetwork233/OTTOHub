@@ -8,16 +8,16 @@ package pl.droidsonroids.gif;
 
 public final class R {
     public static final class attr {
-        public static int freezesAnimation = 0x7f020083;
-        public static int gifSource = 0x7f020085;
-        public static int isOpaque = 0x7f020093;
-        public static int loopCount = 0x7f0200ad;
+        public static int freezesAnimation = 0x7f020084;
+        public static int gifSource = 0x7f020086;
+        public static int isOpaque = 0x7f020094;
+        public static int loopCount = 0x7f0200ae;
     }
     public static final class styleable {
-        public static int[] GifTextureView = { 0x7f020085, 0x7f020093 };
+        public static int[] GifTextureView = { 0x7f020086, 0x7f020094 };
         public static int GifTextureView_gifSource = 0x00000000;
         public static int GifTextureView_isOpaque = 0x00000001;
-        public static int[] GifView = { 0x7f020083, 0x7f0200ad };
+        public static int[] GifView = { 0x7f020084, 0x7f0200ae };
         public static int GifView_freezesAnimation = 0x00000000;
         public static int GifView_loopCount = 0x00000001;
     }

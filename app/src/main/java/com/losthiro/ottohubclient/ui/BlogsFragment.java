@@ -236,8 +236,8 @@ public class BlogsFragment extends Fragment {
 						current.setBackgroundResource(i == index ? R.drawable.btn_bg : R.drawable.btn_empty_bg);
 						current.setTextColor(i == index ? Color.WHITE : ResourceUtils.getColor(R.color.colorSecondary));
 					}
+                    categoryIndex = index;
 					requestCategory(true);
-					categoryIndex = index;
 				}
 			});
 		}

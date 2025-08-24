@@ -34,6 +34,7 @@ public class VideosFragment extends Fragment {
 	public final static String TAG = "Videos";
 	private final static Handler uiThread = new Handler(Looper.getMainLooper());
 	private static final Semaphore request = new Semaphore(1);
+    private static Runnable mCallback;
 	private Context ctx;
 	private boolean isAuto = true;
 	private int categoryIndex = 0;
@@ -114,6 +115,9 @@ public class VideosFragment extends Fragment {
                 public void onCurrentChange(Account newCurrent) {
                     // TODO: Implement this method
                     ImageDownloader.loader(userAvatar, newCurrent.getAvatarURI());
+                    if(mCallback != null){
+                        mCallback.run();
+                    }
                 }
             });
 		return parent;
@@ -180,8 +184,8 @@ public class VideosFragment extends Fragment {
 						current.setTextColor(i == index ? Color.WHITE : ResourceUtils.getColor(R.color.colorSecondary));
 					}
 					((View) popularList.getParent()).setVisibility(index > 0 ? View.GONE : View.VISIBLE);
+                    categoryIndex = index;
 					requestCategory(true);
-					categoryIndex = index;
 				}
 			});
 		}
@@ -426,5 +430,9 @@ public class VideosFragment extends Fragment {
 		current++;
 		popularList.setCurrentItem(current % max, true);
 	}
+    
+    public static void setOnAccountChangeListener(Runnable callback){
+        mCallback = callback;
+    }
 }
 

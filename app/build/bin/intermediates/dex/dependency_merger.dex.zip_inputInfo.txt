@@ -1,4 +1,5 @@
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/5dedf221c45a3fa3b25d48b260bcc005/android-gif-drawable-1.2.29.jar.dex.zip
+/storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/71cf72b59445e4f035b56f2a607250d9/annotation-1.2.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/5591d58b1b89608d806653a00382626f/core-runtime-2.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/8a30c18a9a813fd9efd81f3738b5ae9c/jsr305-3.0.2.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/f0a8ebcf925d6197de90c42ccb73225a/flexmark-ext-aside-0.64.8.jar.dex.zip
@@ -21,6 +22,7 @@
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/d687bdc944f8f36c60fe4080f955c4b4/openhtmltopdf-core-1.0.10.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/b3dfa824e69640218b611f436027740d/icu4j-72.1.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/2f083ece7865742c6621f7661f76466e/openhtmltopdf-rtl-support-1.0.10.jar.dex.zip
+/storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/8d6deeb3300b5a213eae5c5ab497821b/core-ktx-1.5.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/ea9d0cca2c82e1de81c1beaea233b6e1/flexmark-ext-macros-0.64.8.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/2568a4d68aa0a915f2cddfb40477df56/flexmark-ext-xwiki-macros-0.64.8.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/9054813383d06d6d8b4f87e5409f74a4/flexmark-html2md-converter-0.64.8.jar.dex.zip
@@ -37,6 +39,7 @@
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/654dd1fc002b39a2de9af80ba147e979/jspecify-1.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/bd4cb8cc4201d2f8e696ec687a41a1b4/flexmark-jira-converter-0.64.8.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/541fe734d332fc8952dab2dd1b70f863/openhtmltopdf-pdfbox-1.0.10.jar.dex.zip
+/storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/f593b2f7dcaaef446c22b8f6910ca402/versionedparcelable-1.1.1.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/ab117be783ca3c3ab75e48af11e285ba/flexmark-util-builder-0.64.8.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/02972a542c2effe864d68053400fbc9f/interpolator-1.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/d51983994bf1b7d0aefbb1b477d21eb3/flexmark-util-format-0.64.8.jar.dex.zip
@@ -47,7 +50,6 @@
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/9807649b9863ee872f3068b29161625c/customview-1.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/1e94feecb7244c71782ce8f88f6a0c58/flexmark-util-options-0.64.8.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/171ab2241724072f69ace0337358b9a4/bcutil-jdk15on-1.70.jar.dex.zip
-/storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/d1e806cb47a3fc50e8cc666007c08d0f/core-1.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/a3452a0308cc7845a91d391d96a0fbf1/swiperefreshlayout-1.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/6a7a1b6b3c3c0e73b47f36885a9962c1/slf4j-api-2.0.16.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/ea07303c7221c393cbf6f8bc68e9e930/lifecycle-viewmodel-2.0.0.jar.dex.zip
@@ -58,6 +60,7 @@
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/42084061d6e9b9d6eac75e07ce07f231/javax.jms-api-2.0.1.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/281bd34a032fbe386e45834027974e16/lifecycle-common-2.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/957206a35956beaf526cf59d33df0d34/flexmark-ext-gfm-tasklist-0.64.8.jar.dex.zip
+/storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/28e71c3ac3ae4fa867ff20b20ca38743/core-1.5.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/0745b9ec56b5470a756cf37f852aed83/drawerlayout-1.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/a08e60085c7c0377531c96dda80e1917/bcprov-jdk15on-1.70.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/d6f569e4073e09f12aef55430cf78121/osgi.annotation-7.0.0.jar.dex.zip
@@ -91,10 +94,10 @@
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/b8ac881bcc753be97c825d3fcbacac4b/log4j-kit-3.0.0-beta3.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/3532e871005ad6f01ded6ba82bbdbb47/org.osgi.core-6.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/b4ee849b6ec8766c97578498624c0563/flexmark-ext-definition-0.64.8.jar.dex.zip
-/storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/dcf18669373f072b77ce53c678a85f5f/annotation-1.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/e1a0db57cb8ef673f741c9f0ef1aebdf/documentfile-1.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/2cffe9b570d93c77eb58c106c9a42085/legacy-support-core-utils-1.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/80c91d9d6aa5093eb426443e0ffd223d/lifecycle-livedata-core-2.0.0.jar.dex.zip
+/storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/06caa9ee38c213fb91261ce1835dd7dc/jiaozivideoplayer-7.7.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/8fae6435f502c0c145e39fa5c1aa7cad/asynclayoutinflater-1.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/527d185d534b42eaf0298ac90ccfa909/loader-1.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/b714aabc5b1ed1336f2235d5c5b9e05f/viewpager-1.0.0.jar.dex.zip
@@ -108,7 +111,6 @@
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/76ba379a473003e87fafedb57a47f986/flexmark-ext-resizable-image-0.64.8.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/126cbee2c0031b93d87bec592ce8d18b/fontbox-3.0.5.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/8ea9dcbb57a398a0eb2fde4acc44a8b6/flexmark-ext-escaped-character-0.64.8.jar.dex.zip
-/storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/a1456f7a27246100c3681ea1e957f378/versionedparcelable-1.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/96a6f3f53c63ad4d7f3aca81b5b3f5f8/flexmark-ext-wikilink-0.64.8.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/5b3301c98a104ec2b0668c6e88962a24/collection-1.0.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/414df363a07a6614dfcd6b999c60f6c4/slidingpanelayout-1.0.0.jar.dex.zip

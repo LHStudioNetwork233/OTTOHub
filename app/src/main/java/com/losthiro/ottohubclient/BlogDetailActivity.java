@@ -174,12 +174,6 @@ public class BlogDetailActivity extends BasicActivity {
 				View parent = findViewById(android.R.id.content);
 				SlideDrawerManager manager = SlideDrawerManager.getInstance();
 				manager.registerDrawer(parent, (ImageButton) parent.findViewById(R.id.main_slide_bar));
-				manager.setOnAccountChangeListener(this, new AccountManager.AccountListener() {
-					@Override
-					public void onCurrentChange(Account newCurrent) {
-						// TODO: Implement this method
-					}
-				});
 				Account a = new Account(this, new JSONObject(content), token);
 				a.setCurrent(true);
 				AccountManager.getInstance(this).login(a, password);
