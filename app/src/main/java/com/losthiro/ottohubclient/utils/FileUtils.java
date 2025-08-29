@@ -146,22 +146,22 @@ public class FileUtils {
 		return false;
 	}
 
-	public static void clearDir(String path) {
-		File f = new File(path);
-		if (f.exists() && f.isDirectory()) {
-			for (File sub : f.listFiles()) {
-				sub.delete();
-			}
-		}
-	}
-
-	public static void targetClearDir(String path, FilenameFilter filter) {
+	public static void clearDir(String path, FileFilter filter) {
 		File f = new File(path);
 		if (f.exists() && f.isDirectory()) {
 			for (File sub : f.listFiles(filter)) {
 				sub.delete();
 			}
 		}
+	}
+    
+    public static void clearDir(String path, FilenameFilter filter) {
+        File f = new File(path);
+        if (f.exists() && f.isDirectory()) {
+            for (File sub : f.listFiles(filter)) {
+                sub.delete();
+            }
+        }
 	}
 
 	public static boolean renameFile(String path, String name) {

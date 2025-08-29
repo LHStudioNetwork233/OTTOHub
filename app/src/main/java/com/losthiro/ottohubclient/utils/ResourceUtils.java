@@ -5,6 +5,11 @@ import android.content.res.AssetManager;
 import java.io.InputStream;
 import java.io.IOException;
 import android.os.*;
+import androidx.core.content.*;
+import androidx.appcompat.content.res.*;
+import android.content.res.*;
+import com.losthiro.ottohubclient.*;
+import android.app.*;
 
 public class ResourceUtils {
 	public static final String TAG = "ResourceUtils";
@@ -29,7 +34,12 @@ public class ResourceUtils {
 	}
 
 	public static int getColor(int resID) {
-		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? c.getColor(resID) : res.getColor(resID);
+		return getColor(Client.getCurrentActivity(c), resID);
+	}
+    
+    public static int getColor(Activity act, int resID) {
+        //int def = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ? c.getColor(resID) : res.getColor(resID);
+        return act == null ? ContextCompat.getColor(c, resID):ContextCompat.getColor(act, resID);
 	}
 
 	public static InputStream getAssetsFile(String path) throws IOException {

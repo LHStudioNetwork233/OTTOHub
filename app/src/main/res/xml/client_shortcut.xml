@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:icon="@drawable/ic_settings_black"
+        android:enabled="true"
+        android:shortcutId="settings"
+        android:shortcutShortLabel="@string/label_settings"
+        android:shortcutLongLabel="@string/label_settings">
+        <categories android:name="android.intent.category.LAUNCHER" />
+        <intent
+            android:targetPackage="com.losthiro.ottohubclient"
+            android:action="android.intent.action.MAIN"
+            android:targetClass="com.losthiro.ottohubclient.SettingsActivity" />
+    </shortcut>
+</shortcuts>

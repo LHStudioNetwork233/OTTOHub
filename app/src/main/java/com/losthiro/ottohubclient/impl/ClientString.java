@@ -105,7 +105,7 @@ public class ClientString {
             newData = replaceAt(newData);
         }
         if (newData.length() > 64 && newData.length() - 64 > 8 && loadLength) {
-            newData = StringUtils.strCat(newData.substring(0, 63), "§b...展开");
+            newData = StringUtils.strCat(newData.substring(0, 63), "\n§b...展开");
         }
         //newData = getIDColor(newData);
         view.setText(getColorText(newData));

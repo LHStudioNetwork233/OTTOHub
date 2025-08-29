@@ -7,5 +7,6 @@
     <string name="error_upload">遇到了问题？不妨试试<a href="https://m.ottohub.cn/b/8263">点这里</a>查看解决方案</string>
     <string name="error_network">那我缺的网络这一块？</string>
     <string name="loading">走位中...</string>
+    <string name="label_settings">客户端设置</string>
     <string name="infos">以下是本项目相关的链接\n<a href="https://m.ottohub.cn/">网站地址</a>\n<a href="https://afdian.tv/a/ottohub">捐赠站长(不是软件开发者)</a>\n<a href="https://github.com/LHStudioNetwork233/OTTOHub">开源地址</a>\n<a href="https://b23.tv/2Bw77D5">站长B站</a>\n<a href="https://b23.tv/ZrlhtGn">APP开发者B站</a></string>
 </resources>

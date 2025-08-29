@@ -11,7 +11,7 @@ body {
     margin: 0;
     padding: 0;
     display: grid;
-    background: transparent;
+    background: #ffffff;
     font-family: sans-serif;
 }
 
@@ -169,7 +169,7 @@ tr:nth-child(even) {
     html,
     body {
         color: white;
-        background: transparent;
+        background-color: #000000;
     }
 
     h1, h2, h3, h4, h5, h6 {

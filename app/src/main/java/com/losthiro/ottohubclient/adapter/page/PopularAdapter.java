@@ -77,7 +77,11 @@ public class PopularAdapter extends PagerAdapter {
 							String uri = link.replace("https://m.ottohub.cn/", "");
 							long vid = Long.parseLong(uri.split("/", 2)[1]);
 							if (vid > 0) {
-								SearchActivity.callPlayer(main, vid);
+								Intent i=new Intent(main, PlayerActivity.class);
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                i.putExtra("vid", vid);
+                                Client.saveActivity(Client.getCurrentActivity(main).getIntent());
+                                main.startActivity(i);
 							}
 						}
 					} catch (NumberFormatException e) {

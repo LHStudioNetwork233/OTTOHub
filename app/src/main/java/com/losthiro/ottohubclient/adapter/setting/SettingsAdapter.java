@@ -66,6 +66,8 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 			int id = current.getIconID();
 			if (id != 0) {
 				vH.icon.setImageResource(id);
+			} else {
+				vH.icon.setVisibility(View.GONE);
 			}
 		} else {
 			vH.icon.setImageDrawable(icon);
@@ -109,15 +111,40 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 				break;
 			case SettingBasic.TYPE_EDITTEXT :
 				SettingEdittext edit = (SettingEdittext) current;
+				String btnText = edit.getBtnText();
 				vH.edit.setHint(edit.getHint());
 				vH.edit.setText(edit.getContent());
-				vH.editBtn.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						// TODO: Implement this method
-						((SettingEdittext) current).setContent(vH.edit.getText().toString());
-					}
-				});
+				if (btnText != null) {
+					vH.editBtn.setText(btnText);
+				}
+				if (edit.isStatic()) {
+					vH.editBtn.setVisibility(View.GONE);
+                    vH.edit.addTextChangedListener(new TextWatcher(){
+                            @Override
+                            public void afterTextChanged(Editable s) {
+                                // TODO: Implement this method
+                                ((SettingEdittext) current).setContent(s.toString());
+                            }
+
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                // TODO: Implement this method
+                            }
+
+                            @Override
+                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                // TODO: Implement this method
+                            }
+                        });
+				} else {
+					vH.editBtn.setOnClickListener(new OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							// TODO: Implement this method
+							((SettingEdittext) current).setContent(vH.edit.getText().toString());
+						}
+					});
+				}
 				break;
 			case SettingBasic.TYPE_TITLE :
 				vH.icon.setVisibility(View.GONE);
@@ -144,6 +171,15 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 				break;
 		}
 		return new ViewHolder(LayoutInflater.from(mContext).inflate(id, viewGroup, false), p);
+	}
+
+	public SettingBasic getItem(String tag) {
+		for (SettingBasic current : data) {
+			if (current.getTag() == tag) {
+				return current;
+			}
+		}
+		return null;
 	}
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {

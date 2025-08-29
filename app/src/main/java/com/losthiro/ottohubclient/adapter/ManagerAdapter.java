@@ -126,7 +126,16 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 						@Override
 						public void onClick(View v) {
 							// TODO: Implement this method
-							deleteDia(current);
+							Account a = AccountManager.getInstance(main).getAccount();
+							if (a == null) {
+								return;
+							}
+							Intent i = new Intent(Intent.ACTION_SEND);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							i.setType("text/plain");
+							i.putExtra(Intent.EXTRA_TEXT, "OTTOHub邀请你来看 " + a.getName() + " 发布的动态\n"
+									+ "https://m.ottohub.cn/b/" + current.getBID());
+							main.startActivity(Intent.createChooser(i, "share"));
 						}
 					});
 					vH.root.setOnClickListener(new OnClickListener() {
@@ -180,23 +189,24 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 					vH.share.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							deleteDia(current);
+							Account a = AccountManager.getInstance(main).getAccount();
+							if (a == null) {
+								return;
+							}
+							Intent i = new Intent(Intent.ACTION_SEND);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							i.setType("text/plain");
+							i.putExtra(Intent.EXTRA_TEXT, "OTTOHub邀请你来看 " + a.getName() + " 发布的视频\n"
+									+ "https://m.ottohub.cn/v/" + current.getVID());
+							main.startActivity(Intent.createChooser(i, "share"));
 						}
 					});
 					vH.root.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							// TODO: Implement this method
-							Account a = AccountManager.getInstance(main).getAccount();
 							Intent i = new Intent(main, PlayerActivity.class);
 							i.putExtra("vid", current.getVID());
-							i.putExtra("uid", current.getUID());
-							i.putExtra("title", current.getTitle());
-							i.putExtra("time", current.getTime());
-							i.putExtra("name", a.getName());
-							i.putExtra("view", current.getViewCount());
-							i.putExtra("like", current.getLikeCount());
-							i.putExtra("favorite", current.getFavoriteCount());
 							Intent save = ((Activity) main).getIntent();
 							Client.saveActivity(save);
 							main.startActivity(i);
@@ -221,14 +231,13 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 	@Override
 	public ManagerAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int p) {
 		// TODO: Implement this method
-		ManagerModel current = data.get(p);
 		int res = 0;
-		if (current.getType() == ManagerModel.TYPE_BLOG) {
+		if (p == ManagerModel.TYPE_BLOG) {
 			res = R.layout.list_blog_manager;
 		} else {
 			res = R.layout.list_video_manager;
 		}
-		return new ViewHolder(LayoutInflater.from(main).inflate(res, viewGroup, false), current.getType());
+		return new ViewHolder(LayoutInflater.from(main).inflate(res, viewGroup, false), p);
 	}
 
 	private void appealDia(final ManagerModel current) {

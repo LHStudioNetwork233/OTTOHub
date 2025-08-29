@@ -13,7 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.losthiro.ottohubclient.view.drawer.*;
-import java.util.*;
+import android.util.Base64;
 
 /**
  * @Author Hiro
@@ -83,7 +83,7 @@ public class AccountManager {
 								long uid = stringID == null || stringID.isEmpty()
 										? root.optLong("uid", -1)
 										: Long.parseLong(stringID);
-								loadUserDetail(uid, token, password);
+								loadUserDetail(uid, token, Base64.encodeToString(password.getBytes(), Base64.DEFAULT));
 								return;
 							}
 							onFailed(root.optString("message"));
@@ -95,13 +95,13 @@ public class AccountManager {
 					@Override
 					public void onFailed(final String cause) {
 						Log.e("Network", cause);
-						uiThread.post(new Runnable(){
-                                @Override
-                                public void run() {
-                                    // TODO: Implement this method
-                                    Toast.makeText(main, cause, Toast.LENGTH_SHORT).show();
-                                }
-                            });
+						uiThread.post(new Runnable() {
+							@Override
+							public void run() {
+								// TODO: Implement this method
+								Toast.makeText(main, cause, Toast.LENGTH_SHORT).show();
+							}
+						});
 					}
 				});
 	}
@@ -112,26 +112,30 @@ public class AccountManager {
 
 	public void login(Account a, String pw) {
 		current = a;
-		data.put(a.getUID(), pw);
-        callback.run();
+		data.put(a.getUID(), Base64.encodeToString(pw.getBytes(), Base64.DEFAULT));
+		callback.run();
 	}
 
 	public void logout() {
-        if(ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.ACCOUNT_AUTO_REMOVE)){
-            data.remove(current.getUID());
-        }
-        current = null;
+		if (ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.ACCOUNT_AUTO_REMOVE)) {
+			data.remove(current.getUID());
+		}
+		current = null;
+	}
+
+	public boolean contains(String newPassword) {
+		return data.containsValue(newPassword);
 	}
 
 	public void removeAccount(int index) {
-        int pos = 0;
-		for(Long key: data.keySet()) {
-            if(pos == index) {
-                data.remove(key);
-                return;
-            }
-            pos++;
-        }
+		int pos = 0;
+		for (Long key : data.keySet()) {
+			if (pos == index) {
+				data.remove(key);
+				return;
+			}
+			pos++;
+		}
 	}
 
 	public int accountCount() {
@@ -167,9 +171,9 @@ public class AccountManager {
 						break;
 					}
 					if (isCurrent) {
-						login(uid, pw);
+						login(uid, new String(Base64.decode(pw, Base64.DEFAULT)));
 					} else {
-						data.put(uid, pw);
+						data.put(uid, Base64.encodeToString(pw.getBytes(), Base64.DEFAULT));
 					}
 				}
 			} catch (JSONException e) {
@@ -217,7 +221,7 @@ public class AccountManager {
 					return;
 				}
 				try {
-                    current = new Account(main, new JSONObject(content), token);
+					current = new Account(main, new JSONObject(content), token);
 					data.put(current.getUID(), pw);
 					uiThread.post(callback);
 				} catch (JSONException e) {

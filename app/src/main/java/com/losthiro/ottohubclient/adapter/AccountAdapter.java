@@ -110,7 +110,13 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 	}
 
 	private void update(final ViewHolder vH, JSONObject current, final int p) {
-		final long uid = manager.getAccountID(p);
+		long id = 0;
+		Object strID = current.opt("uid");
+		try {
+			id = Long.parseLong(strID.toString());
+		} catch (NumberFormatException e) {
+		}
+		final long uid = id;
 		ImageDownloader.loader(vH.avatar, current.optString("avatar_url"));
 		vH.username.setText(current.optString("username", "棍母"));
 		vH.info.setText(StringUtils.strCat("UID: ", StringUtils.toStr(p)));

@@ -25,6 +25,8 @@ import android.database.*;
 import android.os.*;
 import android.content.res.*;
 import android.provider.*;
+import android.graphics.*;
+import com.losthiro.ottohubclient.*;
 
 /**
  * @Author Hiro
@@ -78,6 +80,7 @@ public class ClientWebView extends WebView {
 		setWebContentsDebuggingEnabled(true);
 		setWebChromeClient(new ChromeClient());
 		setWebViewClient(new ViewClient(getContext()));
+        setBackgroundColor(Color.TRANSPARENT);
 	}
 
 	public void loadTextData(String content) {
@@ -116,7 +119,11 @@ public class ClientWebView extends WebView {
 					if (uri.startsWith("v")) {
 						long vid = Long.parseLong(uri.split("/", 2)[1]);
 						if (vid > 0) {
-							SearchActivity.callPlayer(ctx, vid);
+							Intent i=new Intent(ctx, PlayerActivity.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            i.putExtra("vid", vid);
+                            Client.saveActivity(Client.getCurrentActivity(ctx).getIntent());
+                            ctx.startActivity(i);
 						}
 					}
 					if (uri.startsWith("u")) {

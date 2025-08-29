@@ -197,13 +197,6 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 					public void onClick(View v) {
 						Intent i = new Intent(main, PlayerActivity.class);
 						i.putExtra("vid", vid);
-						i.putExtra("uid", uid);
-						i.putExtra("title", title);
-						i.putExtra("time", time);
-						i.putExtra("name", name);
-						i.putExtra("view", view);
-						i.putExtra("like", like);
-						i.putExtra("favorite", favorite);
 						Intent save = ((Activity) main).getIntent();
 						Client.saveActivity(save);
 						main.startActivity(i);

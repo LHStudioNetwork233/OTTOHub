@@ -2,8 +2,8 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.losthiro.ottohubclient"
-	android:versionCode="2025082403"
-	android:versionName="v1.2.0">
+	android:versionCode="2025082904"
+	android:versionName="v1.3.0">
 
 	<uses-sdk
 		android:minSdkVersion="26"
@@ -16,13 +16,7 @@
 		android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
 	<uses-permission
-		android:name="android.permission.KEYSTORE"/>
-
-	<uses-permission
-		android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
-
-	<uses-permission
-		android:name="android.permission.QUERY_ALL_PACKAGES"/>
+		android:name="android.permission.POST_NOTIFICATIONS"/>
 
 	<uses-permission
 		android:name="android.permission.INTERNET"/>
@@ -54,7 +48,7 @@
 		<activity
 			android:name=".SplashActivity"
 			android:label="@string/app_name"
-			android:launchMode="singleInstance"
+			android:launchMode="singleTask"
 			android:exported="true">
 
 			<intent-filter>
@@ -84,13 +78,17 @@
 
 			</intent-filter>
 
+			<meta-data
+				android:name="android.app.shortcuts"
+				android:resource="@xml/client_shortcut"/>
+
 		</activity>
 
 		<activity
 			android:name=".MainActivity"
 			android:label="@string/app_name"
 			android:exported="true"
-			android:launchMode="singleInstance">
+			android:launchMode="singleTask">
 
 			<intent-filter>
 
@@ -131,9 +129,9 @@
 		<activity
 			android:name=".PlayerActivity"
 			android:exported="true"
-			android:screenOrientation="user"
 			android:hardwareAccelerated="true"
-			android:configChanges="keyboardHidden|orientation">
+			android:configChanges="screenSize|keyboardHidden|orientation"
+			android:screenOrientation="portrait">
 
 			<intent-filter>
 

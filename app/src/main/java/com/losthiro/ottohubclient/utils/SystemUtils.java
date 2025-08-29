@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Process;
 import android.util.Log;
 import android.view.Window;
 import java.util.ArrayList;
@@ -75,13 +76,13 @@ public class SystemUtils {
     }
 
     public static void restart(Activity act) {
-        Intent intent = new Intent(act, SplashActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        act.startActivity(intent);
-        act.finish();
+        loadApp(act.getApplication(), act.getPackageName());
+        act.finishAffinity();
+        exit();
     }
 
     public static void exit() {
+        Process.killProcess(Process.myPid());
         System.exit(0);
     }
 

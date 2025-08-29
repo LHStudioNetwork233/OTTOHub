@@ -230,7 +230,11 @@ public class SearchActivity extends BasicActivity {
             return;
         }
         if (query.contains("OV") || query.contains("ov") || query.contains("vid") || query.contains("VID")) {
-            callPlayer(this, str.findID("(?i)(vid|ov)\\s*"));
+            Intent i=new Intent(this, PlayerActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.putExtra("vid", str.findID("(?i)(vid|ov)\\s*"));
+            Client.saveActivity(Client.getCurrentActivity(this).getIntent());
+            startActivity(i);
             return;
         }
         if (query.contains("OU") || query.contains("ou") || query.contains("uid") || query.contains("UID")) {
@@ -505,51 +509,6 @@ public class SearchActivity extends BasicActivity {
                 }
                 break;
         }
-    }
-
-    public static void callPlayer(final Context c, final long vid) {
-        NetworkUtils.getNetwork.getNetworkJson(APIManager.VideoURI.getIDvideoURI(vid), new NetworkUtils.HTTPCallback(){
-                @Override
-                public void onSuccess(String content) {
-                    if (content == null || content.isEmpty()) {
-                        onFailed("empty content");
-                        return;
-                    }
-                    try {
-                        JSONObject json=new JSONObject(content);
-                        if (json == null) {
-                            onFailed("null json");
-                            return;
-                        }
-                        String status=json.optString("status", "error");
-                        if (status.equals("success")) {
-                            JSONArray video=json.optJSONArray("video_list");
-                            Video v = new Video(c, video.optJSONObject(0), Video.VIDEO_DEF);
-                            Intent i=new Intent(c, PlayerActivity.class);
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            i.putExtra("vid", vid);
-                            i.putExtra("uid", v.getUID());
-                            i.putExtra("title", v.getTitle());
-                            i.putExtra("time", v.getTime());
-                            i.putExtra("name", v.getUser());
-                            i.putExtra("view", v.getViewCount());
-                            i.putExtra("like", v.getLikeCount());
-                            i.putExtra("favorite", v.getFavoriteCount());
-                            Client.saveActivity(Client.getCurrentActivity(c).getIntent());
-                            c.startActivity(i);
-                            return;
-                        }
-                        onFailed(content);
-                    } catch (JSONException e) {
-                        onFailed(e.toString());
-                    }
-                }
-
-                @Override
-                public void onFailed(String cause) {
-                    Log.e("Network", cause);
-                }
-            });
     }
 
     private void addHistory(String query) {

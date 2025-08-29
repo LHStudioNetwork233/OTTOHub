@@ -74,6 +74,7 @@ import android.graphics.*;
 import androidx.fragment.app.*;
 import pl.droidsonroids.gif.GifImageView;
 import com.losthiro.ottohubclient.impl.*;
+import androidx.appcompat.app.*;
 
 /**
  * @Author Hiro
@@ -204,8 +205,8 @@ public class MainActivity extends BasicActivity {
 	private void initPageView() {
 		int pageCount = 3;
 		int currentPage = mainPage.getCurrentItem();
-		int colorAccent = ResourceUtils.getColor(R.color.colorAccent);
-		int color = ResourceUtils.getColor(R.color.colorSecondary);
+		int colorAccent = ResourceUtils.getColor(this, R.color.colorAccent);
+		int color = ResourceUtils.getColor(this, R.color.colorSecondary);
 		View parent = findViewById(android.R.id.content);
 		pages = new TextView[pageCount];
 		pages[0] = parent.findViewWithTag("main");
@@ -237,7 +238,7 @@ public class MainActivity extends BasicActivity {
 			});
 		}
 	}
-
+    
 	private void updatePage(int index) {
 		int colorAccent = ResourceUtils.getColor(R.color.colorAccent);
 		int color = ResourceUtils.getColor(R.color.colorSecondary);

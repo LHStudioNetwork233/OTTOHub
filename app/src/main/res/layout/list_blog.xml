@@ -31,19 +31,19 @@
 		android:layout_toRightOf="@id/user_avatar"
 		android:layout_below="@id/blog_title"
 		android:id="@+id/blog_info"
-        android:textColor="@color/text_color"
+		android:textColor="@color/text_color"
 		android:textSize="10sp"/>
 
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_toRightOf="@id/user_avatar"
-		android:layout_below="@id/blog_info"
+		android:layout_below="@id/user_avatar"
 		android:id="@+id/blog_content"
-        android:textColor="@color/text_color"
-        android:autoLink="web"
+		android:textColor="@color/text_color"
+		android:autoLink="web"
 		android:textIsSelectable="true"/>
-		
+
 	<View
 		android:background="#FFE5E5E5"
 		android:layout_width="match_parent"

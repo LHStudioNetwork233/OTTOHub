@@ -5,13 +5,13 @@
 	android:layout_height="wrap_content">
 
 	<ImageView
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:id="@+id/list_setting_icon"
-        android:src="@drawable/ic_settings_black"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="10dp"/>
-    
+		android:layout_width="35dp"
+		android:layout_height="35dp"
+		android:id="@+id/list_setting_icon"
+		android:src="@drawable/ic_settings_black"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="13dp"/>
+
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="确定"
-		android:layout_below="@id/list_setting_icon"
+		android:layout_below="@id/list_setting_text"
 		android:layout_alignParentEnd="true"
 		android:id="@+id/list_setting_edit_btn"
 		android:background="@drawable/btn_bg"
@@ -51,7 +51,7 @@
 		android:layout_marginBottom="5dp"
 		android:id="@+id/list_setting_edit"
 		android:layout_toStartOf="@id/list_setting_edit_btn"
-		android:layout_below="@id/list_setting_icon"/>
+		android:layout_below="@id/list_setting_text"/>
 
 </RelativeLayout>
 

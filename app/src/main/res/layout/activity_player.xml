@@ -11,23 +11,23 @@
 		android:layout_height="match_parent">
 
 		<FrameLayout
-			android:paddingBottom="10dp"
-			android:minHeight="160dp"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_weight="1.0"
-			android:background="#FF000000">
+            android:paddingBottom="10dp"
+            android:minHeight="200dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.0"
+            android:background="#FF000000">
 
-			<VideoView
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:id="@+id/main_video_view"
-				android:layout_gravity="center"/>
+            <cn.jzvd.JzvdStd
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/main_video_view"
+                android:layout_gravity="center"/>
 
-			<master.flame.danmaku.ui.widget.DanmakuView
-				android:id="@+id/main_danmaku"
-				android:layout_width="match_parent"
-				android:layout_height="match_parent"/>
+            <master.flame.danmaku.ui.widget.DanmakuView
+                android:id="@+id/main_danmaku"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
 		</FrameLayout>
 

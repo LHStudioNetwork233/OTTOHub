@@ -154,11 +154,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 		vH.share.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				String content = currect.getContent();
+				if (content.length() > 10) {
+					content = content.substring(0, 10) + "...";
+				}
+				String type = currect.getType() == Comment.TYPE_BLOG ? "b/" : "v/";
 				Intent i = new Intent(Intent.ACTION_SEND);
 				i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 				i.setType("text/plain");
-				i.putExtra(Intent.EXTRA_TEXT,
-						"OTTOHub邀请你来看评论 " + currect.getCID() + " " + currect.getUser() + "说:" + currect.getContent());
+				i.putExtra(Intent.EXTRA_TEXT, "OTTOHub邀请你来看评论 " + currect.getUser() + " 说:" + content
+						+ "\n原文地址: https://m.ottohub.cn/" + type + currect.getID());
 				main.startActivity(Intent.createChooser(i, "share"));
 			}
 		});
@@ -288,7 +293,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
 		public void showChildComment(List<Comment> childList, int count) {
 			View inflate = LayoutInflater.from(ctx).inflate(R.layout.dialog_child_comment, null);
-            BottomDialog commentDialog = new BottomDialog(ctx, inflate);
+			BottomDialog commentDialog = new BottomDialog(ctx, inflate);
 			((TextView) inflate.findViewWithTag("comment_count")).setText("总共" + count + "条评论");
 			RecyclerView view = inflate.findViewWithTag("child_comment_list");
 			view.setAdapter(new CommentAdapter(ctx, childList, false));

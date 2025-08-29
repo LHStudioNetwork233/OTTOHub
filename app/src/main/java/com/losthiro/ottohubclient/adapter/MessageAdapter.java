@@ -176,7 +176,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 							Client.saveActivity(save);
 							main.startActivity(i);
 						} else if (current.getContent().contains("视频")) {
-							callPlayer(str.findID("VID+:"));
+                            Intent i = new Intent(main, PlayerActivity.class);
+                            i.putExtra("vid", str.findID("VID+:"));
+                            Intent save = ((Activity) main).getIntent();
+                            Client.saveActivity(save);
+                            main.startActivity(i);
 						} else if (current.isEmail()) {
 							Intent i = new Intent(main, MessageDetailActivity.class);
 							i.putExtra("sender", current.getSendUID());
@@ -186,51 +190,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 							Client.saveActivity(save);
 							main.startActivity(i);
 						}
-						return;
-					}
-					onFailed(content);
-				} catch (JSONException e) {
-					onFailed(e.toString());
-				}
-			}
-
-			@Override
-			public void onFailed(String cause) {
-				Log.e("Network", cause);
-			}
-		});
-	}
-
-	private void callPlayer(final long vid) {
-		NetworkUtils.getNetwork.getNetworkJson(APIManager.VideoURI.getIDvideoURI(vid), new NetworkUtils.HTTPCallback() {
-			@Override
-			public void onSuccess(String content) {
-				if (content == null || content.isEmpty()) {
-					onFailed("empty content");
-					return;
-				}
-				try {
-					JSONObject json = new JSONObject(content);
-					if (json == null) {
-						onFailed("null json");
-						return;
-					}
-					String status = json.optString("status", "error");
-					if (status.equals("success")) {
-						JSONArray video = json.optJSONArray("video_list");
-						Video v = new Video(main, video.optJSONObject(0), Video.VIDEO_DEF);
-						Intent i = new Intent(main, PlayerActivity.class);
-						i.putExtra("vid", vid);
-						i.putExtra("uid", v.getUID());
-						i.putExtra("title", v.getTitle());
-						i.putExtra("time", v.getTime());
-						i.putExtra("name", v.getUser());
-						i.putExtra("view", v.getViewCount());
-						i.putExtra("like", v.getLikeCount());
-						i.putExtra("favorite", v.getFavoriteCount());
-						Intent save = ((Activity) main).getIntent();
-						Client.saveActivity(save);
-						main.startActivity(i);
 						return;
 					}
 					onFailed(content);

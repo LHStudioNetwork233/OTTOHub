@@ -168,13 +168,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                             Intent i=new Intent(main, PlayerActivity.class);
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             i.putExtra("vid", currentVideo.getVID());
-                            i.putExtra("uid", currentVideo.getUID());
-                            i.putExtra("title", currentVideo.getTitle());
-                            i.putExtra("time", currentVideo.getTime());
-                            i.putExtra("name", currentVideo.getUser());
-                            i.putExtra("view", currentVideo.getViewCount());
-                            i.putExtra("like", currentVideo.getLikeCount());
-                            i.putExtra("favorite", currentVideo.getFavoriteCount());
                             Intent save=((Activity)main).getIntent();
                             Client.saveActivity(save);
                             main.startActivity(i);
@@ -186,9 +179,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     @Override
     public SearchAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int p) {
-        int type=p >= data.size() ?data.getLast().getType(): data.get(p).getType();
         int res=0;
-        switch (type) {
+        switch (p) {
             case SearchContent.TYPE_USER:
                 res = R.layout.list_user;
                 break;
@@ -201,7 +193,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         }
         View view=LayoutInflater.from(main).inflate(res, viewGroup, false);
         ViewHolder holder = new ViewHolder(view);
-        switch (type) {
+        switch (p) {
             case SearchContent.TYPE_USER:
                 holder.avatar = view.findViewById(R.id.user_avatar);
                 holder.user = view.findViewById(R.id.main_user_name);

@@ -6,12 +6,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!--读取SD卡中的内容-->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <!--读取密钥存储系统-->
-    <uses-permission android:name="android.permission.KEYSTORE"/>
-    <!-- 所有文件访问权限 -->
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-    <!-- 查询所有软件包 -->
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <!-- 显示通知 -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- 拥有完全的网络访问权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 查看网络连接 -->
@@ -37,7 +33,7 @@
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -52,13 +48,16 @@
                     android:scheme="ottohub"
                     android:host="start" />
             </intent-filter>
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/client_shortcut" />
         </activity>
         
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:exported="true"
-            android:launchMode="singleInstance">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
@@ -96,7 +95,8 @@
             android:exported="true"
             android:screenOrientation="user"
             android:hardwareAccelerated="true"
-            android:configChanges="keyboardHidden|orientation">
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />

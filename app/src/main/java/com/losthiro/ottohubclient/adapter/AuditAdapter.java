@@ -137,8 +137,7 @@ public class AuditAdapter extends RecyclerView.Adapter<AuditAdapter.ViewHolder> 
 	public AuditAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int p) {
 		// TODO: Implement this method
 		LayoutInflater inflater = LayoutInflater.from(main);
-		AuditModel current = data.get(p);
-		switch (current.getType()) {
+		switch (p) {
 			case AuditModel.TYPE_VIDEO :
 				return new ViewHolder(inflater.inflate(R.layout.list_video_detail, viewGroup, false),
 						AuditModel.TYPE_VIDEO);

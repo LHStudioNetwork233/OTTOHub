@@ -74,6 +74,7 @@ import android.graphics.drawable.*;
 import com.losthiro.ottohubclient.view.dialog.*;
 import com.losthiro.ottohubclient.adapter.model.*;
 import com.losthiro.ottohubclient.utils.*;
+import cn.jzvd.*;
 
 /**
  * @Author Hiro
@@ -86,7 +87,7 @@ public class PlayerActivity extends BasicActivity {
 	private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 	private static final InfoParser parser = new InfoParser();
 	public static EditText commentEdit;
-	private static VideoView main;
+	private static JzvdStd main;
 	private static IDanmakuView danmaku;
 	private Intent player;
 	private VideoInfo current;
@@ -113,30 +114,24 @@ public class PlayerActivity extends BasicActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_player);
-        long id;
-		final Intent i = getIntent();
+		long id;
+		Intent i = getIntent();
 		if (savedInstanceState != null) {
 			videoPosition = savedInstanceState.getInt("video_current");
 			videoHeight = savedInstanceState.getInt("video_height");
 		}
-        Uri data = i.getData();
-        if (data != null) {
-            String idStr = data.getQueryParameter("vid");
-            if(idStr == null){
-                Log.e(TAG, "error start: not found video id or video id is empty");
-                return;
-            }
-            try{
-                id = Long.parseLong(idStr);
-                parser.isLocal = true;
-            }catch(NumberFormatException e){
-                Log.e(TAG, "error start: video id is not a number", e);
-                id = -1;
-            }
-		}else{
-            id = i.getLongExtra("vid", -1);
-            parser.isLocal = i.getBooleanExtra("is_local", false);
-        }
+		Uri data = i.getData();
+		try {
+			String idStr = data.getQueryParameter("vid");
+			if (idStr == null) {
+				throw new Exception();
+			}
+			id = Long.parseLong(idStr);
+			//parser.isLocal = false;
+		} catch (Exception unuse) {
+			id = i.getLongExtra("vid", -1);
+			parser.isLocal = i.getBooleanExtra("is_local", false);
+		}
 		final Context c = getApplication();
 		final Handler h = new Handler();
 		final RecyclerView videoList = findViewById(R.id.video_detail_list);
@@ -152,9 +147,8 @@ public class PlayerActivity extends BasicActivity {
 		player.putExtra("play_callback", callback);
 		if (parser.isLocal) {
 			current = new VideoInfo(i.getStringExtra("root_path"), vid);
-			loadUI(vid, i);
+			loadUI(vid);
 		} else {
-			parser.uid = i.getLongExtra("uid", -1);
 			AccountManager manager = AccountManager.getInstance(this);
 			String uri = manager.isLogin()
 					? APIManager.VideoURI.getVideoDetail(manager.getAccount().getToken(), vid)
@@ -175,7 +169,7 @@ public class PlayerActivity extends BasicActivity {
 							h.post(new Runnable() {
 								@Override
 								public void run() {
-									loadUI(vid, i);
+									loadUI(vid);
 								}
 							});
 						}
@@ -226,30 +220,29 @@ public class PlayerActivity extends BasicActivity {
 						}
 					});
 		}
-		Toast.makeText(getApplication(), "旋转屏幕进入全屏", Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
 	protected void onPause() {
-		player.putExtra("current_pos", main.getCurrentPosition());
+		player.putExtra("current_pos", main.getCurrentPositionWhenPlaying());
 		startForegroundService(player);
 		super.onPause();
 		if (danmaku != null && danmaku.isPrepared()) {
 			danmaku.pause();
 		}
 		if (main != null) {
-			main.pause();
+			main.goOnPlayOnPause();
 		}
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		if (main != null) {
-			main.seekTo(PlayerService.getCurrent());
-			main.start();
-			stopService(player);
-		}
+		//		if (main != null) {
+		//			main.mediaInterface.seekTo(PlayerService.getCurrent());
+		//			main.mediaInterface.start();
+		//			stopService(player);
+		//		}
 	}
 
 	@Override
@@ -259,8 +252,8 @@ public class PlayerActivity extends BasicActivity {
 			danmaku.resume();
 		}
 		if (main != null) {
-			main.seekTo(PlayerService.getCurrent());
-			main.start();
+			main.seekToManulPosition = PlayerService.getCurrent();
+			main.goOnPlayOnResume();
 			stopService(player);
 		}
 	}
@@ -272,6 +265,7 @@ public class PlayerActivity extends BasicActivity {
 			danmaku.release();
 			danmaku = null;
 		}
+		main.releaseAllVideos();
 		Intent last = Client.getLastActivity();
 		if (last != null && Client.isFinishingLast(last)) {
 			Client.removeActivity();
@@ -282,6 +276,9 @@ public class PlayerActivity extends BasicActivity {
 
 	@Override
 	public void onBackPressed() {
+		if (main.backPress()) {
+			return;
+		}
 		if (System.currentTimeMillis() - firstBackTime > 2000) {
 			Toast.makeText(this, "再按一次返回键退出播放", Toast.LENGTH_SHORT).show();
 			if (commentView != null) {
@@ -306,34 +303,13 @@ public class PlayerActivity extends BasicActivity {
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newMetrics) {
-		try {
-			super.onConfigurationChanged(newMetrics);
-			if (newMetrics.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-				getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
-				main.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-						ViewGroup.LayoutParams.MATCH_PARENT));
-				setContentView(R.layout.activity_player);
-			} else if (newMetrics.orientation == Configuration.ORIENTATION_PORTRAIT) {
-				getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-				main.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-						ViewGroup.LayoutParams.WRAP_CONTENT));
-				setContentView(R.layout.activity_player_fullscreen);
-			}
-		} catch (Exception e) {
-			Toast.makeText(getApplication(), e.toString(), Toast.LENGTH_SHORT).show();
-			e.printStackTrace();
-		}
-	}
-
-	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt("video_current", videoPosition);
 		outState.putInt("video_height", videoHeight);
 	}
 
-	private void loadUI(final long vid, Intent i) {
+	private void loadUI(final long vid) {
 		JSONObject mainfest = null;
 		try {
 			mainfest = current.getInfos(this);
@@ -342,18 +318,20 @@ public class PlayerActivity extends BasicActivity {
 		}
 		String userIntro = parser.isLocal ? mainfest.optString("user_intro", "大家好啊，我是电棍") : current.getUserIntro();
 		String type = parser.isLocal ? mainfest.optString("type", "其他") : current.getType();
-		if (parser.isLocal) {
-			parser.uid = mainfest.optLong("uid", -1);
-		}
+        String[] data = new String[3];
+        if(!parser.isLocal){
+            data = current.getDataCount();
+        }
 		parser.vid = vid;
-		parser.title = parser.isLocal ? mainfest.optString("title", "大家好啊，今天来点大家想看的东西") : i.getStringExtra("title");
-		parser.time = parser.isLocal ? mainfest.optString("time", "2009-04-09 00:00:00") : i.getStringExtra("time");
-		parser.name = parser.isLocal ? mainfest.optString("user_name", "棍母") : i.getStringExtra("name");
-		parser.view = parser.isLocal ? mainfest.optString("view_count", "0播放") : i.getStringExtra("view");
-		parser.like = parser.isLocal ? mainfest.optString("like_count", "0获赞") : i.getStringExtra("like");
-		parser.favourite = parser.isLocal ? mainfest.optString("favorite_count", "0冷藏") : i.getStringExtra("favorite");
+        parser.uid = parser.isLocal ? mainfest.optLong("uid", -1) : current.getUID();
+		parser.title = parser.isLocal ? mainfest.optString("title", "大家好啊，今天来点大家想看的东西") : current.getTitle();
+		parser.time = parser.isLocal ? mainfest.optString("time", "2009-04-09 00:00:00") : current.getTime();
+		parser.name = parser.isLocal ? mainfest.optString("user_name", "棍母") : current.getUserName();
+		parser.view = parser.isLocal ? mainfest.optString("view_count", "0播放") : data[0];
+		parser.like = parser.isLocal ? mainfest.optString("like_count", "0获赞") : data[1];
+		parser.favourite = parser.isLocal ? mainfest.optString("favorite_count", "0冷藏") : data[2];
 		player.putExtra("video_source", current.getVideo());
-        int color = ResourceUtils.getColor(R.color.colorSecondary);
+		int color = ResourceUtils.getColor(R.color.colorSecondary);
 		String info = StringUtils.strCat(new Object[]{parser.time, " - ", parser.view, " - ", type, " - OV", vid});
 		final String intro = parser.isLocal ? mainfest.optString("intro", "打野的走位我就觉得你妈逼离谱") : current.getIntro();
 		((TextView) findViewById(R.id.video_detail_info)).setText(info);
@@ -376,8 +354,8 @@ public class PlayerActivity extends BasicActivity {
 		favouriteView.setText(parser.favourite);
 		((TextView) findViewById(R.id.videos_detail_user_name)).setText(parser.name);
 		((TextView) findViewById(R.id.video_detail_user_intro)).setText(userIntro);
-        ((ImageButton)findViewById(android.R.id.content).findViewWithTag("1")).setColorFilter(color);
-        ((ImageButton)findViewById(android.R.id.content).findViewWithTag("2")).setColorFilter(color);
+		((ImageButton) findViewById(android.R.id.content).findViewWithTag("1")).setColorFilter(color);
+		((ImageButton) findViewById(android.R.id.content).findViewWithTag("2")).setColorFilter(color);
 		List<String> tagList = parser.isLocal
 				? getLocalTags(mainfest.optJSONArray("tags"))
 				: Arrays.asList(current.getTags());
@@ -422,7 +400,9 @@ public class PlayerActivity extends BasicActivity {
 				}
 			});
 			ImageButton likeBtn = findViewById(R.id.video_like_btn);
-			likeBtn.setColorFilter(current.isLike() ? ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.colorSecondary));
+			likeBtn.setColorFilter(current.isLike()
+					? ResourceUtils.getColor(R.color.colorAccent)
+					: ResourceUtils.getColor(R.color.colorSecondary));
 			likeBtn.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -430,7 +410,9 @@ public class PlayerActivity extends BasicActivity {
 				}
 			});
 			ImageButton favouriteBtn = findViewById(R.id.video_favorite_btn);
-			favouriteBtn.setColorFilter(current.isFavorite() ? ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.colorSecondary));
+			favouriteBtn.setColorFilter(current.isFavorite()
+					? ResourceUtils.getColor(R.color.colorAccent)
+					: ResourceUtils.getColor(R.color.colorSecondary));
 			favouriteBtn.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -458,8 +440,12 @@ public class PlayerActivity extends BasicActivity {
 			@Override
 			public void onClick(View v) {
 				if (isOnInfo) {
-					((Button) v).setTextColor(isOnInfo ? ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.text_color));
-					infoBtn.setTextColor(isOnInfo ? ResourceUtils.getColor(R.color.text_color) : ResourceUtils.getColor(R.color.colorAccent));
+					((Button) v).setTextColor(isOnInfo
+							? ResourceUtils.getColor(R.color.colorAccent)
+							: ResourceUtils.getColor(R.color.text_color));
+					infoBtn.setTextColor(isOnInfo
+							? ResourceUtils.getColor(R.color.text_color)
+							: ResourceUtils.getColor(R.color.colorAccent));
 					detailView.setVisibility(View.GONE);
 					commentRefresh.setVisibility(View.VISIBLE);
 					View parent = (View) commentEdit.getParent();
@@ -474,8 +460,12 @@ public class PlayerActivity extends BasicActivity {
 				if (isOnInfo) {
 					return;
 				}
-				((Button) v).setTextColor(isOnInfo ? ResourceUtils.getColor(R.color.text_color) : ResourceUtils.getColor(R.color.colorAccent));
-				commentBtn.setTextColor(isOnInfo ? ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.text_color));
+				((Button) v).setTextColor(isOnInfo
+						? ResourceUtils.getColor(R.color.text_color)
+						: ResourceUtils.getColor(R.color.colorAccent));
+				commentBtn.setTextColor(isOnInfo
+						? ResourceUtils.getColor(R.color.colorAccent)
+						: ResourceUtils.getColor(R.color.text_color));
 				detailView.setVisibility(View.VISIBLE);
 				commentRefresh.setVisibility(View.GONE);
 				View parent = (View) commentEdit.getParent();
@@ -507,14 +497,8 @@ public class PlayerActivity extends BasicActivity {
 			}
 		});
 		main = findViewById(R.id.main_video_view);
-		MediaController control = new MediaController(this);
-		control.setAnchorView(main);
-		main.setMediaController(control);
-		if (parser.isLocal) {
-			main.setVideoPath(current.getVideo());
-		} else {
-			main.setVideoURI(Uri.parse(current.getVideo()));
-		}
+		main.setUp(current.getVideo(), parser.title);
+		ImageDownloader.loader(main.posterImageView, current.getCover());
 		main.post(new Runnable() {
 			@Override
 			public void run() {
@@ -557,48 +541,48 @@ public class PlayerActivity extends BasicActivity {
 			try {
 				JSONArray array = current.getDanmakuList(this);
 				danmaku.prepare(new ClientDanmakuParser(array), controller);
-				main.start();
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
-			return;
-		}
-		NetworkUtils.getNetwork.getNetworkJson(APIManager.DanmakuURI.getListURI(vid), new NetworkUtils.HTTPCallback() {
-			@Override
-			public void onSuccess(final String content) {
-				if (content == null || content.isEmpty()) {
-					onFailed("empty content");
-					return;
-				}
-				try {
-					final JSONObject root = new JSONObject(content);
-					if (root == null) {
-						onFailed("null json");
-						return;
-					}
-					String status = root.optString("status", "error");
-					if (status.equals("error")) {
-						onFailed(root.optString("message", "error 404 gunmu"));
-						return;
-					}
-					mainHandler.post(new Runnable() {
+		} else {
+			NetworkUtils.getNetwork.getNetworkJson(APIManager.DanmakuURI.getListURI(vid),
+					new NetworkUtils.HTTPCallback() {
 						@Override
-						public void run() {
-							danmakuParser = new ClientDanmakuParser(root.optJSONArray("data"));
-							danmaku.prepare(danmakuParser, controller);
+						public void onSuccess(final String content) {
+							if (content == null || content.isEmpty()) {
+								onFailed("empty content");
+								return;
+							}
+							try {
+								final JSONObject root = new JSONObject(content);
+								if (root == null) {
+									onFailed("null json");
+									return;
+								}
+								String status = root.optString("status", "error");
+								if (status.equals("error")) {
+									onFailed(root.optString("message", "error 404 gunmu"));
+									return;
+								}
+								mainHandler.post(new Runnable() {
+									@Override
+									public void run() {
+										danmakuParser = new ClientDanmakuParser(root.optJSONArray("data"));
+										danmaku.prepare(danmakuParser, controller);
+									}
+								});
+							} catch (JSONException e) {
+								onFailed(e.toString());
+							}
+						}
+
+						@Override
+						public void onFailed(String cause) {
+							Log.e("Network", cause);
 						}
 					});
-				} catch (JSONException e) {
-					onFailed(e.toString());
-				}
-			}
-
-			@Override
-			public void onFailed(String cause) {
-				Log.e("Network", cause);
-			}
-		});
-        main.start();
+		}
+		main.startVideo();
 	}
 
 	public static void setFollowingStatus(final Button followingBtn, long uid) {
@@ -692,8 +676,9 @@ public class PlayerActivity extends BasicActivity {
 								h.post(new Runnable() {
 									@Override
 									public void run() {
-										((ImageButton) v)
-												.setColorFilter(isLike ? ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.colorSecondary));
+										((ImageButton) v).setColorFilter(isLike
+												? ResourceUtils.getColor(R.color.colorAccent)
+												: ResourceUtils.getColor(R.color.colorSecondary));
 										likeCountView.setText(likeCount + "获赞");
 										String msg = isLike ? "点赞成功" : "取消点赞成功";
 										Toast.makeText(getApplication(), msg, Toast.LENGTH_SHORT).show();
@@ -744,8 +729,9 @@ public class PlayerActivity extends BasicActivity {
 								h.post(new Runnable() {
 									@Override
 									public void run() {
-										((ImageButton) v)
-												.setColorFilter(isFav ? ResourceUtils.getColor(R.color.colorAccent) : ResourceUtils.getColor(R.color.colorSecondary));
+										((ImageButton) v).setColorFilter(isFav
+												? ResourceUtils.getColor(R.color.colorAccent)
+												: ResourceUtils.getColor(R.color.colorSecondary));
 										favouriteView.setText(fCount + "冷藏");
 										String msg = isFav ? "冷藏成功" : "取消冷藏成功";
 										Toast.makeText(getApplication(), msg, Toast.LENGTH_SHORT).show();
@@ -969,6 +955,7 @@ public class PlayerActivity extends BasicActivity {
 				// TODO: Implement this method
 			}
 		});
+		main.mediaInterface.pause();
 		danmakuRender = inflate.findViewWithTag("danmaku_render");
 		pickerHex = inflate.findViewWithTag("current_color");
 		final ClientColorPicker danmakuPicker = inflate.findViewWithTag("color_picker_view");
@@ -1051,7 +1038,7 @@ public class PlayerActivity extends BasicActivity {
 		if (current == null) {
 			return;
 		}
-		final double pos = main.getCurrentPosition() / 1000;
+		final double pos = main.mediaInterface.getCurrentPosition() / 1000;
 		String rgb = StringUtils.convertToRGB(currentColor).toUpperCase(Locale.getDefault());
 		final String danmakuContent = danmakuEdit.getText().toString();
 		final String render = danmakuRender.getText().toString();
@@ -1083,6 +1070,7 @@ public class PlayerActivity extends BasicActivity {
 						data.textColor = currentColor;
 						data.textShadowColor = currentColor <= Color.BLACK ? Color.WHITE : Color.BLACK;
 						danmaku.addDanmaku(data);
+						main.mediaInterface.start();
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
@@ -1365,18 +1353,27 @@ public class PlayerActivity extends BasicActivity {
 		public long getVID() {
 			return id;
 		}
+        
+        public long getUID() {
+            String strID = main.optString("uid");
+            return strID.isEmpty() ? main.optLong("uid", -1) : Long.parseLong(strID);
+        }
 
 		public boolean isLocal() {
 			return isLocal;
 		}
+        
+        public String getTitle(){
+            return main.optString("title", "大家好啊，今天来点大家想看的东西");
+        }
 
 		public String getIntro() {
-			return main.optString("intro", "棍母");
+			return main.optString("intro", "大家好啊，我是电棍");
 		}
 
 		public String getType() {
-			String stringType = main.optString("type", "-1");
-			int type = stringType.equals("-1") ? main.optInt("type", -1) : Integer.parseInt(stringType);
+			String stringType = main.optString("type");
+			int type = stringType.isEmpty() ? main.optInt("type", -1) : Integer.parseInt(stringType);
 			switch (type) {
 				case 1 :
 					return "转载 - 侵权必删";
@@ -1385,10 +1382,36 @@ public class PlayerActivity extends BasicActivity {
 			}
 			return "其他";
 		}
+        
+        public String getTime(){
+            String format = "yyyy-MM-dd HH:mm:ss";
+            String def = SystemUtils.getDate(format);
+            if (main == null) {
+                return def;
+            }
+            String video = main.optString("time", def);
+            long time = SystemUtils.getTime() - SystemUtils.getTime(video, format);
+            if (time >= 0 && time <= 999) {
+                return "刚刚发布";
+            }
+            if (time > 1000 && time <= 60000) {
+                return time / 1000 + "秒前";
+            }
+            if (time > 60000 && time <= 3600000) {
+                return time / 60000 + "分钟前";
+            }
+            if (time > 3600000 && time <= 216000000) {
+                return time / 3600000 + "小时前";
+            }
+            if (time > 216000000 && time < 6048000000L) {
+                return time / 216000000 + "天前";
+            }
+            return video;
+        }
 
 		public String getCategory() {
-			String stringCat = main.optString("category", "-1");
-			int category = stringCat.equals("-1") ? main.optInt("type", -1) : Integer.parseInt(stringCat);
+			String stringCat = main.optString("category");
+			int category = stringCat.isEmpty() ? main.optInt("type", -1) : Integer.parseInt(stringCat);
 			switch (category) {
 				case APIManager.VideoURI.CATEGORY_OTHER :
 					return "其他";
@@ -1411,10 +1434,22 @@ public class PlayerActivity extends BasicActivity {
 		public String[] getTags() {
 			return main.optString("tag", "#棍母").split("#");
 		}
+        
+        public String getUserName(){
+            return main.optString("username", "棍母");
+        }
 
 		public String getUserIntro() {
 			return main.optString("userintro", "我是电棍");
 		}
+        
+        public String[] getDataCount() {
+            String[] data = new String[3];
+            data[0] = StringUtils.strCat(getCount(main.optString("view_count")), "播放");
+            data[1] = StringUtils.strCat(getCount(main.optString("like_count")), "获赞");
+            data[2] = StringUtils.strCat(getCount(main.optString("favorite_count")), "冷藏");
+            return data;
+        }
 
 		public boolean isLike() {
 			return main.optInt("if_like", 0) != 0;
@@ -1445,6 +1480,21 @@ public class PlayerActivity extends BasicActivity {
 		public String getAvatar() {
 			return isLocal ? new File(local, "user_avatar").getPath() : main.optString("avatar_url", null);
 		}
+        
+        private String getCount(String strCount){
+            String def = StringUtils.toStr(0);
+            if (main == null || strCount.isEmpty()) {
+                return def;
+            }
+            long count = Long.parseLong(strCount);
+            if (count >= 1000) {
+                return count / 1000 + "k";
+            }
+            if (count >= 10000) {
+                return count / 10000 + "w";
+            }
+            return strCount;
+        }
 	}
 }
 

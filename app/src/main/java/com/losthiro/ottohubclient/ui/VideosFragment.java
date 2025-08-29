@@ -34,7 +34,7 @@ public class VideosFragment extends Fragment {
 	public final static String TAG = "Videos";
 	private final static Handler uiThread = new Handler(Looper.getMainLooper());
 	private static final Semaphore request = new Semaphore(1);
-    private static Runnable mCallback;
+	private static Runnable mCallback;
 	private Context ctx;
 	private boolean isAuto = true;
 	private int categoryIndex = 0;
@@ -63,63 +63,63 @@ public class VideosFragment extends Fragment {
 		videoRefresh = parent.findViewById(R.id.video_refresh);
 		userAvatar = parent.findViewById(R.id.main_user_avatar);
 		countView = parent.findViewById(R.id.main_message_count);
-        GridLayoutManager layout = new GridLayoutManager(ctx, 2);
-        layout.setInitialPrefetchItemCount(6);
-        layout.setItemPrefetchEnabled(true);
-        videoList.setLayoutManager(layout);
-        videoList.setItemViewCacheSize(20);
-        videoList.setDrawingCacheEnabled(true);
-        videoList.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        videoList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView view, int state) {
-                    super.onScrollStateChanged(view, state);
-                    if (state == RecyclerView.SCROLL_STATE_IDLE) {
-                        int itemCount = view.getLayoutManager().getItemCount();
-                        int lastPos = ((LinearLayoutManager) view.getLayoutManager()).findLastVisibleItemPosition();
-                        if (lastPos >= itemCount - 1) {
-                            RecyclerView.Adapter adapter = videoList.getAdapter();
-                            if (adapter != null && adapter instanceof VideoAdapter) {
-                                ((VideoAdapter) adapter).startLoading();
-                            }
-                            requestCategory(false);
-                        }
-                    }
-                }
-            });
-        videoRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    Toast.makeText(ctx, R.string.loading, Toast.LENGTH_SHORT).show();
-                    requestCategory(true);
-                }
-            });
-        userAvatar.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AccountManager manager = AccountManager.getInstance(ctx);
-                    if (manager.isLogin()) {
-                        Intent i = new Intent(ctx, AccountDetailActivity.class);
-                        i.putExtra("uid", manager.getAccount().getUID());
-                        requireActivity().startActivity(i);
-                    } else {
-                        requireActivity().startActivityForResult(new Intent(ctx, LoginActivity.class),
-                                                                 BasicActivity.LOGIN_REQUEST_CODE);
-                    }
-                }
-            });
-        SlideDrawerManager slide = SlideDrawerManager.getInstance();
-        slide.registerDrawer(slide.getLastParent(), (ImageButton) parent.findViewById(R.id.main_slide_bar));
-        slide.setOnAccountChangeListener(ctx, new AccountManager.AccountListener(){
-                @Override
-                public void onCurrentChange(Account newCurrent) {
-                    // TODO: Implement this method
-                    ImageDownloader.loader(userAvatar, newCurrent.getAvatarURI());
-                    if(mCallback != null){
-                        mCallback.run();
-                    }
-                }
-            });
+		GridLayoutManager layout = new GridLayoutManager(ctx, 2);
+		layout.setInitialPrefetchItemCount(6);
+		layout.setItemPrefetchEnabled(true);
+		videoList.setLayoutManager(layout);
+		videoList.setItemViewCacheSize(20);
+		videoList.setDrawingCacheEnabled(true);
+		videoList.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+		videoList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(RecyclerView view, int state) {
+				super.onScrollStateChanged(view, state);
+				if (state == RecyclerView.SCROLL_STATE_IDLE) {
+					int itemCount = view.getLayoutManager().getItemCount();
+					int lastPos = ((LinearLayoutManager) view.getLayoutManager()).findLastVisibleItemPosition();
+					if (lastPos >= itemCount - 1) {
+						RecyclerView.Adapter adapter = videoList.getAdapter();
+						if (adapter != null && adapter instanceof VideoAdapter) {
+							((VideoAdapter) adapter).startLoading();
+						}
+						requestCategory(false);
+					}
+				}
+			}
+		});
+		videoRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				Toast.makeText(ctx, R.string.loading, Toast.LENGTH_SHORT).show();
+				requestCategory(true);
+			}
+		});
+		userAvatar.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				AccountManager manager = AccountManager.getInstance(ctx);
+				if (manager.isLogin()) {
+					Intent i = new Intent(ctx, AccountDetailActivity.class);
+					i.putExtra("uid", manager.getAccount().getUID());
+					requireActivity().startActivity(i);
+				} else {
+					requireActivity().startActivityForResult(new Intent(ctx, LoginActivity.class),
+							BasicActivity.LOGIN_REQUEST_CODE);
+				}
+			}
+		});
+		SlideDrawerManager slide = SlideDrawerManager.getInstance();
+		slide.registerDrawer(slide.getLastParent(), (ImageButton) parent.findViewById(R.id.main_slide_bar));
+		slide.setOnAccountChangeListener(ctx, new AccountManager.AccountListener() {
+			@Override
+			public void onCurrentChange(Account newCurrent) {
+				// TODO: Implement this method
+				ImageDownloader.loader(userAvatar, newCurrent.getAvatarURI());
+				if (mCallback != null) {
+					mCallback.run();
+				}
+			}
+		});
 		return parent;
 	}
 
@@ -127,18 +127,18 @@ public class VideosFragment extends Fragment {
 	public void onViewCreated(View parent, Bundle savedInstanceState) {
 		// TODO: Implement this method
 		super.onViewCreated(parent, savedInstanceState);
-        AccountManager manager = AccountManager.getInstance(ctx);
-        if (manager.isLogin()) {
-            String uri = APIManager.MessageURI.getNewMessageURI(manager.getAccount().getToken());
-            ImageDownloader.loader(userAvatar, manager.getAccount().getAvatarURI());
-            initMessageView(uri);
-        } else if (!NetworkUtils.isNetworkAvailable(ctx)) {
-            Toast.makeText(ctx, R.string.error_network, Toast.LENGTH_SHORT).show();
-        } else {
-            manager.resetLogin();
+		AccountManager manager = AccountManager.getInstance(ctx);
+		if (manager.isLogin()) {
+			String uri = APIManager.MessageURI.getNewMessageURI(manager.getAccount().getToken());
+			ImageDownloader.loader(userAvatar, manager.getAccount().getAvatarURI());
+			initMessageView(uri);
+		} else if (!NetworkUtils.isNetworkAvailable(ctx)) {
+			Toast.makeText(ctx, R.string.error_network, Toast.LENGTH_SHORT).show();
+		} else {
+			manager.resetLogin();
 		}
 		videoRefresh.setRefreshing(true);
-		initPopularList();
+		initPopularList(parent);
 		initCategoryView();
 		requestCategory(true);
 	}
@@ -184,14 +184,14 @@ public class VideosFragment extends Fragment {
 						current.setTextColor(i == index ? Color.WHITE : ResourceUtils.getColor(R.color.colorSecondary));
 					}
 					((View) popularList.getParent()).setVisibility(index > 0 ? View.GONE : View.VISIBLE);
-                    categoryIndex = index;
+					categoryIndex = index;
 					requestCategory(true);
 				}
 			});
 		}
 	}
 
-	private void initPopularList() {
+	private void initPopularList(final View parent) {
 		NetworkUtils.getNetwork.getNetworkJson(APIManager.SystemURI.getSlideURI(), new NetworkUtils.HTTPCallback() {
 			@Override
 			public void onSuccess(String content) {
@@ -217,7 +217,7 @@ public class VideosFragment extends Fragment {
 							public void run() {
 								PopularAdapter popular = new PopularAdapter(ctx, data);
 								popularList.setAdapter(popular);
-								updatePopular();
+								updatePopular(parent);
 							}
 						});
 						return;
@@ -235,8 +235,11 @@ public class VideosFragment extends Fragment {
 		});
 	}
 
-	private void updatePopular() {
-		final TextView currentTitle = getView().findViewById(R.id.list_popular_title);
+	private void updatePopular(View parent) {
+		if (parent == null) {
+			return;
+		}
+		final TextView currentTitle = parent.findViewById(R.id.list_popular_title);
 		popularList.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
 			public void onPageScrolled(int p, float p1, int p2) {
@@ -430,9 +433,9 @@ public class VideosFragment extends Fragment {
 		current++;
 		popularList.setCurrentItem(current % max, true);
 	}
-    
-    public static void setOnAccountChangeListener(Runnable callback){
-        mCallback = callback;
-    }
+
+	public static void setOnAccountChangeListener(Runnable callback) {
+		mCallback = callback;
+	}
 }
 

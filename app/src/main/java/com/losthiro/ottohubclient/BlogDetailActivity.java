@@ -72,19 +72,13 @@ public class BlogDetailActivity extends BasicActivity {
 		long id;
 		Intent i = getIntent();
 		Uri data = i.getData();
-		if (data != null) {
-            String idStr = data.getQueryParameter("bid");
-            if(idStr == null){
-                Log.e(TAG, "error start: not found blog id or blog id is empty");
-                return;
-            }
-            try{
-                id = Long.parseLong(idStr);
-            }catch(NumberFormatException e){
-                Log.e(TAG, "error start: blog id is not a number", e);
-                id = -1;
-            }
-		} else {
+		try {
+			String idStr = data.getQueryParameter("bid");
+			if (idStr == null) {
+				throw new Exception();
+			}
+			id = Long.parseLong(idStr);
+		} catch(Exception unuse) {
 			id = i.getLongExtra("bid", -1);
 		}
 		final long bid = id;
@@ -588,7 +582,8 @@ public class BlogDetailActivity extends BasicActivity {
 	public void shareBlog(View v) {
 		Intent i = new Intent(Intent.ACTION_SEND);
 		i.setType("text/plain");
-		i.putExtra(Intent.EXTRA_TEXT, "OTTOHub邀请你来看动态 OB" + current.getID() + " " + current.getUser() + " 发布的动态");
+		i.putExtra(Intent.EXTRA_TEXT,
+				"OTTOHub邀请你来看 " + current.getUser() + " 发布的动态\n" + "https://m.ottohub.cn/b/" + current.getID());
 		startActivity(Intent.createChooser(i, "share"));
 	}
 

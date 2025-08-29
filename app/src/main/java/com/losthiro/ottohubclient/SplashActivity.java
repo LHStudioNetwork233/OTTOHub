@@ -18,6 +18,8 @@ import com.losthiro.ottohubclient.impl.AccountManager;
 import android.graphics.drawable.*;
 import com.losthiro.ottohubclient.utils.*;
 import android.graphics.*;
+import com.losthiro.ottohubclient.impl.*;
+import androidx.appcompat.app.*;
 
 /**
  * @Author Hiro
@@ -25,18 +27,20 @@ import android.graphics.*;
  */
 public class SplashActivity extends BasicActivity {
     public static final String TAG = "SplashActivity";
-    private final int max=200;
+    private final int max=150;
     private int time;
     private ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        int theme = ClientSettings.getInstance().getInt(ClientSettings.SettingPool.SYSTEM_SWITCH_THEME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        AppCompatDelegate.setDefaultNightMode(theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         progress = findViewById(R.id.splash_progress);
         progress.setMax(max);
         Drawable d = progress.getProgressDrawable();
-        d.setColorFilter(ResourceUtils.getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
+        d.setColorFilter(ResourceUtils.getColor(this, R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         progress.setProgressDrawable(d);
         AccountManager.getInstance(this).autoLogin();
         ObjectAnimator anim = ObjectAnimator.ofFloat(progress, "alpha", 0f, 1f);
