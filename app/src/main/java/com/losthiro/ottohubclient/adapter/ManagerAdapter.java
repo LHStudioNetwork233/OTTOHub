@@ -131,7 +131,7 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 								return;
 							}
 							Intent i = new Intent(Intent.ACTION_SEND);
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 							i.setType("text/plain");
 							i.putExtra(Intent.EXTRA_TEXT, "OTTOHub邀请你来看 " + a.getName() + " 发布的动态\n"
 									+ "https://m.ottohub.cn/b/" + current.getBID());
@@ -194,7 +194,7 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 								return;
 							}
 							Intent i = new Intent(Intent.ACTION_SEND);
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+							i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 							i.setType("text/plain");
 							i.putExtra(Intent.EXTRA_TEXT, "OTTOHub邀请你来看 " + a.getName() + " 发布的视频\n"
 									+ "https://m.ottohub.cn/v/" + current.getVID());
@@ -352,6 +352,8 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 												? new Object[]{"成功删除动态 BID:", current.getBID()}
 												: new Object[]{"成功删除视频 VID:", current.getVID()}),
 										Toast.LENGTH_SHORT).show();
+								data.remove(current);
+								notifyDataSetChanged();
 							}
 						});
 						return;
@@ -401,8 +403,9 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 		dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dia, int which) {
-				if (FileUtils.deleteDir(current.getRootPath())) {
+				if (FileUtils.deleteDir(current.getRootPath()) && data.remove(current)) {
 					Toast.makeText(main, "删除成功", Toast.LENGTH_SHORT).show();
+					notifyDataSetChanged();
 				}
 				dia.dismiss();
 			}

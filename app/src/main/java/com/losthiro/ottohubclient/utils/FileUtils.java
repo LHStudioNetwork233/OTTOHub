@@ -45,53 +45,53 @@ public class FileUtils {
 		long bytesAvailable = stat.getBlockSizeLong() * stat.getAvailableBlocksLong();
 		return bytesAvailable > 0;
 	}
-    
-    public static String getStorage(Context ctx, String path){
-        String oldStorage = BasicActivity.getCurrentStorage();
-        String newStorage = ctx.getExternalFilesDir(null).getPath();
-        String realStorage = DeviceUtils.getAndroidSDK() >= Build.VERSION_CODES.R ? newStorage : oldStorage;
-        if(path == null){
-            return realStorage;
-        }
-        return new File(realStorage, path).getPath();
-    }
-    
-    public static File getFile(Context ctx, Uri uri){
-        String path = null;
-        Cursor cursor = null;
-        try {
-            String[] projection = {MediaStore.Images.Media.DATA};
-            cursor = ctx.getContentResolver().query(uri, projection, null, null, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                path = cursor.getString(columnIndex);
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-        return new File(path);
-    }
-    
-    public static String getSize(File f) {
-        // TODO: Implement this method
-        return formatSize(f.length());
-    }
-    
-    public static String formatSize(double size) {
-        // TODO: Implement this method
-        final String[] units = new String[] { "B", "KB", "MB", "GB", "TB" };
-        int unitIndex = 0;
-        if(size<=0){
-            return "0B";
-        }
-        while (size >= 1024 && unitIndex < units.length - 1) {
-            size /= 1024;
-            unitIndex++;
-        }
-        return String.format("%.2f %s", size, units[unitIndex]);
-    }
+
+	public static String getStorage(Context ctx, String path) {
+		String oldStorage = BasicActivity.getCurrentStorage();
+		String newStorage = ctx.getExternalFilesDir(null).getPath();
+		String realStorage = DeviceUtils.getAndroidSDK() >= Build.VERSION_CODES.R ? newStorage : oldStorage;
+		if (path == null) {
+			return realStorage;
+		}
+		return new File(realStorage, path).getPath();
+	}
+
+	public static File getFile(Context ctx, Uri uri) {
+		String path = null;
+		Cursor cursor = null;
+		try {
+			String[] projection = {MediaStore.Images.Media.DATA};
+			cursor = ctx.getContentResolver().query(uri, projection, null, null, null);
+			if (cursor != null && cursor.moveToFirst()) {
+				int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+				path = cursor.getString(columnIndex);
+			}
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+		return new File(path);
+	}
+
+	public static String getSize(File f) {
+		// TODO: Implement this method
+		return formatSize(f.length());
+	}
+
+	public static String formatSize(double size) {
+		// TODO: Implement this method
+		final String[] units = new String[]{"B", "KB", "MB", "GB", "TB"};
+		int unitIndex = 0;
+		if (size <= 0) {
+			return "0B";
+		}
+		while (size >= 1024 && unitIndex < units.length - 1) {
+			size /= 1024;
+			unitIndex++;
+		}
+		return String.format("%.2f %s", size, units[unitIndex]);
+	}
 
 	public static boolean createDir(String path) {
 		File file = new File(path);
@@ -146,22 +146,33 @@ public class FileUtils {
 		return false;
 	}
 
-	public static void clearDir(String path, FileFilter filter) {
+	public static boolean clearDir(String path) {
 		File f = new File(path);
+        List<Boolean> status = new ArrayList<>();
 		if (f.exists() && f.isDirectory()) {
-			for (File sub : f.listFiles(filter)) {
-				sub.delete();
+			for (File sub : f.listFiles()) {
+				status.add(sub.delete());
 			}
 		}
+        return !status.contains(false);
 	}
     
-    public static void clearDir(String path, FilenameFilter filter) {
+    public static void clearDir(String path, FileFilter filter) {
         File f = new File(path);
         if (f.exists() && f.isDirectory()) {
             for (File sub : f.listFiles(filter)) {
                 sub.delete();
             }
         }
+	}
+
+	public static void clearDir(String path, FilenameFilter filter) {
+		File f = new File(path);
+		if (f.exists() && f.isDirectory()) {
+			for (File sub : f.listFiles(filter)) {
+				sub.delete();
+			}
+		}
 	}
 
 	public static boolean renameFile(String path, String name) {
@@ -263,16 +274,20 @@ public class FileUtils {
 			if (old.exists()) {
 				FileInputStream fis = new FileInputStream(old);
 				FileOutputStream fos = new FileOutputStream(new File(newPath));
-				byte[] buffer = new byte[1145];
-				int byteReader;
-				while ((byteReader = fis.read(buffer)) > 0) {
-					fos.write(buffer, 0, byteReader);
-				}
+				copyFile(fis, fos);
 				fis.close();
 				fos.close();
 			}
 		} catch (Exception e) {
 			Log.e(TAG, " Copy " + oldPath + " to " + newPath + " failed, ERROR: ", e);
+		}
+	}
+
+	public static void copyFile(InputStream old, OutputStream current) throws Exception {
+		byte[] buffer = new byte[1145];
+		int byteReader;
+		while ((byteReader = old.read(buffer)) > 0) {
+			current.write(buffer, 0, byteReader);
 		}
 	}
 
@@ -347,62 +362,48 @@ public class FileUtils {
 		}
 
 		public static void unzipFile(Context c, String zipFilePath, String destDirPath) {
-			File zip = new File(zipFilePath);
-			File dir = new File(destDirPath);
 			createDir(destDirPath);
 			try {
-				if (zip.isFile()) {
-					ZipInputStream zis = new ZipInputStream(new BufferedInputStream(new FileInputStream(zip)));
-					ZipEntry entry;
-					while ((entry = zis.getNextEntry()) != null) {
-						File f = new File(dir, entry.getName());
-						File d = f.getParentFile();
-						if (!d.exists()) {
-							d.mkdirs();
-						}
-						if (f.isFile()) {
-							BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
-							byte[] buffer = new byte[1145];
-							int length;
-							while ((length = zis.read(buffer)) > 0) {
-								bos.write(buffer, 0, length);
-							}
-						}
-						zis.closeEntry();
-					}
-					zis.close();
-				}
+				ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFilePath));
+				write(destDirPath, zis);
 			} catch (Exception e) {
+				Toast.makeText(c, e.toString(), Toast.LENGTH_SHORT).show();
 				Log.e(TAG, " unZIP " + zipFilePath + " to " + destDirPath + " failed, ERROR: ", e);
 			}
 		}
 
 		public static void unzipFile(Context c, Uri ZIPUri, String destDirPath) {
-			File dir = new File(destDirPath);
 			createDir(destDirPath);
 			try {
 				ZipInputStream zis = new ZipInputStream(c.getContentResolver().openInputStream(ZIPUri));
-				ZipEntry entry;
-				while ((entry = zis.getNextEntry()) != null) {
-					File f = new File(dir, entry.getName());
-					File d = f.getParentFile();
-					if (!d.exists()) {
-						d.mkdirs();
-					}
-					if (f.isFile()) {
-						BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
-						byte[] buffer = new byte[1145];
-						int length;
-						while ((length = zis.read(buffer)) > 0) {
-							bos.write(buffer, 0, length);
-						}
-					}
-					zis.closeEntry();
-				}
-				zis.close();
+				write(destDirPath, zis);
 			} catch (Exception e) {
 				Log.e(TAG, " unZIP " + ZIPUri + " to " + destDirPath + " failed, ERROR: ", e);
 			}
+		}
+
+		private static void write(String dest, ZipInputStream zis) throws Exception {
+            byte[] buffer = new byte[1024];
+			ZipEntry zipEntry = zis.getNextEntry();
+            while (zipEntry != null) {
+                File file = new File(dest, zipEntry.getName());
+                if (!zipEntry.isDirectory()) {
+                    File parent = file.getParentFile();
+                    if (!parent.exists()) {
+                        parent.mkdirs();
+                    }
+                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                    int len;
+                    while ((len = zis.read(buffer)) > 0) {
+                        bos.write(buffer, 0, len);
+                    }
+                } else {
+                    file.mkdir();
+                }
+                zis.closeEntry();
+                zipEntry = zis.getNextEntry();
+            }
+            zis.closeEntry();
 		}
 	}
 
@@ -421,8 +422,7 @@ public class FileUtils {
 		public static String readAssetsFile(Context c, String name) {
 			StringBuilder content = new StringBuilder();
 			try {
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(ResourceUtils.getAssetsFile(name)));
+				BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceUtils.getAssetsFile(name)));
 				String line;
 				while ((line = reader.readLine()) != null) {
 					content.append(line).append(System.lineSeparator());
@@ -462,13 +462,11 @@ public class FileUtils {
 					if (!d.exists()) {
 						d.mkdirs();
 					}
-					if (f.isFile()) {
-						BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
-						byte[] buffer = new byte[1145];
-						int length;
-						while ((length = zis.read(buffer)) > 0) {
-							bos.write(buffer, 0, length);
-						}
+					BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f));
+					byte[] buffer = new byte[1145];
+					int length;
+					while ((length = zis.read(buffer)) > 0) {
+						bos.write(buffer, 0, length);
 					}
 					zis.closeEntry();
 				}

@@ -43,6 +43,7 @@ import androidx.core.graphics.drawable.*;
 import java.io.*;
 import androidx.appcompat.app.AppCompatDelegate;
 import android.os.Handler;
+import android.database.*;
 
 /**
  * @Author Hiro
@@ -80,6 +81,60 @@ public class SettingsActivity extends BasicActivity {
 		}
 		if (mainLog != null) {
 			mainLog.stopLogging();
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO: Implement this method
+		super.onActivityResult(requestCode, resultCode, data);
+		if (resultCode == RESULT_OK && data != null) {
+			Uri uri = data.getData();
+			if (uri == null) {
+				return;
+			}
+			if (requestCode == FILE_REQUEST_CODE) {
+				final File f = getRealFile(this, uri);
+				if (f == null) {
+					return;
+				}
+				if (!f.isFile() || !f.getName().endsWith(".zip") || !f.getName().startsWith("OV")) {
+					Toast.makeText(this, "格式错误，请重新选择", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle("确定导入文件？");
+				builder.setCancelable(false);
+				builder.setMessage("要求.zip格式，内部结构要与缓存视频的格式一致，开头大写ov+ov号");
+				builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dia, int which) {
+						FileUtils.ZIPUtils.unzipFile(SettingsActivity.this, f.toString(),
+								FileUtils.getStorage(SettingsActivity.this, PATH_SAVE));
+						Toast.makeText(getApplication(), "导入成功(如果不显示或出现异常就是格式不符合)", Toast.LENGTH_SHORT).show();
+						dia.dismiss();
+					}
+				});
+				builder.setNegativeButton(android.R.string.cancel, null);
+				builder.create().show();
+			}
+			if (requestCode == IMAGE_REQUEST_CODE) {
+				final String path = getMediaPath(uri);
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setTitle("确定导入背景？");
+				builder.setCancelable(false);
+				builder.setMessage(path);
+				builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dia, int which) {
+						ClientSettings.getInstance().putValue(ClientSettings.SettingPool.SYSTEM_SPLASH_BG, path);
+						Toast.makeText(getApplication(), "导入成功(原图片被删除后，该设置会失效)", Toast.LENGTH_SHORT).show();
+						dia.dismiss();
+					}
+				});
+				builder.setNegativeButton(android.R.string.cancel, null);
+				builder.create().show();
+			}
 		}
 	}
 
@@ -131,19 +186,37 @@ public class SettingsActivity extends BasicActivity {
 			}
 		});
 		data.add(useMarkdown);
+		SettingToggle backgroundPlay = new SettingToggle("后台播放", "当应用切换到后台时，不停止视频播放",
+				setting.getBoolean(ClientSettings.SettingPool.PLAYER_BACKGROUND_PLAY));
+		backgroundPlay.setIcon(R.drawable.ic_video_black);
+		backgroundPlay.setOnToggleChangeListener(new SettingToggle.OnToggleChangeListener() {
+			@Override
+			public void onChange(boolean isToggle) {
+				// TODO: Implement this method
+				setting.putValue(ClientSettings.SettingPool.PLAYER_BACKGROUND_PLAY, isToggle);
+			}
+		});
+		data.add(backgroundPlay);
+		SettingEdittext storageEdit = new SettingEdittext("自定义存储(实验性)", "自定义APP外部数据存储目录(仅Android10及以下可用)",
+				"在此输入完整外部路径...", setting.getString(ClientSettings.SettingPool.SYSTEM_STORAGE_EDIT));
+
+		storageEdit.setOnTextChangeListener(new SettingEdittext.OnTextChangeListener() {
+			@Override
+			public void onChange(String newText) {
+				// TODO: Implement this method
+				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+					Toast.makeText(getApplication(), "不支持的android版本，外部存储被限制访问", Toast.LENGTH_SHORT).show();
+					return;
+				}
+				storageDia(newText);
+			}
+		});
+		data.add(storageEdit);
 		SettingAction cleanCache = new SettingAction("清理缓存", "点击清理APP缓存目录", new Runnable() {
 			@Override
 			public void run() {
 				// TODO: Implement this method
-				FileUtils.clearDir(FileUtils.getStorage(getApplication(), null), new FileFilter() {
-					@Override
-					public boolean accept(File pathname) {
-						// TODO: Implement this method
-						return pathname.isFile() && pathname.getName().endsWith(".log");
-					}
-				});
-				String msg = SystemUtils.clearCache(getApplication()) ? "缓存清理成功" : "缓存清理失败";
-				Toast.makeText(getApplication(), msg, Toast.LENGTH_SHORT).show();
+				cleanCache(true);
 			}
 		});
 		cleanCache.setIcon(R.drawable.ic_clear_black);
@@ -158,6 +231,29 @@ public class SettingsActivity extends BasicActivity {
 		});
 		settingReset.setIcon(R.drawable.ic_reset_black);
 		data.add(settingReset);
+		SettingAction importVideo = new SettingAction("导入视频", "手动导入已缓存视频", new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+				i.setType("application/zip");
+				i.addCategory(Intent.CATEGORY_OPENABLE);
+				i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+				startActivityForResult(i, FILE_REQUEST_CODE);
+			}
+		});
+		importVideo.setIcon(R.drawable.ic_import_black);
+		data.add(importVideo);
+		SettingAction importBackground = new SettingAction("导入启动图", "自定义APP启动页面的背景图片", new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+				startActivityForResult(i, IMAGE_REQUEST_CODE);
+			}
+		});
+		importBackground.setIcon(R.drawable.ic_background_black);
+		data.add(importBackground);
 		SettingAction checkPermission = new SettingAction("申请权限", "手动申请应用所需权限", new Runnable() {
 			@Override
 			public void run() {
@@ -195,6 +291,19 @@ public class SettingsActivity extends BasicActivity {
 		});
 		themeSwitch.setIcon(R.drawable.ic_platte_black);
 		data.add(themeSwitch);
+		SettingAction share = new SettingAction("分享软件", new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				Intent i = new Intent(Intent.ACTION_SEND);
+				i.setType("text/plain");
+				i.putExtra(Intent.EXTRA_TEXT,
+						"OTTOHub邀请你来体验APP端啦~\n点击下方链接下载↓\nhttps://www.123pan.com/s/fqQojv-oyZJH.html");
+				startActivity(Intent.createChooser(i, "share"));
+			}
+		});
+		share.setIcon(R.drawable.ic_share_black);
+		data.add(share);
 		SettingAction logout = new SettingAction("退出登录", new Runnable() {
 			@Override
 			public void run() {
@@ -217,6 +326,49 @@ public class SettingsActivity extends BasicActivity {
 		return data;
 	}
 
+	private File getRealFile(Context context, Uri uri) {
+		File file = null;
+		if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
+			file = new File(uri.getPath());
+		} else if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+			ContentResolver contentResolver = context.getContentResolver();
+			Cursor cursor = contentResolver.query(uri, null, null, null, null);
+			if (cursor.moveToFirst()) {
+				String displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+				try {
+					InputStream is = contentResolver.openInputStream(uri);
+					File cache = new File(context.getExternalCacheDir().getAbsolutePath(), displayName);
+					FileOutputStream fos = new FileOutputStream(cache);
+					FileUtils.copyFile(is, fos);
+					file = cache;
+					fos.close();
+					is.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return file;
+	}
+
+	private String getMediaPath(Uri uri) {
+		String path = null;
+		Cursor cursor = null;
+		try {
+			String[] projection = {MediaStore.Images.Media.DATA};
+			cursor = getContentResolver().query(uri, projection, null, null, null);
+			if (cursor != null && cursor.moveToFirst()) {
+				int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+				path = cursor.getString(columnIndex);
+			}
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+		return path;
+	}
+
 	private void initWindow() {
 		mainLog = new LogView(this);
 		mainLog.startLogging();
@@ -224,6 +376,40 @@ public class SettingsActivity extends BasicActivity {
 		window.setContentView(main);
 		window.setTouchable(false);
 		window.setFocusable(false);
+	}
+
+	private void storageDia(final String newPath) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("设置新存储位置");
+		builder.setCancelable(false);
+		builder.setMessage("请选择一种移动现有配置文件的方法，选择完之后将会开始转移文件");
+		builder.setPositiveButton("复制(仍然保留原地址的文件)", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dia, int which) {
+				if (BasicActivity.setCurrentStorage(newPath)) {
+					Toast.makeText(getApplication(), "操作成功", Toast.LENGTH_SHORT).show();
+					FileUtils.copyFile(SettingsActivity.this, BasicActivity.getCurrentStorage(), newPath);
+				} else {
+					Toast.makeText(getApplication(), "Android版本过高或出现未知错误", Toast.LENGTH_SHORT).show();
+				}
+				dia.dismiss();
+			}
+		});
+		builder.setNeutralButton("移动(复制完之后删除原地址的所有文件)", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO: Implement this method
+				if (BasicActivity.setCurrentStorage(newPath)) {
+					Toast.makeText(getApplication(), "操作成功", Toast.LENGTH_SHORT).show();
+					FileUtils.moveFile(SettingsActivity.this, BasicActivity.getCurrentStorage(), newPath);
+				} else {
+					Toast.makeText(getApplication(), "Android版本过高或出现未知错误", Toast.LENGTH_SHORT).show();
+				}
+				dialog.dismiss();
+			}
+		});
+		builder.setNegativeButton(android.R.string.cancel, null);
+		builder.create().show();
 	}
 
 	private void send(String text) {
@@ -316,30 +502,30 @@ public class SettingsActivity extends BasicActivity {
 		builder.setNegativeButton(android.R.string.cancel, null);
 		builder.create().show();
 	}
-    
-    private void switchDia(String text, final int index){
-        final Runnable callback = new Runnable(){
-            @Override
-            public void run() {
-                // TODO: Implement this method
-                SystemUtils.restart(SettingsActivity.this);
-            }
-        };
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(StringUtils.strCat("确定切换到:", text));
-        builder.setMessage("这将会重启应用，请做好准备");
-        builder.setCancelable(false);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener(){
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    // TODO: Implement this method
-                    switchTheme(index, callback);
-                    dialog.dismiss();
-                }
-            });
-        builder.setNegativeButton(android.R.string.cancel, null);
+
+	private void switchDia(String text, final int index) {
+		final Runnable callback = new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				SystemUtils.restart(SettingsActivity.this);
+			}
+		};
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(StringUtils.strCat("确定切换到:", text));
+		builder.setMessage("这将会重启应用，请做好准备");
+		builder.setCancelable(false);
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO: Implement this method
+				switchTheme(index, callback);
+				dialog.dismiss();
+			}
+		});
+		builder.setNegativeButton(android.R.string.cancel, null);
 		builder.create().show();
-    }
+	}
 
 	private void switchTheme(int current, Runnable callback) {
 		try {
@@ -355,8 +541,8 @@ public class SettingsActivity extends BasicActivity {
 			ClientSettings setting = ClientSettings.getInstance();
 			setting.putValue(ClientSettings.SettingPool.SYSTEM_SWITCH_THEME, newTheme);
 			setting.release();
-            AppCompatDelegate.setDefaultNightMode(newTheme);
-            Toast.makeText(getApplication(), "主题设置成功，即将重启", Toast.LENGTH_SHORT).show();
+			AppCompatDelegate.setDefaultNightMode(newTheme);
+			Toast.makeText(getApplication(), "主题设置成功，即将重启", Toast.LENGTH_SHORT).show();
 			new Handler().postDelayed(callback, 1000L);
 		} catch (Exception e) {
 			Log.e(TAG, "switch theme error", e);

@@ -37,6 +37,7 @@ import org.json.JSONArray;
 import com.losthiro.ottohubclient.MainActivity;
 import com.losthiro.ottohubclient.MessageDetailActivity;
 import com.losthiro.ottohubclient.adapter.model.*;
+import android.widget.*;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 	public static final String TAG = "MessageAdapter";
@@ -74,7 +75,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 	public void onBindViewHolder(final MessageAdapter.ViewHolder vH, final int p) {
 		final Message current = data.get(p);
 		if (current.getType() == Message.TYPE_SYSTEM) {
-			vH.avatar.setVisibility(View.GONE);
+            ViewGroup.LayoutParams params = vH.avatar.getLayoutParams();
+            params.width = 0;
+            vH.avatar.setLayoutParams(params);
 		} else {
 			final Handler h = new Handler(Looper.getMainLooper());
 			NetworkUtils.getNetwork.getNetworkJson(APIManager.UserURI.getUserDetail(current.getSendUID()),

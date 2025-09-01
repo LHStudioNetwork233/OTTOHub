@@ -9,6 +9,7 @@ import org.json.*;
 import com.losthiro.ottohubclient.utils.*;
 import java.util.*;
 import androidx.appcompat.app.*;
+import com.losthiro.ottohubclient.*;
 
 public class ClientSettings {
 	private static final ClientSettings INSTANCE = new ClientSettings();
@@ -45,7 +46,7 @@ public class ClientSettings {
 			for (int i = 0; i < content.length(); i++) {
 				JSONObject obj = content.optJSONObject(i);
 				String name = obj.optString("name");
-				if (name != null) {
+				if (!name.isEmpty()) {
 					mainfest.putIfAbsent(name, obj.opt("value"));
 				}
 			}
@@ -79,8 +80,11 @@ public class ClientSettings {
 		defMap.put(SettingPool.ACCOUNT_AUTO_LOGIN, true);
 		defMap.put(SettingPool.ACCOUNT_AUTO_REMOVE, false);
 		defMap.put(SettingPool.MSG_MARKDOWN_SURPPORT, true);
+		defMap.put(SettingPool.PLAYER_BACKGROUND_PLAY, true);
 		defMap.put(SettingPool.SYSTEM_CHECK_PERMISSION, false);
-        defMap.put(SettingPool.SYSTEM_SWITCH_THEME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+		defMap.put(SettingPool.SYSTEM_SWITCH_THEME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        defMap.put(SettingPool.SYSTEM_STORAGE_EDIT, BasicActivity.OLD_STORAGE);
+        defMap.put(SettingPool.SYSTEM_SPLASH_BG, null);
 		return defMap;
 	}
 
@@ -95,13 +99,13 @@ public class ClientSettings {
 		}
 		return false;
 	}
-    
-    public boolean getBoolean(String name, boolean def) {
-        Object value = mainfest.getOrDefault(name, def);
-        if (value != null && value instanceof Boolean) {
-            return (boolean) value;
-        }
-        return def;
+
+	public boolean getBoolean(String name, boolean def) {
+		Object value = mainfest.getOrDefault(name, def);
+		if (value != null && value instanceof Boolean) {
+			return (boolean) value;
+		}
+		return def;
 	}
 
 	public int getInt(String name) {
@@ -111,13 +115,13 @@ public class ClientSettings {
 		}
 		return 0;
 	}
-    
-    public int getInt(String name, int def) {
-        Object value = mainfest.getOrDefault(name, def);
-        if (value instanceof Integer) {
-            return (int) value;
-        }
-        return def;
+
+	public int getInt(String name, int def) {
+		Object value = mainfest.getOrDefault(name, def);
+		if (value instanceof Integer) {
+			return (int) value;
+		}
+		return def;
 	}
 
 	public float getFloat(String name) {
@@ -127,39 +131,35 @@ public class ClientSettings {
 		}
 		return 0;
 	}
-    
-    public float getFloat(String name, float def) {
-        Object value = mainfest.getOrDefault(name, def);
-        if (value instanceof Float) {
-            return (float) value;
-        }
-        return def;
+
+	public float getFloat(String name, float def) {
+		Object value = mainfest.getOrDefault(name, def);
+		if (value instanceof Float) {
+			return (float) value;
+		}
+		return def;
 	}
 
 	public String getString(String name) {
-		Object value = mainfest.getOrDefault(name, new String());
-		if (value instanceof String) {
-			return (String) value;
-		}
-		return new String();
+		return getString(name, new String());
 	}
-    
-    public String getString(String name, String def) {
-        Object value = mainfest.getOrDefault(name, def);
-        if (value instanceof String) {
-            return (String) value;
-        }
-        return def;
+
+	public String getString(String name, String def) {
+		return (String) mainfest.getOrDefault(name, def);
 	}
 
 	public static class SettingPool {
 		public static final String ACCOUNT_AUTO_LOGIN = "ottohub/account/auto_login";
 		public static final String ACCOUNT_AUTO_REMOVE = "ottohub/account/auto_remove";
 
+		public static final String PLAYER_BACKGROUND_PLAY = "ottohub/player/background_play";
+
 		public static final String MSG_MARKDOWN_SURPPORT = "ottohub/msg/markdown_surpport";
 
 		public static final String SYSTEM_CHECK_PERMISSION = "ottohub/system/permission_check";
-        public static final String SYSTEM_SWITCH_THEME = "ottohub/system/switch_theme";
+		public static final String SYSTEM_SWITCH_THEME = "ottohub/system/switch_theme";
+		public static final String SYSTEM_STORAGE_EDIT = "ottohub/system/storage_edit";
+        public static final String SYSTEM_SPLASH_BG = "ottohub/system/splash_bg";
 	}
 }
 

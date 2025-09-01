@@ -6,16 +6,16 @@
 	android:layout_height="match_parent"
 	android:id="@+id/main_drawer_layout">
 
-	<RelativeLayout
-        android:background="@color/colorMain"
+	<LinearLayout
+		android:orientation="vertical"
+		android:background="@color/colorMain"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
 
 		<RelativeLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:background="@color/colorAccent"
-			android:id="@+id/blog_header">
+			android:background="@color/colorAccent">
 
 			<ImageButton
 				android:layout_width="wrap_content"
@@ -61,250 +61,212 @@
 
 		</RelativeLayout>
 
-		<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-			android:layout_height="wrap_content"
-			android:layout_below="@id/blog_header"
-			android:layout_width="match_parent"
-			android:id="@+id/comment_refresh">
+            <androidx.core.widget.NestedScrollView
+                android:layout_height="match_parent"
+				android:layout_width="match_parent"
+                android:fillViewport="true">
 
-			<androidx.core.widget.NestedScrollView
-				android:layout_height="match_parent"
-				android:layout_width="match_parent">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-				<LinearLayout
-					android:orientation="vertical"
-					android:layout_width="match_parent"
-					android:layout_height="match_parent">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_margin="5dp"
+                        android:textColor="@color/colorSecondary"
+                        android:id="@+id/blog_title"/>
 
-					<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:textAppearance="?android:attr/textAppearanceMedium"
-						android:layout_margin="5dp"
-						android:textColor="@color/colorSecondary"
-						android:id="@+id/blog_title"/>
-
-					<TextView
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content"
-						android:textSize="10sp"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10sp"
                         android:textColor="@color/text_color"
-						android:layout_marginLeft="5dp"
-						android:id="@+id/blog_info"/>
+                        android:layout_marginLeft="5dp"
+                        android:id="@+id/blog_info"/>
 
-					<com.losthiro.ottohubclient.view.ClientWebView
-						android:layout_height="wrap_content"
-						android:layout_width="match_parent"
-						android:id="@+id/blog_content_view"
-						android:layout_margin="5dp"/>
+                    <com.losthiro.ottohubclient.view.ClientWebView
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:id="@+id/blog_content_view"
+                        android:layout_margin="5dp"/>
 
-					<LinearLayout
-						android:orientation="horizontal"
-						android:layout_width="wrap_content"
-						android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-						<LinearLayout
-							android:orientation="vertical"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:layout_marginLeft="5dp"
-							android:gravity="center">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center">
 
-							<ImageButton
-								android:src="@drawable/ic_like_black"
-								android:layout_width="wrap_content"
-								style="?android:attr/buttonBarButtonStyle"
-								android:layout_height="wrap_content"
-								android:id="@+id/blog_like_btn"/>
+                            <ImageButton
+                                android:src="@drawable/ic_like_black"
+                                android:layout_width="wrap_content"
+                                style="?android:attr/buttonBarButtonStyle"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/blog_like_btn"/>
 
-							<TextView
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:textColor="@color/text_color"
-								android:id="@+id/blog_like_count"/>
+                                android:id="@+id/blog_like_count"/>
 
-						</LinearLayout>
+                        </LinearLayout>
 
-						<LinearLayout
-							android:orientation="vertical"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:layout_marginLeft="5dp"
-							android:gravity="center">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center">
 
-							<ImageButton
-								android:src="@drawable/ic_favorite_black"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								style="?android:attr/buttonBarButtonStyle"
-								android:id="@+id/blog_favorite_btn"/>
+                            <ImageButton
+                                android:src="@drawable/ic_favorite_black"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="?android:attr/buttonBarButtonStyle"
+                                android:id="@+id/blog_favorite_btn"/>
 
-							<TextView
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:textColor="@color/text_color"
-								android:id="@+id/blog_favorite_count"/>
+                                android:id="@+id/blog_favorite_count"/>
 
-						</LinearLayout>
+                        </LinearLayout>
 
-						<LinearLayout
-							android:orientation="vertical"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:layout_marginLeft="5dp"
-							android:gravity="center">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center">
 
-							<ImageButton
-								android:src="@drawable/ic_share_black"
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
-								style="?android:attr/buttonBarButtonStyle"
+                            <ImageButton
+                                android:src="@drawable/ic_share_black"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="?android:attr/buttonBarButtonStyle"
                                 android:tag="1"
-								android:onClick="shareBlog"/>
+                                android:onClick="shareBlog"/>
 
-							<TextView
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:textColor="@color/text_color"
-								android:text="分享"/>
+                                android:text="分享"/>
 
-						</LinearLayout>
+                        </LinearLayout>
 
-						<LinearLayout
-							android:orientation="vertical"
-							android:layout_width="wrap_content"
-							android:layout_height="wrap_content"
-							android:layout_marginLeft="5dp"
-							android:gravity="center">
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center">
 
-							<ImageButton
-								android:src="@drawable/ic_report_black"
-								android:layout_width="wrap_content"
-								style="?android:attr/buttonBarButtonStyle"
-								android:layout_height="wrap_content"
+                            <ImageButton
+                                android:src="@drawable/ic_report_black"
+                                android:layout_width="wrap_content"
+                                style="?android:attr/buttonBarButtonStyle"
+                                android:layout_height="wrap_content"
                                 android:tag="2"
-								android:onClick="reportBlog"/>
+                                android:onClick="reportBlog"/>
 
-							<TextView
-								android:layout_width="wrap_content"
-								android:layout_height="wrap_content"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:textColor="@color/text_color"
-								android:text="举报"/>
+                                android:text="举报"/>
 
-						</LinearLayout>
+                        </LinearLayout>
 
-					</LinearLayout>
+                    </LinearLayout>
 
-					<View
-						android:background="#FFE5E5E5"
-						android:layout_width="match_parent"
-						android:layout_height="1dp"/>
+                    <View
+                        android:background="#FFE5E5E5"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
 
-					<androidx.recyclerview.widget.RecyclerView
-						android:layout_height="wrap_content"
-						android:layout_width="match_parent"
-						android:id="@+id/comment_list"
-						android:layout_weight="1.0"/>
+                    <FrameLayout
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:id="@+id/comment_page"
+                        android:layout_weight="1.0"
+                        android:layout_gravity="bottom"/>
 
-				</LinearLayout>
+                </LinearLayout>
 
-			</androidx.core.widget.NestedScrollView>
+            </androidx.core.widget.NestedScrollView>
 
-		</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+	</LinearLayout>
+
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="wrap_content"
+		android:layout_gravity="start"
+		android:layout_height="match_parent"
+		android:id="@+id/drawer_content"
+		android:choiceMode="singleChoice"
+		android:divider="@color/colorMain"
+		android:dividerHeight="1dp"
+		android:background="@color/colorMain"
+		android:minWidth="200dp">
 
 		<LinearLayout
-			android:orientation="horizontal"
+			android:orientation="vertical"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			android:padding="5dp"
-			android:layout_alignParentBottom="true"
-			android:background="@drawable/video_card_bg"
-			android:elevation="4dp"
-			android:layout_marginLeft="5dp"
-			android:layout_marginRight="5dp">
+			android:layout_weight="1.0">
 
-			<com.losthiro.ottohubclient.view.RandomTextEdit
+			<RelativeLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content">
+
+				<ImageView
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:id="@+id/main_user_cover"
+					android:adjustViewBounds="true"
+					android:minHeight="160dp"
+					android:src="@drawable/ic_def_user_cover"/>
+
+				<ImageButton
+					android:layout_width="wrap_content"
+					style="?android:attr/buttonBarButtonStyle"
+					android:layout_height="wrap_content"
+					android:src="@drawable/ic_down"
+					android:onClick="switchAccountDia"
+					android:layout_alignBottom="@id/main_user_cover"
+					android:layout_alignParentEnd="true"/>
+
+			</RelativeLayout>
+
+			<ListView
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				android:id="@+id/blog_comment_edit"
-				android:textSize="10sp"
+				android:id="@+id/main_menu_list"
 				android:layout_weight="1.0"/>
-
-			<Button
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:text="冲刺"
-				android:onClick="sendComment"
-				android:background="@drawable/btn_bg"
-				android:textColor="#FFFFFFFF"
-				android:shadowDx="4"
-				android:shadowDy="4"
-				android:shadowColor="#FFC0C0C0"
-				android:shadowRadius="4"/>
 
 		</LinearLayout>
 
-	</RelativeLayout>
-
-	<LinearLayout
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_gravity="start"
-        android:layout_height="match_parent"
-        android:id="@+id/drawer_content"
-        android:choiceMode="singleChoice"
-        android:divider="@color/colorMain"
-        android:dividerHeight="1dp"
-        android:background="@color/colorMain"
-        android:minWidth="200dp">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.0">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/main_user_cover"
-                    android:adjustViewBounds="true"
-                    android:minHeight="160dp"
-                    android:src="@drawable/ic_def_user_cover"/>
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    style="?android:attr/buttonBarButtonStyle"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_down"
-                    android:onClick="switchAccountDia"
-                    android:layout_alignBottom="@id/main_user_cover"
-                    android:layout_alignParentEnd="true"/>
-
-            </RelativeLayout>
-
-            <ListView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/main_menu_list"
-                android:layout_weight="1.0"/>
-
-        </LinearLayout>
-
-        <TextView
-            android:textSize="17dp"
-            android:textStyle="bold"
-            android:textColor="@color/colorSecondary"
-            android:layout_gravity="bottom|center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="©Copyright2025 | APP By Hiro"
-            android:singleLine="true"
-            android:layout_margin="10dp"/>
+		<TextView
+			android:textSize="17dp"
+			android:textStyle="bold"
+			android:textColor="@color/colorSecondary"
+			android:layout_gravity="bottom|center"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="©Copyright2025 | APP By Hiro"
+			android:singleLine="true"
+			android:layout_margin="10dp"/>
 
 	</LinearLayout>
 

@@ -421,17 +421,21 @@ public class VideosFragment extends Fragment {
 	public void lastPopular() {
 		PopularAdapter popular = (PopularAdapter) popularList.getAdapter();
 		int max = popular.getCount();
-		int current = popularList.getCurrentItem();
-		current--;
-		popularList.setCurrentItem((current + max) % max, true);
+		if (max > 0) {
+			int current = popularList.getCurrentItem();
+			current--;
+			popularList.setCurrentItem((current + max) % max, true);
+		}
 	}
 
 	public void nextPopular() {
 		PopularAdapter popular = (PopularAdapter) popularList.getAdapter();
 		int max = popular.getCount();
-		int current = popularList.getCurrentItem();
-		current++;
-		popularList.setCurrentItem(current % max, true);
+		if (max > 0) {
+			int current = popularList.getCurrentItem();
+			current++;
+			popularList.setCurrentItem(current % max, true);
+		}
 	}
 
 	public static void setOnAccountChangeListener(Runnable callback) {

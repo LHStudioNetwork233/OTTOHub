@@ -177,10 +177,7 @@ public class ProfileFragment extends Fragment {
 			@Override
 			public void onChange(String newText) {
 				// TODO: Implement this method
-				FragmentActivity a = requireActivity();
-				if (a instanceof AccountDetailActivity) {
-					((AccountDetailActivity) a).editName(newText);
-				}
+				onNameChange(newText);
 			}
 		});
 		profile.add(editName);
@@ -304,6 +301,24 @@ public class ProfileFragment extends Fragment {
 						Log.e(TAG, cause);
 					}
 				});
+	}
+    
+    private void onNameChange(final String name) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("确定更新用户名吗？");
+        builder.setMessage(StringUtils.strCat("将会更新为", name));
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dia, int which) {
+                    FragmentActivity a = requireActivity();
+                    if (a instanceof AccountDetailActivity) {
+                        ((AccountDetailActivity) a).editName(name);
+                    }
+                    dia.dismiss();
+                }
+            });
+        builder.setNegativeButton(android.R.string.cancel, null);
+        builder.create().show();
 	}
 
 	private void onPhoneChange(final String phone) {

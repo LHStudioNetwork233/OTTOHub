@@ -50,6 +50,8 @@ import com.losthiro.ottohubclient.adapter.*;
 import com.losthiro.ottohubclient.adapter.model.*;
 import com.losthiro.ottohubclient.utils.*;
 import android.net.*;
+import androidx.fragment.app.*;
+import com.losthiro.ottohubclient.ui.*;
 
 /**
  * @Author Hiro
@@ -57,12 +59,8 @@ import android.net.*;
  */
 public class BlogDetailActivity extends BasicActivity {
 	public static final String TAG = "BlogDetailActivity";
-	private static final List<Comment> commentList = new ArrayList<>();
 	private static final Semaphore request = new Semaphore(1);
-	public static EditText commentEdit;
 	private BlogInfo current;
-	private SwipeRefreshLayout refresh;
-	private RecyclerView commentView;
 	private long firstBackTime;
 
 	@Override
@@ -78,22 +76,29 @@ public class BlogDetailActivity extends BasicActivity {
 				throw new Exception();
 			}
 			id = Long.parseLong(idStr);
-		} catch(Exception unuse) {
-			id = i.getLongExtra("bid", -1);
+		} catch (Exception unuse) {
+			id = i.getLongExtra("bid", 0);
 		}
 		final long bid = id;
-		if (bid == -1) {
+		if (bid == 0) {
 			return;
 		}
 		if (!NetworkUtils.isNetworkAvailable(this)) {
 			Toast.makeText(getApplication(), "那我缺的网络这块谁来给我补上啊", Toast.LENGTH_SHORT).show();
 			return;
 		}
+		FragmentManager fragmanager = getSupportFragmentManager();
+		Fragment commentPage = fragmanager.findFragmentById(R.id.comment_page);
+		if (commentPage == null) {
+			commentPage = CommentFragment.newInstance(bid, Comment.TYPE_BLOG);
+			FragmentTransaction transacte = fragmanager.beginTransaction();
+			transacte.add(R.id.comment_page, commentPage);
+			transacte.commit();
+		}
 		AccountManager manager = AccountManager.getInstance(this);
 		String uri = manager.isLogin()
 				? APIManager.BlogURI.getBlogDetailURI(bid, manager.getAccount().getToken())
 				: APIManager.BlogURI.getBlogDetailURI(bid);
-		final Handler h = new Handler(getMainLooper());
 		NetworkUtils.getNetwork.getNetworkJson(uri, new NetworkUtils.HTTPCallback() {
 			@Override
 			public void onSuccess(String content) {
@@ -107,7 +112,7 @@ public class BlogDetailActivity extends BasicActivity {
 					}
 					if (root.optString("status", "error").equals("success")) {
 						current = new BlogInfo(root, bid);
-						h.post(new Runnable() {
+						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
 								loadUI();
@@ -131,9 +136,10 @@ public class BlogDetailActivity extends BasicActivity {
 	public void onBackPressed() {
 		if (System.currentTimeMillis() - firstBackTime > 2000) {
 			Toast.makeText(this, "再按一次返回键退出", Toast.LENGTH_SHORT).show();
-			CommentAdapter adapter = (CommentAdapter) commentView.getAdapter();
-			if (adapter != null) {
-				adapter.onBack(Comment.TYPE_BLOG);
+			FragmentManager fragmanager = getSupportFragmentManager();
+			Fragment commentPage = fragmanager.findFragmentById(R.id.comment_page);
+			if (commentPage != null && commentPage instanceof CommentFragment) {
+				((CommentFragment) commentPage).onBack();
 			}
 			firstBackTime = System.currentTimeMillis();
 			return;
@@ -238,111 +244,6 @@ public class BlogDetailActivity extends BasicActivity {
 		int color = ResourceUtils.getColor(R.color.colorSecondary);
 		((ImageButton) content.findViewWithTag("1")).setColorFilter(color);
 		((ImageButton) content.findViewWithTag("2")).setColorFilter(color);
-		refresh = findViewById(R.id.comment_refresh);
-		refresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				request(true);
-			}
-		});
-		commentView = findViewById(R.id.comment_list);
-		commentView.setLayoutManager(new GridLayoutManager(this, 1));
-		commentView.setItemViewCacheSize(20);
-		commentView.setDrawingCacheEnabled(true);
-		commentView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-		commentView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-			@Override
-			public void onScrollStateChanged(RecyclerView view, int state) {
-				super.onScrollStateChanged(view, state);
-				if (state == RecyclerView.SCROLL_STATE_IDLE) {
-					int itemCount = view.getLayoutManager().getItemCount();
-					int lastPos = ((LinearLayoutManager) view.getLayoutManager()).findLastVisibleItemPosition();
-					if (lastPos >= itemCount - 1 && itemCount >= 12) {
-						request(false);
-					}
-				}
-			}
-		});
-		commentEdit = findViewById(R.id.blog_comment_edit);
-		request(true);
-	}
-
-	private void request(final boolean isRefresh) {
-		try {
-			if (!request.tryAcquire()) {
-				return;
-			}
-			if (isRefresh) {
-				commentList.clear();
-			}
-			AccountManager manager = AccountManager.getInstance(this);
-			String uri = manager.isLogin()
-					? APIManager.CommentURI.getBlogCommentURI(current.getID(), 0, manager.getAccount().getToken(), 0,
-							12)
-					: APIManager.CommentURI.getBlogCommentURI(current.getID(), 0, 0, 12);
-			final Handler main = new Handler(getMainLooper());
-			NetworkUtils.getNetwork.getNetworkJson(uri, new NetworkUtils.HTTPCallback() {
-				@Override
-				public void onSuccess(final String content) {
-					if (content == null || content.isEmpty()) {
-						onFailed("empty content");
-						return;
-					}
-					try {
-						JSONObject json = new JSONObject(content);
-						if (json == null) {
-							onFailed("null json");
-							return;
-						}
-						String status = json.optString("status", "error");
-						if (status.equals("success")) {
-							JSONArray comment = json.optJSONArray("comment_list");
-							final List<Comment> data = new ArrayList<>();
-							for (int i = 0; i < comment.length(); i++) {
-								Comment currentComment = new Comment(getApplication(), comment.optJSONObject(i),
-										current.getID(), Comment.TYPE_BLOG);
-								CommentAdapter adapter = (CommentAdapter) commentView.getAdapter();
-								if (adapter == null || !adapter.isCommentExists(currentComment)) {
-									data.add(currentComment);
-								}
-							}
-							main.post(new Runnable() {
-								@Override
-								public void run() {
-									if (commentList.isEmpty()) {
-										commentList.addAll(data);
-										commentView.setAdapter(
-												new CommentAdapter(BlogDetailActivity.this, commentList, true));
-										return;
-									}
-									if (isRefresh) {
-										commentList.addAll(data);
-										commentView.getAdapter().notifyDataSetChanged();
-									} else {
-										((CommentAdapter) commentView.getAdapter()).addNewData(data);
-									}
-								}
-							});
-							refresh.setRefreshing(false);
-							return;
-						}
-						onFailed(content);
-					} catch (JSONException e) {
-						onFailed(e.toString());
-					}
-				}
-
-				@Override
-				public void onFailed(String cause) {
-					Log.e("Network", cause);
-					refresh.setRefreshing(false);
-				}
-			});
-		} catch (Exception e) {
-			Thread.currentThread().interrupt();
-		} finally {
-			request.release();
-		}
 	}
 
 	private void likeCurrent(final View v, final TextView likeCountView) {
@@ -451,73 +352,6 @@ public class BlogDetailActivity extends BasicActivity {
 				});
 	}
 
-	private void sendComment(long parent) {
-		AccountManager manager = AccountManager.getInstance(this);
-		if (!manager.isLogin()) {
-			Toast.makeText(this, "没登录发牛魔", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		String content = commentEdit.getText().toString();
-		if (content.isEmpty()) {
-			Toast.makeText(this, "你发的是棍母", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		NetworkUtils.getNetwork.getNetworkJson(APIManager.CommentURI.getCommentBlogURI(current.getID(), parent,
-				manager.getAccount().getToken(), content), new NetworkUtils.HTTPCallback() {
-					@Override
-					public void onSuccess(String content) {
-						if (content.isEmpty() || content == null) {
-							onFailed("empty content");
-							return;
-						}
-						try {
-							final JSONObject root = new JSONObject(content);
-							new Handler(Looper.getMainLooper()).post(new Runnable() {
-								@Override
-								public void run() {
-									refresh.setRefreshing(true);
-									String status = root.optString("status", "error");
-									if (status.equals("success")) {
-										int callback = root.optInt("if_get_experience", 0);
-										String msg = "评论发送成功~";
-										if (callback == 1) {
-											msg = msg + "经验+3";
-										}
-										Toast.makeText(getApplication(), msg, Toast.LENGTH_SHORT).show();
-										commentEdit.setText("");
-										request(false);
-										return;
-									}
-									String message = root.optString("message", "error");
-									if (message.equals("content_too_long")) {
-										Toast.makeText(getApplication(), "不许你发小作文", Toast.LENGTH_SHORT).show();
-									}
-									if (message.equals("content_too_short")) {
-										Toast.makeText(getApplication(), "才发两三个字是什么意思啊", Toast.LENGTH_SHORT).show();
-									}
-									if (message.equals("error_parent")) {
-										Toast.makeText(getApplication(), "这个嘛...目前还没有楼中楼中楼功能哦", Toast.LENGTH_SHORT)
-												.show();
-									}
-									if (message.equals("warn")) {
-										Toast.makeText(getApplication(), "冰不许爆(把你违禁词删了)", Toast.LENGTH_SHORT).show();
-									}
-									onFailed(message);
-								}
-							});
-						} catch (JSONException e) {
-							onFailed(e.toString());
-						}
-					}
-
-					@Override
-					public void onFailed(final String cause) {
-						Log.e("Network", cause);
-						refresh.setRefreshing(false);
-					}
-				});
-	}
-
 	private void reportCurrent() {
 		try {
 			if (!request.tryAcquire()) {
@@ -570,13 +404,11 @@ public class BlogDetailActivity extends BasicActivity {
 	}
 
 	public void sendComment(View v) {
-		CommentAdapter adapter = (CommentAdapter) commentView.getAdapter();
-		if (adapter == null) {
-			return;
+		FragmentManager fragmanager = getSupportFragmentManager();
+		Fragment commentPage = fragmanager.findFragmentById(R.id.comment_page);
+		if (commentPage != null && commentPage instanceof CommentFragment) {
+			((CommentFragment) commentPage).sendComment();
 		}
-		Comment c = adapter.getCurrent();
-		long parent = c == null ? 0 : c.getCID();
-		sendComment(parent);
 	}
 
 	public void shareBlog(View v) {

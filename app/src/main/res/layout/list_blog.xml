@@ -7,10 +7,10 @@
 	android:padding="5dp">
 
 	<com.losthiro.ottohubclient.view.RoundImageView
-		android:layout_width="50dp"
-		android:layout_height="50dp"
-		android:src="@drawable/ic_unloading_user"
-		android:id="@+id/user_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_unloading_user"
+        android:id="@+id/user_avatar"
 		android:layout_marginRight="10dp"/>
 
 	<com.losthiro.ottohubclient.view.RunTextView
@@ -38,11 +38,11 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_toRightOf="@id/user_avatar"
-		android:layout_below="@id/user_avatar"
 		android:id="@+id/blog_content"
 		android:textColor="@color/text_color"
 		android:autoLink="web"
-		android:textIsSelectable="true"/>
+		android:textIsSelectable="true"
+		android:layout_below="@id/user_avatar"/>
 
 	<View
 		android:background="#FFE5E5E5"

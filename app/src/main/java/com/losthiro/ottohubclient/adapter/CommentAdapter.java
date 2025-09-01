@@ -53,10 +53,13 @@ import com.losthiro.ottohubclient.adapter.model.*;
  * @Author Hiro
  * @Date 2025/05/23 06:43
  */
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
+public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 	public static final String TAG = "CommentAdapter";
+	private static final int STATUS_DEF = 0;
+	private static final int STATUS_LOADING = 1;
 	private String currentHint;
 	private boolean isShowChild;
+	private boolean isLoading = false;
 	private Context main;
 	private List<Comment> data;
 
@@ -101,97 +104,102 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
 	@Override
 	public int getItemCount() {
-		return data.size();
+		return data.size() + (isLoading ? 1 : 0);
 	}
 
 	@Override
-	public void onBindViewHolder(CommentAdapter.ViewHolder vH, int p) {
-		final Comment currect = data.get(p);
-		currect.setAvatar(vH.userIcon);
-		vH.userIcon.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent i = new Intent(main, AccountDetailActivity.class);
-				i.putExtra("uid", currect.getUID());
-				Intent save = ((Activity) main).getIntent();
-				Client.saveActivity(save);
-				main.startActivity(i);
-			}
-		});
-		vH.userName.setText(currect.getUser());
-		vH.commentInfo.setText(StringUtils.strCat(new Object[]{currect.getTime(),
-				(currect.getType() == Comment.TYPE_VIDEO ? " OVC" : " OBC"), currect.getCID()}));
-		vH.commentContent.loadTextData(currect.getContent());
-		vH.root.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				EditText text = currect.getType() == Comment.TYPE_VIDEO
-						? PlayerActivity.commentEdit
-						: BlogDetailActivity.commentEdit;
-				if (text == null) {
-					return;
+	public int getItemViewType(int position) {
+		// TODO: Implement this method
+		return (position == data.size() && isLoading) ? STATUS_LOADING : STATUS_DEF;
+	}
+
+	@Override
+	public void onBindViewHolder(RecyclerView.ViewHolder holder, int p) {
+		if (holder instanceof ViewHolder) {
+			final ViewHolder vH = (ViewHolder) holder;
+			final Comment currect = data.get(p);
+			currect.setAvatar(vH.userIcon);
+			vH.userIcon.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(main, AccountDetailActivity.class);
+					i.putExtra("uid", currect.getUID());
+					Intent save = ((Activity) main).getIntent();
+					Client.saveActivity(save);
+					main.startActivity(i);
 				}
-				currentHint = text.getHint().toString();
-				for (Comment another : data) {
-					another.setCurrent(false);
+			});
+			vH.userName.setText(currect.getUser());
+			vH.commentInfo.setText(StringUtils.strCat(new Object[]{currect.getTime(),
+					(currect.getType() == Comment.TYPE_VIDEO ? " OVC" : " OBC"), currect.getCID()}));
+			vH.commentContent.loadTextData(currect.getContent());
+			vH.root.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					for (Comment another : data) {
+						another.setCurrent(false);
+					}
+					currect.setCurrent(true);
 				}
-				currect.setCurrent(true);
-			}
-		});
-		vH.report.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				AlertDialog dialog = new AlertDialog.Builder(main).setTitle("确认举报？").setMessage(currect.getUser())
-						.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(DialogInterface dia, int which) {
-								currect.reportComment();
-							}
-						}).setNegativeButton(android.R.string.cancel, null).create();
-				dialog.show();
-			}
-		});
-		vH.share.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String content = currect.getContent();
-				if (content.length() > 10) {
-					content = content.substring(0, 10) + "...";
+			});
+			vH.report.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					AlertDialog dialog = new AlertDialog.Builder(main).setTitle("确认举报？").setMessage(currect.getUser())
+							.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dia, int which) {
+									currect.reportComment();
+								}
+							}).setNegativeButton(android.R.string.cancel, null).create();
+					dialog.show();
 				}
-				String type = currect.getType() == Comment.TYPE_BLOG ? "b/" : "v/";
-				Intent i = new Intent(Intent.ACTION_SEND);
-				i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				i.setType("text/plain");
-				i.putExtra(Intent.EXTRA_TEXT, "OTTOHub邀请你来看评论 " + currect.getUser() + " 说:" + content
-						+ "\n原文地址: https://m.ottohub.cn/" + type + currect.getID());
-				main.startActivity(Intent.createChooser(i, "share"));
+			});
+			vH.share.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					String content = currect.getContent();
+					if (content.length() > 10) {
+						content = content.substring(0, 10) + "...";
+					}
+					String type = currect.getType() == Comment.TYPE_BLOG ? "b/" : "v/";
+					Intent i = new Intent(Intent.ACTION_SEND);
+					i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					i.setType("text/plain");
+					i.putExtra(Intent.EXTRA_TEXT, "OTTOHub邀请你来看评论 " + currect.getUser() + " 说:" + content
+							+ "\n原文地址: https://m.ottohub.cn/" + type + currect.getID());
+					main.startActivity(Intent.createChooser(i, "share"));
+				}
+			});
+			vH.delete.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					deleteDia(currect);
+				}
+			});
+			AccountManager manager = AccountManager.getInstance(main);
+			if (manager.isLogin()) {
+				Account current = manager.getAccount();
+				if (current.getUID() == currect.getUID()) {
+					vH.delete.setVisibility(View.GONE);
+				}
 			}
-		});
-		vH.delete.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				deleteDia(currect);
+			String[] honours = currect.getHonours();
+			if (honours.length > 1) {
+				vH.honourList.setAdapter(new HonourAdapter(main, Arrays.<String>asList(honours)));
+				vH.honourList.setLayoutManager(new LinearLayoutManager(main, LinearLayoutManager.HORIZONTAL, false));
 			}
-		});
-		AccountManager manager = AccountManager.getInstance(main);
-		if (manager.isLogin()) {
-			Account current = manager.getAccount();
-			if (current.getUID() == currect.getUID()) {
-				vH.delete.setVisibility(View.GONE);
+			if (currect.getChildCount() > 0 && isShowChild) {
+				currect.loadChildComment(vH.childCommentList, new CallComment(main), currect.getType());
 			}
-		}
-		String[] honours = currect.getHonours();
-		if (honours.length > 1) {
-			vH.honourList.setAdapter(new HonourAdapter(main, Arrays.<String>asList(honours)));
-			vH.honourList.setLayoutManager(new LinearLayoutManager(main, LinearLayoutManager.HORIZONTAL, false));
-		}
-		if (currect.getChildCount() > 0 && isShowChild) {
-			currect.loadChildComment(vH.childCommentList, new CallComment(main), currect.getType());
 		}
 	}
 
 	@Override
-	public CommentAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int p) {
+	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int p) {
+		if (p == STATUS_LOADING) {
+			return new LoadingViewHolder(viewGroup);
+		}
 		return new ViewHolder(LayoutInflater.from(main).inflate(R.layout.list_comment, viewGroup, false));
 	}
 
@@ -263,17 +271,23 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 		data.addAll(newData);
 		notifyItemRangeInserted(data.size() - newData.size(), newData.size());
 	}
-
-	public void onBack(int type) {
-		EditText text = type == Comment.TYPE_VIDEO ? PlayerActivity.commentEdit : BlogDetailActivity.commentEdit;
-		if (text == null) {
-			return;
+    
+    public void setData(List<Comment> newData){
+        data.clear();
+        data.addAll(newData);
+        notifyDataSetChanged();
+    }
+    
+    public void onBack(EditText commentEdit){
+        commentEdit.setHint(currentHint);
+        for (Comment current : data) {
+            current.setCurrent(false);
 		}
-		text.setHint(currentHint);
-		for (Comment current : data) {
-			current.setCurrent(false);
-		}
-	}
+    }
+    
+    public void cacheHint(String hint){
+        currentHint = hint;
+    }
 
 	public Comment getCurrent() {
 		for (Comment current : data) {
@@ -282,6 +296,19 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 			}
 		}
 		return null;
+	}
+    
+    public void startLoading() {
+        if (isLoading) {
+            return;
+        }
+        isLoading = true;
+        notifyItemInserted(data.size());
+    }
+
+    public void stopLoading() {
+        isLoading = false;
+        notifyItemRemoved(data.size());
 	}
 
 	public static class CallComment {

@@ -108,6 +108,7 @@ public class AccountDetailActivity extends BasicActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == RESULT_OK && data != null) {
 			Uri uri = data.getData();
+            Toast.makeText(getApplication(), uri.toString(), Toast.LENGTH_SHORT).show();
 			Account current = AccountManager.getInstance(this).getAccount();
 			if (requestCode == IMAGE_REQUEST_CODE) {
 				new ImageUploader(this, "https://api.ottohub.cn/module/creator/update_avatar.php",
@@ -116,6 +117,7 @@ public class AccountDetailActivity extends BasicActivity {
 							public void onSuccess(String content) {
 								// TODO: Implement this method
 								try {
+                                    Toast.makeText(getApplication(), content, Toast.LENGTH_SHORT).show();
 									JSONObject json = new JSONObject(content);
 									if (json.optString("status", "error").equals("success")) {
 										Toast.makeText(getApplication(), "发送成功，已送往审核", Toast.LENGTH_SHORT).show();
@@ -131,7 +133,7 @@ public class AccountDetailActivity extends BasicActivity {
 							public void onFailed(String cause) {
 								// TODO: Implement this method
 								Log.e("Network", cause);
-								String msg = null;
+								String msg = cause;
 								switch (cause) {
 									case "error_file" :
 										msg = "文件格式错误，请正确选择图片";
@@ -188,7 +190,7 @@ public class AccountDetailActivity extends BasicActivity {
 								});
 								return;
 							}
-							onFailed(content);
+							onFailed(json.optString("message"));
 						} catch (JSONException e) {
 							onFailed(e.toString());
 						}
@@ -204,7 +206,7 @@ public class AccountDetailActivity extends BasicActivity {
 								Context ctx = getApplication();
 								switch (cause) {
 									case "error_username" :
-										Toast.makeText(ctx, "名字输入错误", Toast.LENGTH_SHORT).show();
+										Toast.makeText(ctx, "名字输入错误，不能带特殊符号", Toast.LENGTH_SHORT).show();
 										return;
 									case "username_exist" :
 										Toast.makeText(ctx, "名字已经被别人占用了", Toast.LENGTH_SHORT).show();
@@ -254,10 +256,10 @@ public class AccountDetailActivity extends BasicActivity {
 	}
 
 	public void quit(View v) {
-        Fragment userPage = getSupportFragmentManager().findFragmentById(R.id.user_page);
-        if (userPage instanceof UserFragment) {
-            finish();
-            return;
+		Fragment userPage = getSupportFragmentManager().findFragmentById(R.id.user_page);
+		if (userPage instanceof UserFragment) {
+			finish();
+			return;
 		}
 		loadUserProfile();
 	}

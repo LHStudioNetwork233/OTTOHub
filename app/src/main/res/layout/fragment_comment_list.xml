@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:id="@+id/refresh"
+		android:layout_weight="1.0">
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:layout_marginBottom="25dp"
+			android:id="@+id/comment_list"/>
+
+	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+	<LinearLayout
+		android:orientation="horizontal"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:padding="5dp"
+		android:layout_alignParentBottom="true"
+		android:background="@drawable/video_card_bg"
+		android:elevation="4dp"
+		android:layout_marginLeft="5dp"
+		android:layout_marginRight="5dp"
+		android:layout_gravity="bottom|center">
+
+		<com.losthiro.ottohubclient.view.RandomTextEdit
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/comment_edit"
+			android:textSize="10sp"
+			android:layout_weight="1.0"
+			android:layout_gravity="center"/>
+
+		<Button
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="冲刺"
+			android:onClick="sendComment"
+			android:background="@drawable/btn_bg"
+			android:textColor="#FFFFFFFF"
+			android:shadowDx="4"
+			android:shadowDy="4"
+			android:shadowColor="#FFC0C0C0"
+			android:shadowRadius="4"/>
+
+	</LinearLayout>
+
+</LinearLayout>
+

@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.losthiro.ottohubclient.view.drawer.*;
 import android.util.Base64;
+import java.util.*;
 
 /**
  * @Author Hiro
@@ -95,19 +96,14 @@ public class AccountManager {
 					@Override
 					public void onFailed(final String cause) {
 						Log.e("Network", cause);
-						uiThread.post(new Runnable() {
-							@Override
-							public void run() {
-								// TODO: Implement this method
-								Toast.makeText(main, cause, Toast.LENGTH_SHORT).show();
-							}
-						});
 					}
 				});
 	}
 
 	public void login(long uid) {
-		login(uid, data.get(uid));
+		if (!isLogin() || uid != current.getUID()) {
+			login(uid, new String(Base64.decode(data.get(uid), Base64.DEFAULT)));
+		}
 	}
 
 	public void login(Account a, String pw) {
@@ -154,15 +150,14 @@ public class AccountManager {
 	public void autoLogin() {
 		//boolean isSaved = prefs.getBoolean("login_saved", false);
 		if (ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.ACCOUNT_AUTO_LOGIN)) {
-			String content = prefs.getString("accounts", null);
-			if (content == null) {
+			Set<String> set = prefs.getStringSet("accounts", null);
+			if (set == null) {
 				resetLogin();
 				return;
 			}
 			try {
-				JSONArray set = new JSONArray(content);
-				for (int i = 0; i < set.length(); i++) {
-					JSONObject j = set.optJSONObject(i);
+				for (String account : set) {
+					JSONObject j = new JSONObject(account);
 					long uid = j.optLong("uid", -1);
 					final String pw = j.optString("user_password");
 					final boolean isCurrent = j.optBoolean("is_current", false);
@@ -173,7 +168,7 @@ public class AccountManager {
 					if (isCurrent) {
 						login(uid, new String(Base64.decode(pw, Base64.DEFAULT)));
 					} else {
-						data.put(uid, Base64.encodeToString(pw.getBytes(), Base64.DEFAULT));
+						data.put(uid, pw);
 					}
 				}
 			} catch (JSONException e) {
@@ -184,7 +179,7 @@ public class AccountManager {
 	}
 
 	public void saveAccounts() {
-		JSONArray array = new JSONArray();
+		Set<String> set = new HashSet<>();
 		for (HashMap.Entry<Long, String> entry : data.entrySet()) {
 			long uid = entry.getKey();
 			String pw = entry.getValue();
@@ -197,7 +192,7 @@ public class AccountManager {
 				account.put("uid", uid);
 				account.put("user_password", pw);
 				account.put("is_current", isCurrent);
-				array.put(account);
+				set.add(account.toString());
 			} catch (JSONException e) {
 				Toast.makeText(main, e.toString(), Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
@@ -205,7 +200,7 @@ public class AccountManager {
 			}
 		}
 		SharedPreferences.Editor edit = prefs.edit();
-		edit.putString("accounts", array.toString());
+		edit.putStringSet("accounts", set);
 		//edit.putString("user_password", password);
 		//edit.putLong("key_last_update", SystemUtils.getTime());
 		//		edit.putBoolean("login_saved", true);

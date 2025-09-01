@@ -115,7 +115,7 @@ public class SystemUtils {
     }
     
     public static boolean clearCache(Context context) {
-        return FileUtils.deleteDir(context.getCacheDir().getPath()) && (context.getExternalCacheDir() != null ? FileUtils.deleteDir(context.getExternalCacheDir().getPath()) : true);
+        return FileUtils.clearDir(context.getCacheDir().getPath()) && (context.getExternalCacheDir() != null ? FileUtils.clearDir(context.getExternalCacheDir().getPath()) : true);
     }
 
     public static int getStatusBarHeight(Context context) {

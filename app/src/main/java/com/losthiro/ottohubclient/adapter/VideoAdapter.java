@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.losthiro.ottohubclient.adapter.model.*;
 import java.util.*;
+import android.widget.*;
 /**
  * @Author Hiro
  * @Date 2025/05/22 14:18
@@ -132,8 +133,8 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 					holder.root.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
+                            Toast.makeText(main, currect.getRootPath()+"", Toast.LENGTH_SHORT).show();
 							Intent i = new Intent(main, PlayerActivity.class);
-							i.putExtra("is_local", true);
 							i.putExtra("root_path", currect.getRootPath());
 							i.putExtra("vid", vid);
 							Intent save = ((Activity) main).getIntent();

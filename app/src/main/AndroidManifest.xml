@@ -176,12 +176,6 @@
             android:exported="true"
             android:launchMode="singleInstance"/>
 
-        <service
-            android:name=".service.PlayerService"
-            android:enabled="true"
-            android:exported="false"
-            android:foregroundServiceType="mediaPlayback"/>
-
         <meta-data
             android:name="android.max_aspect"
             android:value="4.0"/>

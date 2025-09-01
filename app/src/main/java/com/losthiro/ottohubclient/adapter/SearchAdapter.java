@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Collections;
 import java.util.ArrayList;
 import com.losthiro.ottohubclient.adapter.model.*;
+import com.losthiro.ottohubclient.ui.*;
 
 /**
  * @Author Hiro
@@ -84,10 +85,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 vH.follow.setOnClickListener(new OnClickListener(){
                         @Override
                         public void onClick(View v) {
-                            PlayerActivity.following(currentUser.getUID(), v);
+                            VideoInfoFragment.following(currentUser.getUID(), v);
                         }
                     });
-                PlayerActivity.setFollowingStatus(vH.follow, currentUser.getUID());
+                VideoInfoFragment.setFollowingStatus(vH.follow, currentUser.getUID());
                 vH.root.setOnClickListener(new OnClickListener(){
                         @Override
                         public void onClick(View v) {

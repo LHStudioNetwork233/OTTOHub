@@ -115,11 +115,12 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		try {
 			id = Long.parseLong(strID.toString());
 		} catch (NumberFormatException e) {
+			Log.e(TAG, "uid parse failed", e);
 		}
 		final long uid = id;
 		ImageDownloader.loader(vH.avatar, current.optString("avatar_url"));
 		vH.username.setText(current.optString("username", "棍母"));
-		vH.info.setText(StringUtils.strCat("UID: ", StringUtils.toStr(p)));
+		vH.info.setText(StringUtils.strCat("UID: ", StringUtils.toStr(id)));
 		vH.current.setColorFilter(ResourceUtils.getColor(R.color.colorSecondary));
 		if (manager.isLogin()) {
 			vH.current.setVisibility(uid == manager.getAccount().getUID() ? View.VISIBLE : View.GONE);
@@ -127,9 +128,6 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		vH.root.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				for (int i = 0; i < getItemCount(); i++) {
-					vH.current.setVisibility(i == p ? View.VISIBLE : View.GONE);
-				}
 				manager.setLoginCallback(new Runnable() {
 					@Override
 					public void run() {
@@ -140,10 +138,13 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 						if (update != null) {
 							update.update(manager.getAccount());
 						}
+                        for (int i = 0; i < getItemCount(); i++) {
+                            vH.current.setVisibility(i == p ? View.VISIBLE : View.GONE);
+                        }
+                        notifyItemRangeChanged(0, manager.accountCount());
 					}
 				});
 				manager.login(uid);
-				notifyDataSetChanged();
 			}
 		});
 		vH.root.setOnLongClickListener(new OnLongClickListener() {
@@ -171,6 +172,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 					manager.logout();
 				}
 				manager.removeAccount(pos);
+                notifyItemRemoved(pos);
 				dia.dismiss();
 			}
 		});
