@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:background="#DD323232">
+
+	<com.github.chrisbanes.photoview.PhotoView
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_centerInParent="true"
+        android:scaleType="fitCenter"
+		android:id="@+id/image_viewer"/>
+
+	<ImageButton
+		android:layout_width="wrap_content"
+		style="?android:attr/buttonBarButtonStyle"
+		android:layout_height="wrap_content"
+		android:src="@drawable/ic_left_arrow"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="10dp"
+		android:id="@+id/image_viewer_quit"/>
+
+	<ImageButton
+		android:layout_width="wrap_content"
+		style="?android:attr/buttonBarButtonStyle"
+		android:layout_height="wrap_content"
+		android:src="@drawable/ic_more"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="10dp"
+		android:id="@+id/image_viewer_more"
+		android:layout_toRightOf="@id/image_viewer_quit"/>
+
+</RelativeLayout>
+

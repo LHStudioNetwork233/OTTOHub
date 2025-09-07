@@ -27,6 +27,7 @@ import android.content.res.*;
 import android.provider.*;
 import android.graphics.*;
 import com.losthiro.ottohubclient.*;
+import android.webkit.*;
 
 /**
  * @Author Hiro
@@ -34,6 +35,8 @@ import com.losthiro.ottohubclient.*;
  */
 public class ClientWebView extends WebView {
 	public static final String TAG = "ClientWebView";
+    private WebBean main;
+    private boolean isInit = false;
 
 	public ClientWebView(Context context) {
 		super(context);
@@ -56,6 +59,7 @@ public class ClientWebView extends WebView {
 	}
 
 	private void init() {
+        main = new WebBean(getContext(), "loading");
 		int windowStatus = getContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
 		WebSettings setting = getSettings();
 		setting.setJavaScriptEnabled(true);
@@ -81,11 +85,78 @@ public class ClientWebView extends WebView {
 		setWebChromeClient(new ChromeClient());
 		setWebViewClient(new ViewClient(getContext()));
         setBackgroundColor(Color.TRANSPARENT);
+        addJavascriptInterface(main, "dataBridge");
+        isInit = true;
 	}
+    
+    public boolean load(){
+        if(isInit){
+            loadUrl("file:///android_asset/index.html");
+            return true;
+        }
+        return false;
+    }
 
-	public void loadTextData(String content) {
-		new WebBean(getContext(), content).loadHTML(this);
+	public void setTextData(String content) {
+        if ((content.startsWith("<!DOCTYPE html>") || content.startsWith("<html>")) && content.endsWith("</html>")) {
+            loadData(content, "text/html;charset=UTF-8", "UTF-8");
+            isInit = false;
+            return;
+        }
+        main.setData(content);
 	}
+    
+    public void setCSS(String cssUri) {
+        main.setCssURI(cssUri);
+    }
+    
+    public void addScript(String jsUri) {
+        main.addScript(jsUri);
+    }
+    
+    public static boolean praseLinkAndLoad(Context ctx, String uri) {
+        String head = "https://m.ottohub.cn/";
+        if (uri.startsWith(head)) {
+            uri = uri.substring(head.length());
+            try {
+                if (uri.startsWith("b")) {
+                    long bid = Long.parseLong(uri.split("/", 2)[1]);
+                    if (bid > 0) {
+                        Intent i = new Intent(ctx, BlogDetailActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.putExtra("bid", bid);
+                        Client.saveActivity(Client.getCurrentActivity(ctx).getIntent());
+                        ctx.startActivity(i);
+                    }
+                }
+                if (uri.startsWith("v")) {
+                    long vid = Long.parseLong(uri.split("/", 2)[1]);
+                    if (vid > 0) {
+                        Intent i=new Intent(ctx, PlayerActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.putExtra("vid", vid);
+                        Client.saveActivity(Client.getCurrentActivity(ctx).getIntent());
+                        ctx.startActivity(i);
+                    }
+                }
+                if (uri.startsWith("u")) {
+                    long uid = Long.parseLong(uri.split("/", 2)[1]);
+                    if (uid > 0) {
+                        Intent i = new Intent(ctx, AccountDetailActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        i.putExtra("uid", uid);
+                        Client.saveActivity(Client.getCurrentActivity(ctx).getIntent());
+                        ctx.startActivity(i);
+                    }
+                }
+            } catch (NumberFormatException e) {
+                Log.d(TAG, e.toString());
+            }
+            return true;
+        }
+        SystemUtils.loadUri(ctx, uri);
+        return true;
+    }
 
 	public static class ViewClient extends WebViewClient {
 		private Context ctx;
@@ -102,47 +173,7 @@ public class ClientWebView extends WebView {
 
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-			String uri = request.getUrl().toString().toLowerCase();
-			if (uri.startsWith("https://m.ottohub.cn/")) {
-				uri = uri.replace("https://m.ottohub.cn/", "");
-				try {
-					if (uri.startsWith("b")) {
-						long bid = Long.parseLong(uri.split("/", 2)[1]);
-						if (bid > 0) {
-							Intent i = new Intent(ctx, BlogDetailActivity.class);
-							i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							i.putExtra("bid", bid);
-							Client.saveActivity(Client.getCurrentActivity(ctx).getIntent());
-							ctx.startActivity(i);
-						}
-					}
-					if (uri.startsWith("v")) {
-						long vid = Long.parseLong(uri.split("/", 2)[1]);
-						if (vid > 0) {
-							Intent i=new Intent(ctx, PlayerActivity.class);
-                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            i.putExtra("vid", vid);
-                            Client.saveActivity(Client.getCurrentActivity(ctx).getIntent());
-                            ctx.startActivity(i);
-						}
-					}
-					if (uri.startsWith("u")) {
-						long uid = Long.parseLong(uri.split("/", 2)[1]);
-						if (uid > 0) {
-							Intent i = new Intent(ctx, AccountDetailActivity.class);
-							i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-							i.putExtra("uid", uid);
-							Client.saveActivity(Client.getCurrentActivity(ctx).getIntent());
-							ctx.startActivity(i);
-						}
-					}
-				} catch (NumberFormatException e) {
-					Log.d(TAG, e.toString());
-				}
-                return true;
-			}
-			SystemUtils.loadUri(ctx, uri);
-			return true;
+			return praseLinkAndLoad(ctx, request.getUrl().toString().toLowerCase());
 		}
 
 		@Override

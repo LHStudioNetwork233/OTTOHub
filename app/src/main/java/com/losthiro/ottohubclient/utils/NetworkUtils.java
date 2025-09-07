@@ -12,6 +12,8 @@ import android.os.Looper;
 import java.net.*;
 import java.io.*;
 import java.nio.charset.*;
+import android.widget.*;
+import android.app.*;
 
 /**
  * @Author Hiro
@@ -29,6 +31,58 @@ public class NetworkUtils {
 		NetworkCapabilities capabilities = connectivityManager
 				.getNetworkCapabilities(connectivityManager.getActiveNetwork());
 		return capabilities != null && capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET);
+	}
+
+	public static class OnNetworkChange {
+        private static final Handler mainThread = new Handler(Looper.getMainLooper());
+        private long mCheckDelay = 1500;
+        private boolean currentStatus;
+        private boolean lastStatus;
+
+		public OnNetworkChange(final Activity act, final OnNetworkChangeListener callback, final boolean isOnUi) {
+			mainThread.post(new Runnable() {
+				@Override
+				public void run() {
+					// TODO: Implement this method
+					currentStatus = isNetworkAvailable(act);
+					if (lastStatus != currentStatus) {
+						if (isOnUi) {
+							act.runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									// TODO: Implement this method
+									callback.onChange(currentStatus);
+								}
+							});
+						} else {
+							callback.onChange(currentStatus);
+						}
+					}
+					lastStatus = currentStatus;
+					mainThread.postDelayed(this, mCheckDelay);
+				}
+			});
+		}
+        
+        public OnNetworkChange(Activity act, OnNetworkChangeListener callback) {
+            new OnNetworkChange(act, callback, false);
+        }
+        
+        public boolean getCurrentStatus() {
+            return currentStatus;
+        }
+        
+        public boolean getLastStatus() {
+            return lastStatus;
+        }
+        
+        public void setCheckDelay(long delay) {
+            mCheckDelay = delay;
+        }
+        
+        public void release() {
+            mainThread.removeCallbacksAndMessages(null);
+        }
 	}
 
 	public static class getNetwork {//获取网络内容内部类
@@ -79,7 +133,7 @@ public class NetworkUtils {
 						http.setReadTimeout(timeout);
 						http.connect();
 						int code = http.getResponseCode();
-						if (code >= 200 && code < 300) {
+						if (code >= 200 && code < 320) {
 							callback.onSuccess(StringUtils.byteStreamReader(http.getInputStream()));
 						} else {
 							callback.onFailed("error " + code);
@@ -100,7 +154,12 @@ public class NetworkUtils {
 			getNetworkByte(uri, new HTTPByteCallback() {
 				@Override
 				public void onSuccess(byte[] data) {
-					FileUtils.writeFile(targetDir, data);
+					File output = new File(targetDir);
+                    if (output.exists() && output.isFile()) {
+                        FileUtils.writeFile(targetDir, data);
+                    } else {
+                        FileUtils.createFile(targetDir, data);
+					}
 				}
 
 				@Override
@@ -115,7 +174,12 @@ public class NetworkUtils {
 			getNetworkByte(uri, new HTTPByteCallback() {
 				@Override
 				public void onSuccess(byte[] data) {
-					FileUtils.writeFile(targetDir, data);
+					File output = new File(targetDir);
+					if (output.exists() && output.isFile()) {
+						FileUtils.writeFile(targetDir, data);
+					} else {
+						FileUtils.createFile(targetDir, data);
+					}
 					main.post(callback);
 				}
 
@@ -134,7 +198,8 @@ public class NetworkUtils {
 			postJSON(uri, postData, callback, defTimeout);
 		}
 
-		public static void postJSON(final String uri, final String postData, final HTTPCallback callback, final int timeOut) {
+		public static void postJSON(final String uri, final String postData, final HTTPCallback callback,
+				final int timeOut) {
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
@@ -158,7 +223,8 @@ public class NetworkUtils {
 						if (responseCode >= 200 && responseCode < 299) {
 							callback.onSuccess(StringUtils.streamReader(connection.getInputStream()));
 						} else {
-							callback.onFailed("code=" + responseCode + StringUtils.streamReader(connection.getErrorStream()));
+							callback.onFailed(
+									"code=" + responseCode + StringUtils.streamReader(connection.getErrorStream()));
 						}
 						connection.disconnect();
 					} catch (Exception e) {
@@ -177,6 +243,10 @@ public class NetworkUtils {
 	public static interface HTTPByteCallback {
 		void onSuccess(byte[] data);
 		void onFailed(String cause);
+	}
+
+	public static interface OnNetworkChangeListener {
+		void onChange(boolean status);
 	}
 }
 

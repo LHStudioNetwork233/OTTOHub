@@ -23,6 +23,7 @@ android {
 dependencies {
 	api project(':../DanmakuFlameMaster-master/DanmakuFlameMaster/')
     implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
+	implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.29'
 	implementation 'cn.jzvd:jiaozivideoplayer:7.7.0'
     implementation 'androidx.drawerlayout:drawerlayout:1.0.0'

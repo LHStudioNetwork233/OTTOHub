@@ -131,7 +131,7 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_child_comment.xml:33
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_account.xml:82
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_blogs.xml:123
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_comment_list.xml:14
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_comment_list.xml:16
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_profile.xml:8
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_user.xml:97
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_user_favourite.xml:47
@@ -164,6 +164,9 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:17
 -keep class cn.jzvd.JzvdStd { <init>(...); }
 
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_image_viewer.xml:8
+-keep class com.github.chrisbanes.photoview.PhotoView { <init>(...); }
+
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_color_picker.xml:99
 -keep class com.losthiro.ottohubclient.view.ClientColorPicker { <init>(...); }
 
@@ -179,7 +182,7 @@
 -keep class com.losthiro.ottohubclient.view.CricleImageView { <init>(...); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:81
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_comment_list.xml:34
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_comment_list.xml:35
 -keep class com.losthiro.ottohubclient.view.RandomTextEdit { <init>(...); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:28
@@ -328,7 +331,7 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_blog.xml:168
 -keepclassmembers class * { *** sendBlog(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_comment_list.xml:42
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_comment_list.xml:43
 -keepclassmembers class * { *** sendComment(android.view.View); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_color_picker.xml:14

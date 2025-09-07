@@ -98,7 +98,7 @@
 # view res/layout/fragment_account.xml #generated:184
 # view res/layout/fragment_account.xml #generated:82
 # view res/layout/fragment_blogs.xml #generated:123
-# view res/layout/fragment_comment_list.xml #generated:14
+# view res/layout/fragment_comment_list.xml #generated:16
 # view res/layout/fragment_profile.xml #generated:8
 # view res/layout/fragment_user.xml #generated:97
 # view res/layout/fragment_user_favourite.xml #generated:47
@@ -132,6 +132,9 @@
 
 # view res/layout/activity_player.xml #generated:17
 -keep class cn.jzvd.JzvdStd { <init>(...); }
+
+# view res/layout/fragment_image_viewer.xml #generated:8
+-keep class com.github.chrisbanes.photoview.PhotoView { <init>(...); }
 
 # view AndroidManifest.xml #generated:70
 -keep class com.losthiro.ottohubclient.AccountDetailActivity { <init>(...); }
@@ -208,7 +211,7 @@
 -keep class com.losthiro.ottohubclient.view.CricleImageView { <init>(...); }
 
 # view res/layout/activity_player.xml #generated:81
-# view res/layout/fragment_comment_list.xml #generated:34
+# view res/layout/fragment_comment_list.xml #generated:35
 -keep class com.losthiro.ottohubclient.view.RandomTextEdit { <init>(...); }
 
 # view res/layout/activity_blog_detail.xml #generated:28
@@ -360,7 +363,7 @@
 # onClick res/layout/activity_upload_blog.xml #generated:168
 -keepclassmembers class * { *** sendBlog(...); }
 
-# onClick res/layout/fragment_comment_list.xml #generated:42
+# onClick res/layout/fragment_comment_list.xml #generated:43
 -keepclassmembers class * { *** sendComment(...); }
 
 # onClick res/layout/dialog_color_picker.xml #generated:14

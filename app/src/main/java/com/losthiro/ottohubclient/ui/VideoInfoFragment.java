@@ -514,13 +514,12 @@ public class VideoInfoFragment extends Fragment {
 		String[] tagsData = current.getTags();
 		JSONArray tags = new JSONArray(tagsData);
 		mainData.put("tags", tags);
-		String name = "mainfest.json";
-		String fPath = StringUtils.strCat(new String[]{dir.toString(), File.separator, name});
-		if (!new File(dir, name).exists()) {
-			FileUtils.createFile(ctx, fPath, mainData.toString(4));
+		File fPath = new File(dir, "mainfest.json");
+		if (!fPath.exists()) {
+			FileUtils.createFile(ctx, fPath.getPath(), mainData.toString(4));
 			return;
 		}
-		FileUtils.writeFile(ctx, fPath, mainData.toString(4));
+		FileUtils.writeFile(ctx, fPath.getPath(), mainData.toString(4));
 	}
 
 	public long getUID() {
@@ -543,10 +542,9 @@ public class VideoInfoFragment extends Fragment {
 		long vid = valueMap.get("vid");
 		String randomName = StringUtils.strCat(
 				new Object[]{"OV", vid, "-", SystemUtils.getDate("yyyy-MM-dd-HH-mm-ss-"), SystemUtils.getTime()});
-		String realDir = StringUtils.strCat(destDir, randomName);
-		final File dir = new File(realDir);
+		final File dir = new File(destDir, randomName);
 		if (!dir.exists()) {
-			FileUtils.createDir(realDir);
+			FileUtils.createDir(dir.toString());
 		}
 		try {
 			Toast.makeText(ctx, "正在保存请稍候", Toast.LENGTH_SHORT).show();
@@ -569,10 +567,10 @@ public class VideoInfoFragment extends Fragment {
 								String name = "danmaku_config.json";
 								File f = new File(dir, name);
 								if (!f.exists()) {
-									FileUtils.createFile(ctx, f.getPath(), danmakuData.toString(4));
+									FileUtils.createFile(ctx, f.toString(), danmakuData.toString(4));
 									return;
 								}
-								FileUtils.writeFile(ctx, f.getPath(), danmakuData.toString(4));
+								FileUtils.writeFile(ctx, f.toString(), danmakuData.toString(4));
 							} catch (JSONException e) {
 								onFailed(e.toString());
 							}
@@ -592,9 +590,9 @@ public class VideoInfoFragment extends Fragment {
 			String avatar = current.getAvatar();
 			String cover = current.getCover();
 			String video = current.getVideo();
-			NetworkUtils.getNetwork.download(avatar, new File(dir, "user_avatar").getPath());
-			NetworkUtils.getNetwork.download(cover, new File(dir, "cover").getPath());
-			NetworkUtils.getNetwork.download(video, new File(dir, "video").getPath(), callback);
+			NetworkUtils.getNetwork.download(avatar, new File(dir, "source/user_avatar").getPath());
+			NetworkUtils.getNetwork.download(cover, new File(dir, "source/cover").getPath());
+			NetworkUtils.getNetwork.download(video, new File(dir, "source/video").getPath(), callback);
 		} catch (Exception e) {
 			Log.e(TAG, e.toString());
 		}
@@ -708,7 +706,14 @@ public class VideoInfoFragment extends Fragment {
 		}
 
 		public String[] getTags() {
-			return main.optString("tag", "#棍母").split("#");
+            String tags = main.optString("tag");
+            if(tags != null && !tags.isEmpty()) {
+                String[] tagArr = tags.split("#");
+                if(tagArr.length > 0) {
+                    return tagArr;
+                }
+            }
+			return new String[]{};
 		}
 
 		public String getUserName() {
@@ -746,15 +751,15 @@ public class VideoInfoFragment extends Fragment {
 		}
 
 		public String getVideo() {
-			return isLocal ? new File(local, "video").getPath() : main.optString("video_url", null);
+			return isLocal ? new File(local, "source/video").getPath() : main.optString("video_url", null);
 		}
 
 		public String getCover() {
-			return isLocal ? new File(local, "cover").getPath() : main.optString("cover_url", null);
+			return isLocal ? new File(local, "source/cover").getPath() : main.optString("cover_url", null);
 		}
 
 		public String getAvatar() {
-			return isLocal ? new File(local, "user_avatar").getPath() : main.optString("avatar_url", null);
+			return isLocal ? new File(local, "source/user_avatar").getPath() : main.optString("avatar_url", null);
 		}
 
 		private String getCount(String strCount) {

@@ -84,7 +84,7 @@ import com.losthiro.ottohubclient.impl.*;
  * @Author Hiro
  * @Date 2025/05/23 00:54
  */
-public class PlayerActivity extends BasicActivity {
+public class PlayerActivity extends BasicActivity implements VideoInfoFragment.OnRequestVideoListener {
 	public static final String TAG = "PlayerActivity";
 	private static final Semaphore request = new Semaphore(1);
 	private static final Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -92,6 +92,7 @@ public class PlayerActivity extends BasicActivity {
 	private static IDanmakuView danmaku;
 	private Button[] pages;
 	private ViewPager videoPage;
+	private BottomDialog danmakuDia;
 	private long vid;
 	private long uid;
 	private boolean isLocal;
@@ -129,7 +130,6 @@ public class PlayerActivity extends BasicActivity {
 			vid = i.getLongExtra("vid", 0);
 			isLocal = root != null && !root.isEmpty();
 		}
-		Toast.makeText(this, "" + root, Toast.LENGTH_SHORT);
 		if (vid == 0) {
 			return;
 		}
@@ -277,49 +277,49 @@ public class PlayerActivity extends BasicActivity {
 		outState.putInt("video_height", videoHeight);
 	}
 
+	@Override
+	public void onSuccess(final VideoInfoFragment.VideoInfo current, String title, long id) {
+		// TODO: Implement this method
+		uid = id;
+		main.setUp(current.getVideo(), title, Jzvd.SCREEN_NORMAL);
+		main.startPreloading();
+		main.posterImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		ImageDownloader.loader(main.posterImageView, current.getCover());
+		main.post(new Runnable() {
+			@Override
+			public void run() {
+				View parent = (View) main.getParent();
+				if (parent != null) {
+					videoHeight = main.getHeight();
+					ViewGroup.LayoutParams params = parent.getLayoutParams();
+					params.height = videoHeight;
+					parent.setLayoutParams(params);
+				}
+				JSONArray array = null;
+				try {
+					array = current.getDanmakuList(PlayerActivity.this);
+				} catch (JSONException unuse) {
+				}
+				loadDanmaku(array);
+				main.startVideoAfterPreloading();
+			}
+		});
+	}
+
 	private FragmentPagerAdapter initPage(long vid, String rootPath) {
 		List<Fragment> data = new ArrayList<>();
-		VideoInfoFragment.OnRequestVideoListener listener = new VideoInfoFragment.OnRequestVideoListener() {
-			@Override
-			public void onSuccess(final VideoInfoFragment.VideoInfo current, String title, long id) {
-				// TODO: Implement this method
-				uid = id;
-				main.setUp(current.getVideo(), title);
-				main.posterImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-				ImageDownloader.loader(main.posterImageView, current.getCover());
-				main.post(new Runnable() {
-					@Override
-					public void run() {
-						View parent = (View) main.getParent();
-						if (parent != null) {
-							videoHeight = main.getHeight();
-							ViewGroup.LayoutParams params = parent.getLayoutParams();
-							params.height = videoHeight;
-							parent.setLayoutParams(params);
-						}
-						JSONArray array = null;
-						try {
-							array = current.getDanmakuList(PlayerActivity.this);
-						} catch (JSONException unuse) {
-						}
-						loadDanmaku(array);
-						main.startVideo();
-					}
-				});
-			}
-		};
 		VideoInfoFragment info;
 		if (isLocal) {
 			info = VideoInfoFragment.newInstance(rootPath, vid);
 		} else {
 			info = VideoInfoFragment.newInstance(vid);
 		}
-		info.setOnRequestVideoListener(listener);
+		info.setOnRequestVideoListener(this);
 		data.add(info);
 		if (!isLocal) {
 			data.add(CommentFragment.newInstance(vid, Comment.TYPE_VIDEO));
 		}
-		return new PagesAdapter(getSupportFragmentManager(), data);
+		return new PagesAdapter(this, data);
 	}
 
 	private void loadDanmaku(JSONArray array) {
@@ -420,7 +420,9 @@ public class PlayerActivity extends BasicActivity {
 			return;
 		}
 		final View inflate = LayoutInflater.from(this).inflate(R.layout.dialog_color_picker, null);
-		BottomDialog loginDialog = new BottomDialog(this, inflate);
+		if (danmakuDia == null) {
+			danmakuDia = new BottomDialog(this, inflate);
+		}
 		SeekBar sizeProgress = inflate.findViewWithTag("danmaku_size");
 		sizeProgress.setMin(10);
 		sizeProgress.setMax(50);
@@ -444,7 +446,11 @@ public class PlayerActivity extends BasicActivity {
 				// TODO: Implement this method
 			}
 		});
-		main.mediaInterface.pause();
+		main.goOnPlayOnPause();
+		danmaku.pause();
+		danmakuType = "scroll";
+		currentColor = Color.WHITE;
+		currentSize = 10;
 		danmakuRender = inflate.findViewWithTag("danmaku_render");
 		pickerHex = inflate.findViewWithTag("current_color");
 		final ClientColorPicker danmakuPicker = inflate.findViewWithTag("color_picker_view");
@@ -483,12 +489,11 @@ public class PlayerActivity extends BasicActivity {
 			}
 		});
 		((TextView) inflate.findViewWithTag("danmaku_content")).setText(danmakuEdit.getText());
-		loginDialog.show();
+		danmakuDia.show();
 		int color = danmakuPicker.getColor();
 		String rgb = StringUtils.convertToRGB(color).toUpperCase(Locale.getDefault());
 		pickerHex.setText(StringUtils.strCat("#", rgb));
 		pickerHex.setTextColor(color);
-		Toast.makeText(getApplication(), "color=" + currentColor, Toast.LENGTH_SHORT).show();
 	}
 
 	public void switchType(final View v) {
@@ -531,8 +536,8 @@ public class PlayerActivity extends BasicActivity {
 		String rgb = StringUtils.convertToRGB(currentColor).toUpperCase(Locale.getDefault());
 		final String danmakuContent = danmakuEdit.getText().toString();
 		final String render = danmakuRender.getText().toString();
-		String uri = APIManager.DanmakuURI.getSendURI(vid, current.getToken(), danmakuContent, pos, danmakuType,
-				StringUtils.strCat("#", rgb), currentSize + "px", render);
+		String uri = APIManager.DanmakuURI.getSendURI(vid, current.getToken(), danmakuContent, pos, danmakuType, rgb,
+				currentSize + "px", render);
 		NetworkUtils.getNetwork.getNetworkJson(uri, new NetworkUtils.HTTPCallback() {
 			@Override
 			public void onSuccess(String content) {
@@ -547,7 +552,7 @@ public class PlayerActivity extends BasicActivity {
 						if (danmakuType.equals("top")) {
 							type = BaseDanmaku.TYPE_FIX_TOP;
 						}
-						BaseDanmaku data = controller.mDanmakuFactory.createDanmaku(type);
+						final BaseDanmaku data = controller.mDanmakuFactory.createDanmaku(type);
 						if (data == null || danmaku == null) {
 							return;
 						}
@@ -558,12 +563,11 @@ public class PlayerActivity extends BasicActivity {
 						data.textSize = currentSize * (danmakuParser.getDisplayer().getDensity() - 0.6f);
 						data.textColor = currentColor;
 						data.textShadowColor = currentColor <= Color.BLACK ? Color.WHITE : Color.BLACK;
-						danmaku.addDanmaku(data);
-						main.mediaInterface.start();
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
 								// TODO: Implement this method
+								danmaku.addDanmaku(data);
 								Toast.makeText(getApplication(), "发送成功", Toast.LENGTH_SHORT).show();
 							}
 						});
@@ -576,11 +580,13 @@ public class PlayerActivity extends BasicActivity {
 			}
 
 			@Override
-			public void onFailed(String cause) {
+			public void onFailed(final String cause) {
 				// TODO: Implement this method
 				Log.e("Network", cause);
 			}
 		});
+		danmaku.resume();
+		main.goOnPlayOnResume();
 	}
 
 	public void sendComment(View v) {

@@ -84,6 +84,7 @@ public class MainActivity extends BasicActivity {
 	public static final String TAG = "VideosActivity";
 	public static WeakReference<BasicActivity> activity;
 	private static final Handler main = new Handler(Looper.getMainLooper());
+	private Runnable callback;
 	private long firstBackTime;
 	private ViewPager mainPage;
 	private TextView[] pages;
@@ -112,16 +113,17 @@ public class MainActivity extends BasicActivity {
 				updatePage(p);
 			}
 		});
+		callback = new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				mainPage.getAdapter().notifyDataSetChanged();
+			}
+		};
 		if (!FileUtils.isStorageAvailable()) {
 			Toast.makeText(getApplication(), "你的内存不够保存东西了", Toast.LENGTH_SHORT).show();
 		}
-        VideosFragment.setOnAccountChangeListener(new Runnable(){
-                @Override
-                public void run() {
-                    // TODO: Implement this method
-                    ((PagesAdapter)mainPage.getAdapter()).addPage(AccountFragment.newInstance());
-                }
-            });
+		VideosFragment.setOnAccountChangeListener(callback);
 		SlideDrawerManager.getInstance().saveLastParent(findViewById(android.R.id.content));
 		DefDanmakuManager.getInstance(this);
 		requestPreDialog(this);
@@ -161,18 +163,18 @@ public class MainActivity extends BasicActivity {
 			String content = data.getStringExtra("content");
 			String token = data.getStringExtra("token");
 			try {
+				final PagesAdapter adapter = (PagesAdapter) mainPage.getAdapter();
 				Account a = new Account(this, new JSONObject(content), token);
-				a.setCurrent(true);
-				AccountManager.getInstance(this).login(a, password);
-				PagesAdapter adapter = (PagesAdapter) mainPage.getAdapter();
+				AccountManager manager = AccountManager.getInstance(this);
 				Fragment page = adapter.getItem(mainPage.getCurrentItem());
+				manager.setLoginCallback(callback);
+				manager.login(a, password);
 				if (page instanceof VideosFragment) {
 					((VideosFragment) page).AccountCallback(a);
 				}
 				if (page instanceof BlogsFragment) {
 					((BlogsFragment) page).AccountCallback(a);
 				}
-				adapter.addPage(AccountFragment.newInstance());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -195,11 +197,10 @@ public class MainActivity extends BasicActivity {
 		List<Fragment> pages = new ArrayList<>();
 		pages.add(VideosFragment.newInstance());
 		pages.add(BlogsFragment.newInstance());
-		AccountManager manager = AccountManager.getInstance(this);
-		if (manager.isLogin()) {
-			pages.add(AccountFragment.newInstance());
-		}
-		return new PagesAdapter(getSupportFragmentManager(), pages);
+		pages.add(AccountFragment.newInstance());
+        PagesAdapter adapter = new PagesAdapter(this, pages);
+        adapter.setCheckAccount(true);
+		return adapter;
 	}
 
 	private void initPageView() {
@@ -238,7 +239,7 @@ public class MainActivity extends BasicActivity {
 			});
 		}
 	}
-    
+
 	private void updatePage(int index) {
 		int colorAccent = ResourceUtils.getColor(R.color.colorAccent);
 		int color = ResourceUtils.getColor(R.color.colorSecondary);
@@ -324,7 +325,7 @@ public class MainActivity extends BasicActivity {
 
 	public static void requestPreDialog(final Activity a) {
 		SharedPreferences sharedPreferences = a.getSharedPreferences("Settings", 0);
-        boolean check = ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.SYSTEM_CHECK_PERMISSION);
+		boolean check = ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.SYSTEM_CHECK_PERMISSION);
 		if (new Boolean(sharedPreferences.getBoolean("First", true)).booleanValue() || check) {
 			sharedPreferences.edit().putBoolean("First", false).commit();
 			AlertDialog.Builder dialog = new AlertDialog.Builder(a);

@@ -147,7 +147,7 @@ public class Video {
 	}
 
 	public Bitmap getCover() {
-		File cover = new File(local, "cover");
+		File cover = new File(local, "source/cover");
 		return cover.exists()
 				? BitmapFactory.decodeFile(cover.getPath())
 				: BitmapFactory.decodeResource(main.getResources(), R.drawable.ic_def_video_cover);
@@ -175,7 +175,7 @@ public class Video {
 	}
 
 	public Bitmap getAvatar() {
-		File avatar = new File(local, "user_avatar");
+		File avatar = new File(local, "source/user_avatar");
 		return avatar.exists()
 				? BitmapFactory.decodeFile(avatar.getPath())
 				: BitmapFactory.decodeResource(main.getResources(), R.drawable.ic_unloading_user);
@@ -186,7 +186,7 @@ public class Video {
 	}
 
 	public File getVideo() {
-		return new File(local, "video");
+		return new File(local, "source/video");
 	}
 
 	public JSONObject getInfos(Context c) throws JSONException {

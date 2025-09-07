@@ -20,6 +20,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import androidx.core.app.ActivityCompat;
+import android.content.res.*;
 
 public class SystemUtils {
     private static final String TAG="IntentUtils";
@@ -124,4 +125,15 @@ public class SystemUtils {
         window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
         return rectangle.top;
     }
+    
+    public static int getNavigationBarHeight(Context c) {
+        int navigationBarHeight = 0;
+        Resources resources = c.getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            navigationBarHeight = resources.getDimensionPixelSize(resourceId);
+        }
+        return navigationBarHeight;
+    }
+    
 }

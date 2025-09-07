@@ -41,7 +41,8 @@ public class AuditViewActivity extends BasicActivity {
 				final TextView textContent = findViewById(R.id.blog_content_text);
 				textContent.setText(content);
 				final ClientWebView webContent = findViewById(R.id.blog_content_view);
-				webContent.loadTextData(content);
+				webContent.setTextData(content);
+                webContent.load();
 				Switch mode = findViewById(R.id.audit_blog_mode);
 				mode.setVisibility(View.VISIBLE);
 				mode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

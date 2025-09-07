@@ -495,7 +495,7 @@ public class APIManager {
         }
 
         public static final String getSendURI(long vid, String token, String text, double time, String mode, String color, String size, String render) {
-            return StringUtils.strCat(new Object[]{getDanmakuURI(), "send_danmaku&vid=", vid, "&token=", token, "&text=", text, "&time=", time, "&mode=", mode, "&color=", color, "&size=", size, "&render=", render});
+            return StringUtils.strCat(new Object[]{getDanmakuURI(), "send_danmaku&vid=", vid, "&token=", token, "&text=", text, "&time=", time, "&mode=", mode, "&color=", color, "&font_size=", size, "&render=", render});
         }
 
         public static final String getListURI(long vid) {

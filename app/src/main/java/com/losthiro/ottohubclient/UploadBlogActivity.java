@@ -57,8 +57,9 @@ public class UploadBlogActivity extends BasicActivity {
 					contentEdit.setVisibility(View.GONE);
 					parent.setVisibility(View.VISIBLE);
 					((TextView) findViewById(R.id.blog_title)).setText(titleEdit.getText());
-					((ClientWebView) findViewById(R.id.blog_content_view))
-                        .loadTextData(contentEdit.getText().toString());
+					ClientWebView content = findViewById(R.id.blog_content_view);
+					content.setTextData(contentEdit.getText().toString());
+					content.load();
 				} else {
 					titleEdit.setVisibility(View.VISIBLE);
 					contentEdit.setVisibility(View.VISIBLE);

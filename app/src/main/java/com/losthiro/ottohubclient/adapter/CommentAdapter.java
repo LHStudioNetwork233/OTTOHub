@@ -132,7 +132,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 			vH.userName.setText(currect.getUser());
 			vH.commentInfo.setText(StringUtils.strCat(new Object[]{currect.getTime(),
 					(currect.getType() == Comment.TYPE_VIDEO ? " OVC" : " OBC"), currect.getCID()}));
-			vH.commentContent.loadTextData(currect.getContent());
+			vH.commentContent.setTextData(currect.getContent());
+            vH.commentContent.load();
 			vH.root.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

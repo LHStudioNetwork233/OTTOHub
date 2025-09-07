@@ -96,8 +96,24 @@ public class UserFragment extends Fragment {
 	}
 
 	private void initUI(final UserInfo current, View view) {
-		ImageDownloader.loader((ImageView) view.findViewById(R.id.main_user_avatar), current.getAvatarURI());
-		ImageDownloader.loader((ImageView) view.findViewById(R.id.main_user_cover), current.getCoverURI());
+        ImageView cover = view.findViewById(R.id.main_user_cover);
+        cover.setOnClickListener(new OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    // TODO: Implement this method
+                    ImageViewerFragment.newInstance(current.getCoverURI()).show(getFragmentManager(), "cover");
+                }
+            });
+        ImageView avatar = view.findViewById(R.id.main_user_avatar);
+        avatar.setOnClickListener(new OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    // TODO: Implement this method
+                    ImageViewerFragment.newInstance(current.getAvatarURI()).show(getFragmentManager(), "avatar");
+                }
+            });
+		ImageDownloader.loader(avatar, current.getAvatarURI());
+		ImageDownloader.loader(cover, current.getCoverURI());
 		FragmentActivity a = requireActivity();
 		if (a instanceof AccountDetailActivity) {
 			((AccountDetailActivity) a).setUserTitle(current.getUser());
@@ -242,7 +258,7 @@ public class UserFragment extends Fragment {
 		data.add(UserBlog.newInstance(uid));
 		data.add(UserFavourite.newInstance(uid));
 		data.add(UserVideo.newInstance(uid, true));
-		return new PagesAdapter(getChildFragmentManager(), data);
+		return new PagesAdapter(this, data);
 	}
 
 	private void initCategoryView(long uid) {

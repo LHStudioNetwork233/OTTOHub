@@ -16,6 +16,7 @@
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/62b84d1064ac21d9c150457bf0c0de43/log4j-1.2-api-2.24.3.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/60ca8cb3abe2d095541c863ab3283410/pdfbox-2.0.24.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/5d699ed6cf772ba8236a9a153552cd6f/vectordrawable-animated-1.0.0.jar.dex.zip
+/storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/f29886ce1f487cfca1772fd316c5c7bd/PhotoView-2.3.0.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/551e3ce62fc8822602023104713ac481/flexmark-ext-enumerated-reference-0.64.8.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/aacd98c2f205ff75548914c57345e592/flexmark-ext-toc-0.64.8.jar.dex.zip
 /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/intermediates/jardex/31845cd59628227e0056157f350b10d6/lifecycle-livedata-2.0.0.jar.dex.zip

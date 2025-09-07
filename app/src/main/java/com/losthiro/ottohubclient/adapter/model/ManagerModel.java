@@ -158,7 +158,7 @@ public class ManagerModel {
 	}
     
     public Bitmap getCover(Context ctx) {
-        File cover = new File(local, "cover");
+        File cover = new File(local, "source/cover");
         return cover.exists()
             ? BitmapFactory.decodeFile(cover.getPath())
             : BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_def_video_cover);
@@ -169,11 +169,11 @@ public class ManagerModel {
     }
 
     public File getVideo() {
-        return new File(local, "video");
+        return new File(local, "source/video");
 	}
     
     public Bitmap getAvatar(Context ctx) {
-        File avatar = new File(local, "user_avatar");
+        File avatar = new File(local, "source/user_avatar");
         return avatar.exists()
             ? BitmapFactory.decodeFile(avatar.getPath())
             : BitmapFactory.decodeResource(ctx.getResources(), R.drawable.ic_unloading_user);

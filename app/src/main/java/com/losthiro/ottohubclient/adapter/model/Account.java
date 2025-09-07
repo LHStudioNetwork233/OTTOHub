@@ -14,16 +14,11 @@ public class Account {
     private Context main;
     private JSONObject root;
     private String mainToken;
-    private boolean isCurrent;
 
     public Account(Context ctx, JSONObject json, String token) {
         main = ctx;
         root = json;
         mainToken = token;
-    }
-
-    public boolean isCurrent() {
-        return isCurrent;
     }
 
     public long getUID() {
@@ -117,10 +112,6 @@ public class Account {
 
     public int getFansCount() {
         return root.optInt("fans_count", 0);
-    }
-
-    public void setCurrent(boolean v) {
-        isCurrent = v;
     }
 
     @Override

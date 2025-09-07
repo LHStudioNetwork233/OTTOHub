@@ -19,6 +19,7 @@ import androidx.core.view.*;
 import androidx.core.graphics.*;
 import android.content.*;
 import android.app.*;
+import android.graphics.*;
 
 public class BasicActivity extends AppCompatActivity {
 	public static final int LOGIN_REQUEST_CODE = 114;
@@ -52,15 +53,15 @@ public class BasicActivity extends AppCompatActivity {
 		super.onPostCreate(savedInstanceState);
 		ViewGroup root = findViewById(android.R.id.content);
 		root.setFitsSystemWindows(true);
-		View child = root.getChildAt(0);
-		ViewCompat.setOnApplyWindowInsetsListener(child, new OnApplyWindowInsetsListener() {
-			@Override
-			public WindowInsetsCompat onApplyWindowInsets(View view, WindowInsetsCompat windowInsetsCompat) {
-				// TODO: Implement this method
-				view.setPadding(0, 0, 0, getWindow().getDecorView().getTop());
-				return windowInsetsCompat;
-			}
-		});
+		WindowInsets insets = root.getRootWindowInsets();
+        if (insets != null) {
+            int navigationBarHeight = insets.getSystemWindowInsetBottom();
+            Rect visibleFrame = new Rect();
+            root.getGlobalVisibleRect(visibleFrame);
+            if(visibleFrame.bottom > root.getHeight() - navigationBarHeight){
+                root.setBottom(navigationBarHeight);
+            }
+        }
 	}
 
 	@Override
@@ -107,7 +108,7 @@ public class BasicActivity extends AppCompatActivity {
 		return isSuccess;
 	}
 
-	public void checkServer() {
+	public void checkServer(final Runnable callback) {
 		try {
 			if (!request.tryAcquire()) {
 				return;
@@ -132,7 +133,7 @@ public class BasicActivity extends AppCompatActivity {
 								}
 								String status = json.optString("status", "error");
 								if (status.equals("success")) {
-
+                                    runOnUiThread(callback);
 									return;
 								}
 								onFailed(content);
@@ -144,13 +145,6 @@ public class BasicActivity extends AppCompatActivity {
 						@Override
 						public void onFailed(final String cause) {
 							Log.e("Network", cause);
-							runOnUiThread(new Runnable() {
-								@Override
-								public void run() {
-									// TODO: Implement this method
-									Toast.makeText(getApplication(), cause, Toast.LENGTH_SHORT).show();
-								}
-							});
 						}
 					});
 		} catch (Exception e) {

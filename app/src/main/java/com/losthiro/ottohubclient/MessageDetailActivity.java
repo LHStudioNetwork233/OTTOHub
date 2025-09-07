@@ -81,7 +81,9 @@ public class MessageDetailActivity extends BasicActivity {
                 }
             });
         ((TextView)findViewById(R.id.message_time)).setText(time);
-        ((ClientWebView)findViewById(R.id.message_content)).loadTextData(content.substring(content.indexOf(":") + 1));
+        ClientWebView contentView = findViewById(R.id.message_content);
+        contentView.setTextData(content.substring(content.indexOf(":") + 1));
+        contentView.load();
     }
 
     @Override

@@ -20,6 +20,7 @@ import android.util.*;
 import java.util.concurrent.*;
 import android.widget.*;
 import android.content.*;
+import android.graphics.*;
 
 public class CommentFragment extends Fragment {
 	public final static String TAG = "Comments";

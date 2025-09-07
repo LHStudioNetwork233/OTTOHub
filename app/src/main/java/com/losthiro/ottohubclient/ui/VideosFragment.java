@@ -4,31 +4,28 @@
  * @AIDE AIDE+ 
  */
 package com.losthiro.ottohubclient.ui;
-import com.losthiro.ottohubclient.R;
-import androidx.fragment.app.*;
-import android.view.*;
-import android.os.*;
-import androidx.recyclerview.widget.*;
 import android.content.*;
-import androidx.swiperefreshlayout.widget.*;
-import android.widget.*;
-import androidx.viewpager.widget.*;
-import android.view.View.*;
-import com.losthiro.ottohubclient.impl.*;
-import com.losthiro.ottohubclient.*;
-import com.losthiro.ottohubclient.utils.*;
-import org.json.*;
-import com.losthiro.ottohubclient.adapter.model.*;
-import com.losthiro.ottohubclient.adapter.page.*;
-import android.util.*;
-import java.util.concurrent.*;
-import com.losthiro.ottohubclient.adapter.*;
 import android.graphics.*;
 import android.graphics.drawable.*;
+import android.os.*;
+import android.util.*;
+import android.view.*;
+import android.view.View.*;
+import android.widget.*;
+import androidx.fragment.app.*;
+import androidx.recyclerview.widget.*;
+import androidx.swiperefreshlayout.widget.*;
+import androidx.viewpager.widget.*;
+import com.losthiro.ottohubclient.*;
+import com.losthiro.ottohubclient.adapter.*;
+import com.losthiro.ottohubclient.adapter.model.*;
+import com.losthiro.ottohubclient.adapter.page.*;
+import com.losthiro.ottohubclient.impl.*;
+import com.losthiro.ottohubclient.utils.*;
 import com.losthiro.ottohubclient.view.drawer.*;
-import java.util.List;
-import java.util.ArrayList;
-import androidx.lifecycle.*;
+import java.util.*;
+import java.util.concurrent.*;
+import org.json.*;
 
 public class VideosFragment extends Fragment {
 	public final static String TAG = "Videos";
@@ -419,7 +416,10 @@ public class VideosFragment extends Fragment {
 	}
 
 	public void lastPopular() {
-		PopularAdapter popular = (PopularAdapter) popularList.getAdapter();
+		PagerAdapter popular = popularList.getAdapter();
+		if (popular == null) {
+			return;
+		}
 		int max = popular.getCount();
 		if (max > 0) {
 			int current = popularList.getCurrentItem();
@@ -429,7 +429,10 @@ public class VideosFragment extends Fragment {
 	}
 
 	public void nextPopular() {
-		PopularAdapter popular = (PopularAdapter) popularList.getAdapter();
+		PagerAdapter popular = popularList.getAdapter();
+		if (popular == null) {
+			return;
+		}
 		int max = popular.getCount();
 		if (max > 0) {
 			int current = popularList.getCurrentItem();

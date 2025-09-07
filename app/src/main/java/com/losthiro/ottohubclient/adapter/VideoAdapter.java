@@ -133,7 +133,6 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 					holder.root.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
-                            Toast.makeText(main, currect.getRootPath()+"", Toast.LENGTH_SHORT).show();
 							Intent i = new Intent(main, PlayerActivity.class);
 							i.putExtra("root_path", currect.getRootPath());
 							i.putExtra("vid", vid);

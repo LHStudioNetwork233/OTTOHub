@@ -45,55 +45,6 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 	public void onBindViewHolder(ManagerAdapter.ViewHolder vH, int p) {
 		// TODO: Implement this method
 		final ManagerModel current = data.get(p);
-		if (current.isLocal() && current.getType() == ManagerModel.TYPE_VIDEO) {
-			vH.image.setImageBitmap(current.getCover(main));
-			try {
-				JSONObject mainfest = current.getInfos(main);
-				final long vid = mainfest.optLong("vid", -1);
-				final String title = mainfest.optString("title", "大家好啊，今天来点大家想看的东西");
-				final String user = mainfest.optString("user_name", "棍母");
-				final String time = mainfest.optString("time", "2009-04-09 00:00:00");
-				final String view = mainfest.optString("view_count", "0播放");
-				final String like = mainfest.optString("like_count", "0获赞");
-				vH.title.setText(title);
-				vH.info.setText(StringUtils.strCat(new String[]{view, " ", like}));
-				vH.content.setText(time);
-				vH.username.setText(user);
-				vH.root.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						// TODO: Implement this method
-						Intent i = new Intent(main, PlayerActivity.class);
-						i.putExtra("is_local", true);
-						i.putExtra("root_path", current.getRootPath());
-						i.putExtra("vid", vid);
-						Intent save = ((Activity) main).getIntent();
-						Client.saveActivity(save);
-						main.startActivity(i);
-					}
-				});
-				vH.root.setOnLongClickListener(new OnLongClickListener() {
-					@Override
-					public boolean onLongClick(View v) {
-						// TODO: Implement this method
-						localManagerDia(current);
-						return false;
-					}
-				});
-				vH.appeal.setVisibility(View.VISIBLE);
-				vH.appeal.setText("导出");
-				vH.appeal.setOnClickListener(new OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						// TODO: Implement this method
-						exportDia(current);
-					}
-				});
-			} catch (JSONException e) {
-				e.printStackTrace();
-			}
-			return;
-		}
 		if (current.getType() == ManagerModel.TYPE_BLOG) {
 			ImageDownloader.loader(vH.image, current.getAvatar());
 			final ClientString str = new ClientString(current.getContent());
@@ -163,6 +114,54 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 					break;
 			}
 		} else {
+            if (current.isLocal()) {
+                vH.image.setImageBitmap(current.getCover(main));
+                try {
+                    JSONObject mainfest = current.getInfos(main);
+                    final long vid = mainfest.optLong("vid", 0);
+                    final String title = mainfest.optString("title", "大家好啊，今天来点大家想看的东西");
+                    final String user = mainfest.optString("user_name", "棍母");
+                    final String time = mainfest.optString("time", "2009-04-09 00:00:00");
+                    final String view = mainfest.optString("view_count", "0播放");
+                    final String like = mainfest.optString("like_count", "0获赞");
+                    vH.title.setText(title);
+                    vH.info.setText(StringUtils.strCat(new String[]{view, " ", like}));
+                    vH.content.setText(time);
+                    vH.username.setText(user);
+                    vH.root.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // TODO: Implement this method
+                                Intent i = new Intent(main, PlayerActivity.class);
+                                i.putExtra("root_path", current.getRootPath());
+                                i.putExtra("vid", vid);
+                                Intent save = ((Activity) main).getIntent();
+                                Client.saveActivity(save);
+                                main.startActivity(i);
+                            }
+                        });
+                    vH.root.setOnLongClickListener(new OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                // TODO: Implement this method
+                                localManagerDia(current);
+                                return false;
+                            }
+                        });
+                    vH.appeal.setVisibility(View.VISIBLE);
+                    vH.appeal.setText("导出");
+                    vH.appeal.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                // TODO: Implement this method
+                                exportDia(current);
+                            }
+                        });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return;
+            }
 			ImageDownloader.loader(vH.image, current.getCover());
 			vH.title.setText(current.getTitle());
 			vH.info.setText(StringUtils.strCat(new String[]{current.getViewCount(), " ", current.getLikeCount()}));

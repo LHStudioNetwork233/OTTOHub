@@ -175,7 +175,6 @@ public class BlogDetailActivity extends BasicActivity {
 				SlideDrawerManager manager = SlideDrawerManager.getInstance();
 				manager.registerDrawer(parent, (ImageButton) parent.findViewById(R.id.main_slide_bar));
 				Account a = new Account(this, new JSONObject(content), token);
-				a.setCurrent(true);
 				AccountManager.getInstance(this).login(a, password);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -240,7 +239,9 @@ public class BlogDetailActivity extends BasicActivity {
 		String info = StringUtils
 				.strCat(new Object[]{current.getTime(), " - ", current.getViewCount(), " - OB", current.getID()});
 		((TextView) findViewById(R.id.blog_info)).setText(info);
-		((ClientWebView) findViewById(R.id.blog_content_view)).loadTextData(current.getContent());
+		ClientWebView dataView = findViewById(R.id.blog_content_view);
+        dataView.setTextData(current.getContent());
+        dataView.load();
 		int color = ResourceUtils.getColor(R.color.colorSecondary);
 		((ImageButton) content.findViewWithTag("1")).setColorFilter(color);
 		((ImageButton) content.findViewWithTag("2")).setColorFilter(color);

@@ -39,7 +39,13 @@ public class SplashActivity extends BasicActivity {
 		int theme = ClientSettings.getInstance().getInt(ClientSettings.SettingPool.SYSTEM_SWITCH_THEME,
 				AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 		AppCompatDelegate.setDefaultNightMode(theme);
-		AccountManager.getInstance(this).autoLogin();
+        checkServer(new Runnable(){
+                @Override
+                public void run() {
+                    // TODO: Implement this method
+                    AccountManager.getInstance(getApplication()).autoLogin();
+                }
+            });
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
         progress = findViewById(R.id.splash_progress);

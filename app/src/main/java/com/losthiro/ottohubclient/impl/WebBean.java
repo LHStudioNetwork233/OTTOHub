@@ -26,74 +26,41 @@ import java.util.regex.Pattern;
 import android.util.Log;
 import android.content.res.*;
 import com.losthiro.ottohubclient.utils.*;
+import android.webkit.*;
+import org.json.*;
+import com.losthiro.ottohubclient.*;
+import java.util.*;
 
 /**
  * @Author Hiro
  * @Date 2025/06/18 12:17
  */
+ 
 public class WebBean {
 	public static final String TAG = "WebBean";
 	private Context ctx;
-	private String content;
-	private String css = "file:///android_asset/css/main_layout.css";
-	private boolean usingCSS = true;
+	private String content = "loading";
+	private String css;
 	private List<String> scripts = new ArrayList<>();
+    private Parser parser;
+    private HtmlRenderer renderer;
 
-	public WebBean(Context c, String str) {
+	public WebBean(Context c, String defaultData) {
 		ctx = c;
-		content = str;
+		content = defaultData;
+        MutableDataSet options = new MutableDataSet();
+        options.set(Parser.EXTENSIONS,
+                    Arrays.asList(TablesExtension.create(), StrikethroughExtension.create(), TaskListExtension.create(),
+                                  FootnoteExtension.create(), AutolinkExtension.create(), TypographicExtension.create(),
+                                  AnchorLinkExtension.create(), TocExtension.create(), AbbreviationExtension.create(),
+                                  WikiLinkExtension.create(), AttributesExtension.create(), GitLabExtension.create()));
+        parser = Parser.builder(options).build();
+		renderer = HtmlRenderer.builder(options).build();
+        
 	}
 
-	public void loadHTML(WebView view) {
-		if ((content.startsWith("<!DOCTYPE html>") || content.startsWith("<html>")) && content.endsWith("</html>")) {
-			view.loadData(content, "text/html;charset=UTF-8", "UTF-8");
-			return;
-		}
-		StringBuilder htmlBulider = new StringBuilder(
-				"<!DOCTYPE html><html><head><title>Hiro Loading...</title><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">");
-		MutableDataSet options = new MutableDataSet();
-		options.set(Parser.EXTENSIONS,
-				Arrays.asList(TablesExtension.create(), StrikethroughExtension.create(), TaskListExtension.create(),
-						FootnoteExtension.create(), AutolinkExtension.create(), TypographicExtension.create(),
-						AnchorLinkExtension.create(), TocExtension.create(), AbbreviationExtension.create(),
-						WikiLinkExtension.create(), AttributesExtension.create(), GitLabExtension.create()));
-		Parser parser = Parser.builder(options).build();
-		HtmlRenderer renderer = HtmlRenderer.builder(options).build();
-		String text = content;
-		try {
-            if(!ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.MSG_MARKDOWN_SURPPORT)){
-                throw new Exception();
-            }
-			text = renderer.render(parser.parse(content));
-			text = text.replace("\n", "<br/>");
-			//Toast.makeText(ctx, text, Toast.LENGTH_SHORT).show();
-		} catch (Exception e) {
-			Log.i(TAG, e.toString());
-			//            text = text.replace("&amp;", "&");
-			//            text = text.replace("&lt;", "<");
-			//            text = text.replace("&gt;", ">");
-			//            text = text.replace("&quot;", "\"");
-			//            text = text.replace("&#39;", "'");
-			//Toast.makeText(ctx, text, Toast.LENGTH_SHORT).show();
-			text = replaceText(text);
-		}
-		//text = replaceAt(text);
-		text = replaceLinks(text);
-		if (!scripts.isEmpty()) {
-			for (String js : scripts) {
-                htmlBulider.append("<script src=\"").append(js).append("\"/>");
-            }
-		}
-		if (usingCSS) {
-			htmlBulider.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"");
-			htmlBulider.append(css);
-			htmlBulider.append("?v1.0.1\"/>");
-		}
-		htmlBulider.append("</head><body>");
-		htmlBulider.append(text);
-		htmlBulider.append("</body></html>");
-		//Toast.makeText(ctx, htmlBulider, Toast.LENGTH_SHORT).show();
-		view.loadData(htmlBulider.toString(), "text/html;charset=UTF-8", "UTF-8");
+	public void setData(String data) {
+		content = data;
 	}
 
 	public void setCssURI(String uri) {
@@ -202,6 +169,58 @@ public class WebBean {
 			return "u/";
 		}
 		return null;
+	}
+    
+    @JavascriptInterface
+    public void toast(String msg) {
+        Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
+    }
+
+	@JavascriptInterface
+	public String getColor(int type) {
+        int color = ResourceUtils.getColor(R.color.colorMain);
+		switch (type) {
+			case 1 :
+				color = ResourceUtils.getColor(R.color.colorSecondary);
+                break;
+			case 2 :
+				color = ResourceUtils.getColor(R.color.colorAccent);
+                break;
+		}
+        String rgba = StringUtils.convertToRGB(color).toLowerCase(Locale.getDefault());
+        return StringUtils.strCat("#", rgba);
+	}
+
+	@JavascriptInterface
+	public String getStyleFile() {
+		return css;
+	}
+
+	@JavascriptInterface
+	public String getScriptFiles() {
+		JSONArray array = new JSONArray();
+		for (String current : scripts) {
+			array.put(current);
+		}
+		return array.toString();
+	}
+
+	@JavascriptInterface
+	public String getData() {
+		if (content.equals("loading")) {
+			return content;
+		}
+		String text = content;
+		try {
+			if (!ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.MSG_MARKDOWN_SURPPORT)) {
+				throw new Exception();
+			}
+			text = renderer.render(parser.parse(content));
+			text = text.replace("\n", "<br/>");
+		} catch (Exception unuse) {
+			text = replaceText(text);
+		}
+		return replaceLinks(text);
 	}
 }
 

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:padding="10dp"
+	android:gravity="center"
+	android:minWidth="400dp"
+	android:elevation="4dp"
+	android:background="@drawable/video_card_bg"
+	android:layout_margin="10dp">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="图片操作"
+		android:layout_marginBottom="5dp"
+		android:textStyle="bold"/>
+
+	<View
+		android:background="#FFE5E5E5"
+		android:layout_width="match_parent"
+		android:layout_height="1dp"
+		android:layout_marginLeft="3dp"
+		android:layout_marginRight="3dp"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="上传并更换图片"
+		android:tag="upload_image"
+		android:visibility="gone"
+		android:layout_marginTop="5dp"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="下载图片"
+		android:tag="download_image"
+		android:layout_marginTop="5dp"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="复制图片链接"
+		android:tag="copy_uri"
+		android:layout_marginTop="5dp"/>
+
+</LinearLayout>
+
