@@ -117,7 +117,9 @@ public class MainActivity extends BasicActivity {
 			@Override
 			public void run() {
 				// TODO: Implement this method
-				mainPage.getAdapter().notifyDataSetChanged();
+				if (AccountManager.getInstance(getApplication()).isLogin()) {
+                    ((PagesAdapter) mainPage.getAdapter()).addItem(AccountFragment.newInstance());
+                }
 			}
 		};
 		if (!FileUtils.isStorageAvailable()) {
@@ -193,14 +195,14 @@ public class MainActivity extends BasicActivity {
 		super.startActivity(intent);
 	}
 
-	private FragmentPagerAdapter initPager() {
-		List<Fragment> pages = new ArrayList<>();
-		pages.add(VideosFragment.newInstance());
-		pages.add(BlogsFragment.newInstance());
-		pages.add(AccountFragment.newInstance());
-        PagesAdapter adapter = new PagesAdapter(this, pages);
-        adapter.setCheckAccount(true);
-		return adapter;
+	private FragmentStatePagerAdapter initPager() {
+		PagesAdapter pages = new PagesAdapter(this);
+		pages.addItem(VideosFragment.newInstance());
+		pages.addItem(BlogsFragment.newInstance());
+		if (AccountManager.getInstance(this).isLogin()) {
+			pages.addItem(AccountFragment.newInstance());
+		}
+		return pages;
 	}
 
 	private void initPageView() {

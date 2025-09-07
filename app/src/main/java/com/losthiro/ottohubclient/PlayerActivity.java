@@ -306,8 +306,8 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 		});
 	}
 
-	private FragmentPagerAdapter initPage(long vid, String rootPath) {
-		List<Fragment> data = new ArrayList<>();
+	private FragmentStatePagerAdapter initPage(long vid, String rootPath) {
+		PagesAdapter data = new PagesAdapter(this);
 		VideoInfoFragment info;
 		if (isLocal) {
 			info = VideoInfoFragment.newInstance(rootPath, vid);
@@ -315,11 +315,11 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 			info = VideoInfoFragment.newInstance(vid);
 		}
 		info.setOnRequestVideoListener(this);
-		data.add(info);
+		data.addItem(info);
 		if (!isLocal) {
-			data.add(CommentFragment.newInstance(vid, Comment.TYPE_VIDEO));
+			data.addItem(CommentFragment.newInstance(vid, Comment.TYPE_VIDEO));
 		}
-		return new PagesAdapter(this, data);
+		return data;
 	}
 
 	private void loadDanmaku(JSONArray array) {

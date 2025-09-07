@@ -2,8 +2,8 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.losthiro.ottohubclient"
-	android:versionCode="2025090105"
-	android:versionName="v1.4.0">
+	android:versionCode="2025090706"
+	android:versionName="v1.4.1">
 
 	<uses-sdk
 		android:minSdkVersion="26"

@@ -10,29 +10,26 @@ import android.widget.*;
 import android.os.*;
 import android.content.*;
 import com.losthiro.ottohubclient.impl.*;
+import androidx.viewpager.widget.*;
 
-public class PagesAdapter extends FragmentPagerAdapter {
-	private List<Fragment> data;
+public class PagesAdapter extends FragmentStatePagerAdapter {
+	private final List<Fragment> data = new ArrayList<>();
 	private Context ctx;
-    private boolean mCheckAccount;
 
-	public PagesAdapter(FragmentActivity act, List<Fragment> pages) {
+	public PagesAdapter(FragmentActivity act) {
 		super(act.getSupportFragmentManager());
-		data = pages;
 		ctx = act.getApplication();
 	}
     
-    public PagesAdapter(Fragment parent, List<Fragment> pages) {
+    public PagesAdapter(Fragment parent) {
         super(parent.getChildFragmentManager());
-        data = pages;
         ctx = parent.getContext();
 	}
 
 	@Override
 	public int getCount() {
 		// TODO: Implement this method
-        int offset = AccountManager.getInstance(ctx).isLogin() ? 0 : 1;
-		return mCheckAccount ? data.size() - offset : data.size();
+		return data.size();
 	}
 
 	@Override
@@ -40,6 +37,12 @@ public class PagesAdapter extends FragmentPagerAdapter {
 		// TODO: Implement this method
 		return data.get(p);
 	}
+
+    @Override
+    public int getItemPosition(Object object) {
+        // TODO: Implement this method
+        return PagerAdapter.POSITION_NONE;
+    }
 
 	public Fragment getItem(String tag) {
 		for (Fragment current : data) {
@@ -51,8 +54,9 @@ public class PagesAdapter extends FragmentPagerAdapter {
 		return null;
 	}
     
-    public void setCheckAccount(boolean isCheck) {
-        mCheckAccount = isCheck;
+    public void addItem(Fragment current) {
+        data.add(current);
+        notifyDataSetChanged();
     }
 }
 

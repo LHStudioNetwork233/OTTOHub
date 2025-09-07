@@ -253,12 +253,12 @@ public class UserFragment extends Fragment {
 
 	private PagerAdapter initPager(long uid) {
 		// TODO: Implement this method
-		List<Fragment> data = new ArrayList<>();
-		data.add(UserVideo.newInstance(uid));
-		data.add(UserBlog.newInstance(uid));
-		data.add(UserFavourite.newInstance(uid));
-		data.add(UserVideo.newInstance(uid, true));
-		return new PagesAdapter(this, data);
+		PagesAdapter data = new PagesAdapter(this);
+		data.addItem(UserVideo.newInstance(uid));
+		data.addItem(UserBlog.newInstance(uid));
+		data.addItem(UserFavourite.newInstance(uid));
+		data.addItem(UserVideo.newInstance(uid, true));
+		return data;
 	}
 
 	private void initCategoryView(long uid) {
