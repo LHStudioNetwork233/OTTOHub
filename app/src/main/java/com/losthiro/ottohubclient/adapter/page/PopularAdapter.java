@@ -72,6 +72,7 @@ public class PopularAdapter extends PagerAdapter {
 			view.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+                    ClickSounds.playSound(v.getContext());
 					ClientWebView.praseLinkAndLoad(main, link);
 				}
 			});

@@ -51,10 +51,7 @@ public class SettingToggle extends SettingBasic {
 	}
 
 	public void switchToggle() {
-		isToggle = !isToggle;
-		if (command != null) {
-			command.onChange(isToggle);
-		}
+		setToggle(!isToggle);
 	}
 
 	public void setOnToggleChangeListener(OnToggleChangeListener listener) {

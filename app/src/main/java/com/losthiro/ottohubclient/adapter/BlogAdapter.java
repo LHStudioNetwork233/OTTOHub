@@ -85,6 +85,7 @@ public class BlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 			holder.avatar.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+                    ClickSounds.playSound(v.getContext());
 					Intent i = new Intent(main, AccountDetailActivity.class);
 					i.putExtra("uid", current.getUID());
 					Intent save = ((Activity) main).getIntent();
@@ -107,6 +108,7 @@ public class BlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 			holder.root.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+                    ClickSounds.playSound(v.getContext());
 					Intent i = new Intent(main, BlogDetailActivity.class);
 					i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					i.putExtra("bid", current.getBID());

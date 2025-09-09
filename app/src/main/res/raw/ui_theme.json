@@ -1,0 +1,19 @@
+{
+    "name": "个性化设置",
+    "id": "[FILE_ID]",
+    "items": [
+    {
+            "type": "toggle",
+            "path": "ottohub/system/click_sound",
+            "title": "点击音效",
+            "msg": "是否启用控件点击音效",
+            "icon": "ic_click_black"
+        },
+        {
+            "type": "action",
+            "path": "ottohub/system/switch_theme",
+            "title": "主题切换",
+            "icon": "ic_platte_black"
+        }
+    ]
+}

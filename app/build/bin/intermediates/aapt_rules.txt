@@ -161,14 +161,19 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_videos.xml:266
 -keep class androidx.viewpager.widget.ViewPager { <init>(...); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:17
--keep class cn.jzvd.JzvdStd { <init>(...); }
-
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_image_viewer.xml:8
 -keep class com.github.chrisbanes.photoview.PhotoView { <init>(...); }
 
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_video.xml:2
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_video_detail.xml:2
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_video_manager.xml:2
+-keep class com.losthiro.ottohubclient.view.ClientCardLayout { <init>(...); }
+
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_color_picker.xml:99
 -keep class com.losthiro.ottohubclient.view.ClientColorPicker { <init>(...); }
+
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:17
+-keep class com.losthiro.ottohubclient.view.ClientVideoView { <init>(...); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_audit_view.xml:74
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:90
@@ -180,6 +185,12 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_account.xml:30
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_user.xml:61
 -keep class com.losthiro.ottohubclient.view.CricleImageView { <init>(...); }
+
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/window_info.xml:25
+-keep class com.losthiro.ottohubclient.view.FPSListenerText { <init>(...); }
+
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/window_info.xml:38
+-keep class com.losthiro.ottohubclient.view.JVMListenerText { <init>(...); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:81
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_comment_list.xml:35
@@ -198,14 +209,14 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_blog_manager.xml:9
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_comment.xml:9
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_user.xml:13
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_video.xml:63
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_video.xml:60
 -keep class com.losthiro.ottohubclient.view.RoundImageView { <init>(...); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_blog.xml:16
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_blog_manager.xml:16
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_video.xml:72
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_video_detail.xml:23
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_video_manager.xml:23
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_video.xml:69
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_video_detail.xml:20
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_video_manager.xml:20
 -keep class com.losthiro.ottohubclient.view.RunTextView { <init>(...); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_login.xml:20

@@ -130,9 +130,6 @@
 # view res/layout/fragment_videos.xml #generated:266
 -keep class androidx.viewpager.widget.ViewPager { <init>(...); }
 
-# view res/layout/activity_player.xml #generated:17
--keep class cn.jzvd.JzvdStd { <init>(...); }
-
 # view res/layout/fragment_image_viewer.xml #generated:8
 -keep class com.github.chrisbanes.photoview.PhotoView { <init>(...); }
 
@@ -196,8 +193,16 @@
 # view AndroidManifest.xml #generated:151
 -keep class com.losthiro.ottohubclient.UploadVideoActivity { <init>(...); }
 
+# view res/layout/list_video.xml #generated:2
+# view res/layout/list_video_detail.xml #generated:2
+# view res/layout/list_video_manager.xml #generated:2
+-keep class com.losthiro.ottohubclient.view.ClientCardLayout { <init>(...); }
+
 # view res/layout/dialog_color_picker.xml #generated:99
 -keep class com.losthiro.ottohubclient.view.ClientColorPicker { <init>(...); }
+
+# view res/layout/activity_player.xml #generated:17
+-keep class com.losthiro.ottohubclient.view.ClientVideoView { <init>(...); }
 
 # view res/layout/activity_audit_view.xml #generated:74
 # view res/layout/activity_blog_detail.xml #generated:90
@@ -209,6 +214,12 @@
 # view res/layout/fragment_account.xml #generated:30
 # view res/layout/fragment_user.xml #generated:61
 -keep class com.losthiro.ottohubclient.view.CricleImageView { <init>(...); }
+
+# view res/layout/window_info.xml #generated:25
+-keep class com.losthiro.ottohubclient.view.FPSListenerText { <init>(...); }
+
+# view res/layout/window_info.xml #generated:38
+-keep class com.losthiro.ottohubclient.view.JVMListenerText { <init>(...); }
 
 # view res/layout/activity_player.xml #generated:81
 # view res/layout/fragment_comment_list.xml #generated:35
@@ -228,16 +239,16 @@
 # view res/layout/list_blog_manager.xml #generated:9
 # view res/layout/list_comment.xml #generated:9
 # view res/layout/list_user.xml #generated:13
-# view res/layout/list_video.xml #generated:63
+# view res/layout/list_video.xml #generated:60
 -keep class com.losthiro.ottohubclient.view.RoundImageView { <init>(...); }
 
 # view res/layout/list_blog.xml #generated:16
 # view res/layout/list_blog_manager.xml #generated:16
-# view res/layout/list_video.xml #generated:72
-# view res/layout/list_video_detail.xml #generated:23
-# view res/layout/list_video_detail.xml #generated:40
-# view res/layout/list_video_manager.xml #generated:23
-# view res/layout/list_video_manager.xml #generated:40
+# view res/layout/list_video.xml #generated:69
+# view res/layout/list_video_detail.xml #generated:20
+# view res/layout/list_video_detail.xml #generated:37
+# view res/layout/list_video_manager.xml #generated:20
+# view res/layout/list_video_manager.xml #generated:37
 -keep class com.losthiro.ottohubclient.view.RunTextView { <init>(...); }
 
 # view res/layout/activity_login.xml #generated:20

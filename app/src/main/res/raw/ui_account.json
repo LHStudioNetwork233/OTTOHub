@@ -1,0 +1,26 @@
+{
+    "name": "账户设置",
+    "id": "[FILE_ID]",
+    "items": [
+        {
+            "type": "toggle",
+            "path": "ottohub/account/auto_login",
+            "title": "自动登录",
+            "msg": "每次打开时自动登录上次的账号",
+            "icon": "ic_login_black"
+        },
+        {
+            "type": "toggle",
+            "path": "ottohub/account/auto_remove",
+            "title": "账号移除",
+            "msg": "退出登录时，移除列表中当前账号",
+            "icon": "ic_remove_account"
+        },
+        {
+            "type": "action",
+            "path": "ottohub/account/logout",
+            "title": "退出登录",
+            "icon": "ic_logout_black"
+        }
+    ]
+}

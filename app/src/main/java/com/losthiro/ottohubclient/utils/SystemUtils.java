@@ -53,6 +53,7 @@ public class SystemUtils {
             Intent i=new Intent();
             i.setAction(Intent.ACTION_VIEW);
             i.setData(Uri.parse(uri));
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             c.startActivity(i);
         } catch (Exception e) {
             Log.e(TAG, "uri load failed", e);
@@ -116,6 +117,9 @@ public class SystemUtils {
     }
     
     public static boolean clearCache(Context context) {
+        if (!context.getCacheDir().exists() && !context.getExternalCacheDir().exists()) {
+            return true;
+        }
         return FileUtils.clearDir(context.getCacheDir().getPath()) && (context.getExternalCacheDir() != null ? FileUtils.clearDir(context.getExternalCacheDir().getPath()) : true);
     }
 

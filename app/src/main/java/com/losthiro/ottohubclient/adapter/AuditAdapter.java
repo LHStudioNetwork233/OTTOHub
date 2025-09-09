@@ -53,6 +53,7 @@ public class AuditAdapter extends RecyclerView.Adapter<AuditAdapter.ViewHolder> 
 					@Override
 					public void onClick(View v) {
 						// TODO: Implement this method
+                        ClickSounds.playSound(v.getContext());
 						Intent i = new Intent(main, AuditViewActivity.class);
 						i.putExtra("type", AuditModel.TYPE_VIDEO);
 						i.putExtra("uid", current.getUID());
@@ -83,6 +84,7 @@ public class AuditAdapter extends RecyclerView.Adapter<AuditAdapter.ViewHolder> 
 					@Override
 					public void onClick(View v) {
 						// TODO: Implement this method
+                        ClickSounds.playSound(v.getContext());
 						Intent i = new Intent(main, AuditViewActivity.class);
 						i.putExtra("type", AuditModel.TYPE_BLOG);
 						i.putExtra("bid", current.getVID());
@@ -101,6 +103,7 @@ public class AuditAdapter extends RecyclerView.Adapter<AuditAdapter.ViewHolder> 
 					@Override
 					public void onClick(View v) {
 						// TODO: Implement this method
+                        ClickSounds.playSound(v.getContext());
 						Intent i = new Intent(main, AuditViewActivity.class);
 						i.putExtra("type", AuditModel.TYPE_AVATAR);
 						i.putExtra("uid", current.getUID());
@@ -119,6 +122,7 @@ public class AuditAdapter extends RecyclerView.Adapter<AuditAdapter.ViewHolder> 
                         @Override
                         public void onClick(View v) {
                             // TODO: Implement this method
+                            ClickSounds.playSound(v.getContext());
                             Intent i = new Intent(main, AuditViewActivity.class);
                             i.putExtra("type", AuditModel.TYPE_COVER);
                             i.putExtra("uid", current.getUID());

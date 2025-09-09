@@ -26,6 +26,7 @@ import com.losthiro.ottohubclient.adapter.model.*;
 public class UploadManagerActivity extends BasicActivity {
 	public static final String TAG = "UploadManagerActivity";
 	private static final Semaphore request = new Semaphore(1);
+    private static final HashMap<Integer, Integer> offsetMap = new HashMap<>();
 	private int currentCategory;
 	private SwipeRefreshLayout refresh;
 	private RecyclerView view;
@@ -63,7 +64,7 @@ public class UploadManagerActivity extends BasicActivity {
 			@Override
 			public void onRefresh() {
 				// TODO: Implement this method
-				Toast.makeText(getApplication(), "走位中...", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplication(), R.string.loading, Toast.LENGTH_SHORT).show();
 				request(true);
 			}
 		});
@@ -147,14 +148,21 @@ public class UploadManagerActivity extends BasicActivity {
 				refresh.setRefreshing(false);
 				return;
 			}
+            int index = currentCategory;
+            int current = offsetMap.getOrDefault(index, 0);
+            if (isRefresh) {
+                offsetMap.put(index, 0);
+            } else {
+                offsetMap.put(index, current + 12);
+            }
 			AccountManager manager = AccountManager.getInstance(this);
 			if (!manager.isLogin()) {
 				return;
 			}
 			String token = manager.getAccount().getToken();
 			String uri = currentCategory == 0
-					? APIManager.ProfileURI.getVideosManageURI(token, 0, 12)
-					: APIManager.ProfileURI.getBlogsManageURI(token, 0, 12);
+					? APIManager.ProfileURI.getVideosManageURI(token, current, 12)
+					: APIManager.ProfileURI.getBlogsManageURI(token, current, 12);
 			NetworkUtils.getNetwork.getNetworkJson(uri, new NetworkUtils.HTTPCallback() {
 				@Override
 				public void onSuccess(String content) {

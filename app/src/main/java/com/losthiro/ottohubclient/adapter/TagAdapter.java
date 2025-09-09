@@ -12,6 +12,7 @@ import com.losthiro.ottohubclient.R;
 import android.content.*;
 import android.view.View.*;
 import android.graphics.*;
+import com.losthiro.ottohubclient.impl.*;
 
 public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
 	private final List<String> data = new ArrayList<>();
@@ -53,6 +54,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
 			@Override
 			public void onClick(View v) {
 				// TODO: Implement this method
+                ClickSounds.playSound(v.getContext());
 				if (data.remove(current)) {
 					data.sort(action);
                     notifyDataSetChanged();

@@ -26,6 +26,7 @@ import com.losthiro.ottohubclient.adapter.model.*;
 public class SuscribeActivity extends BasicActivity {
 	private static final Semaphore request = new Semaphore(1);
 	private long uid;
+    private int offset;
 	private int maxCount = 12;
 	private SwipeRefreshLayout refresh;
 	private RecyclerView view;
@@ -66,6 +67,7 @@ public class SuscribeActivity extends BasicActivity {
 						int itemCount = view.getLayoutManager().getItemCount();
 						int lastPos = ((LinearLayoutManager) view.getLayoutManager()).findLastVisibleItemPosition();
 						if (lastPos >= itemCount - 1 && itemCount >= 12) {
+                            offset = offset + 12;
 							request(false);
 						}
 					}
@@ -80,7 +82,8 @@ public class SuscribeActivity extends BasicActivity {
 			@Override
 			public void onRefresh() {
 				// TODO: Implement this method
-				Toast.makeText(getApplication(), "走位中...", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplication(), R.string.loading, Toast.LENGTH_SHORT).show();
+                offset = 0;
 				request(true);
 			}
 		});
@@ -114,7 +117,7 @@ public class SuscribeActivity extends BasicActivity {
 			if (!manager.isLogin()) {
 				return;
 			}
-			NetworkUtils.getNetwork.getNetworkJson(APIManager.FollowingURI.getFollowingListURI(uid, 0, maxCount),
+			NetworkUtils.getNetwork.getNetworkJson(APIManager.FollowingURI.getFollowingListURI(uid, offset, maxCount),
 					new NetworkUtils.HTTPCallback() {
 						@Override
 						public void onSuccess(String content) {

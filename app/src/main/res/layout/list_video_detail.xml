@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.losthiro.ottohubclient.view.ClientCardLayout
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:app="http://schemas.android.com/apk/res-auto"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:elevation="4dp"
-	android:background="@drawable/video_card_bg"
-	android:padding="5dp"
 	android:layout_marginBottom="5dp"
 	android:layout_marginTop="5dp">
 
@@ -69,5 +66,5 @@
 		android:layout_below="@id/video_user"
 		android:layout_marginLeft="5dp"/>
     
-</RelativeLayout>
+</com.losthiro.ottohubclient.view.ClientCardLayout>
 

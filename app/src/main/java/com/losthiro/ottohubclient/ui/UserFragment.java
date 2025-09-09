@@ -96,22 +96,22 @@ public class UserFragment extends Fragment {
 	}
 
 	private void initUI(final UserInfo current, View view) {
-        ImageView cover = view.findViewById(R.id.main_user_cover);
-        cover.setOnClickListener(new OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    // TODO: Implement this method
-                    ImageViewerFragment.newInstance(current.getCoverURI()).show(getFragmentManager(), "cover");
-                }
-            });
-        ImageView avatar = view.findViewById(R.id.main_user_avatar);
-        avatar.setOnClickListener(new OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    // TODO: Implement this method
-                    ImageViewerFragment.newInstance(current.getAvatarURI()).show(getFragmentManager(), "avatar");
-                }
-            });
+		ImageView cover = view.findViewById(R.id.main_user_cover);
+		cover.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO: Implement this method
+				ImageViewerFragment.newInstance(current.getCoverURI()).show(getFragmentManager(), "cover");
+			}
+		});
+		ImageView avatar = view.findViewById(R.id.main_user_avatar);
+		avatar.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO: Implement this method
+				ImageViewerFragment.newInstance(current.getAvatarURI()).show(getFragmentManager(), "avatar");
+			}
+		});
 		ImageDownloader.loader(avatar, current.getAvatarURI());
 		ImageDownloader.loader(cover, current.getCoverURI());
 		FragmentActivity a = requireActivity();
@@ -538,6 +538,7 @@ public class UserFragment extends Fragment {
 		private static final Semaphore request = new Semaphore(1);
 		private SwipeRefreshLayout refresh;
 		private RecyclerView list;
+		private int offset;
 
 		public static UserVideo newInstance(long uid) {
 			return newInstance(uid, false);
@@ -577,6 +578,7 @@ public class UserFragment extends Fragment {
 							if (adapter != null && adapter instanceof VideoAdapter) {
 								((VideoAdapter) adapter).startLoading();
 							}
+							offset = offset + 12;
 							request(false);
 						}
 					}
@@ -588,6 +590,7 @@ public class UserFragment extends Fragment {
 				public void onRefresh() {
 					// TODO: Implement this method
 					Toast.makeText(getContext(), R.string.loading, Toast.LENGTH_SHORT).show();
+					offset = 0;
 					request(true);
 				}
 			});
@@ -622,7 +625,7 @@ public class UserFragment extends Fragment {
 					requestLocal(ctx);
 					return;
 				}
-				NetworkUtils.getNetwork.getNetworkJson(APIManager.VideoURI.getUserVideo(uid, 0, 12),
+				NetworkUtils.getNetwork.getNetworkJson(APIManager.VideoURI.getUserVideo(uid, offset, 12),
 						new NetworkUtils.HTTPCallback() {
 							@Override
 							public void onSuccess(String content) {
@@ -711,6 +714,7 @@ public class UserFragment extends Fragment {
 		private static final Semaphore request = new Semaphore(1);
 		private SwipeRefreshLayout refresh;
 		private RecyclerView list;
+		private int offset;
 
 		public static UserBlog newInstance(long uid) {
 			Bundle arg = new Bundle();
@@ -745,6 +749,7 @@ public class UserFragment extends Fragment {
 							if (adapter != null && adapter instanceof VideoAdapter) {
 								((VideoAdapter) adapter).startLoading();
 							}
+							offset = offset + 12;
 							request(false);
 						}
 					}
@@ -756,6 +761,7 @@ public class UserFragment extends Fragment {
 				public void onRefresh() {
 					// TODO: Implement this method
 					Toast.makeText(getContext(), R.string.loading, Toast.LENGTH_SHORT).show();
+					offset = 0;
 					request(true);
 				}
 			});
@@ -785,7 +791,7 @@ public class UserFragment extends Fragment {
 				if (!manager.isLogin()) {
 					return;
 				}
-				NetworkUtils.getNetwork.getNetworkJson(APIManager.BlogURI.getUserBlogURI(uid, 0, 12),
+				NetworkUtils.getNetwork.getNetworkJson(APIManager.BlogURI.getUserBlogURI(uid, offset, 12),
 						new NetworkUtils.HTTPCallback() {
 							@Override
 							public void onSuccess(String content) {
@@ -853,6 +859,7 @@ public class UserFragment extends Fragment {
 		public static final String SUB_TAG = "UserBlog";
 		private final static Handler uiThread = new Handler(Looper.getMainLooper());
 		private static final Semaphore request = new Semaphore(1);
+		private static final HashMap<Integer, Integer> offsetMap = new HashMap<>();
 		private SwipeRefreshLayout refresh;
 		private RecyclerView vlist;
 		private RecyclerView blist;
@@ -894,6 +901,7 @@ public class UserFragment extends Fragment {
 							if (adapter != null && adapter instanceof VideoAdapter) {
 								((VideoAdapter) adapter).startLoading();
 							}
+							offsetMap.put(0, offsetMap.getOrDefault(0, 0) + 12);
 							request(false);
 						}
 					}
@@ -919,6 +927,7 @@ public class UserFragment extends Fragment {
 							if (adapter != null && adapter instanceof BlogAdapter) {
 								((BlogAdapter) adapter).startLoading();
 							}
+							offsetMap.put(1, offsetMap.getOrDefault(1, 0) + 12);
 							request(false);
 						}
 					}
@@ -935,6 +944,12 @@ public class UserFragment extends Fragment {
 				public void onRefresh() {
 					// TODO: Implement this method
 					Toast.makeText(getContext(), R.string.loading, Toast.LENGTH_SHORT).show();
+					if (showVideo) {
+						offsetMap.put(0, 0);
+					}
+					if (showBlog) {
+						offsetMap.put(1, 0);
+					}
 					request(true);
 				}
 			});
@@ -969,9 +984,8 @@ public class UserFragment extends Fragment {
 					return;
 				}
 				if (showBlog) {
-					NetworkUtils.getNetwork.getNetworkJson(
-							APIManager.ProfileURI.getFavoriteBlogsURI(current.getToken(), 0, 12),
-							new NetworkUtils.HTTPCallback() {
+					NetworkUtils.getNetwork.getNetworkJson(APIManager.ProfileURI.getFavoriteBlogsURI(current.getToken(),
+							offsetMap.getOrDefault(1, 0), 12), new NetworkUtils.HTTPCallback() {
 								@Override
 								public void onSuccess(String content) {
 									if (content == null || content.isEmpty()) {
@@ -1028,9 +1042,8 @@ public class UserFragment extends Fragment {
 							});
 				}
 				if (showVideo) {
-					NetworkUtils.getNetwork.getNetworkJson(
-							APIManager.ProfileURI.getFavoriteVideosURI(current.getToken(), 0, 12),
-							new NetworkUtils.HTTPCallback() {
+					NetworkUtils.getNetwork.getNetworkJson(APIManager.ProfileURI.getFavoriteVideosURI(
+							current.getToken(), offsetMap.getOrDefault(0, 0), 12), new NetworkUtils.HTTPCallback() {
 								@Override
 								public void onSuccess(String content) {
 									if (content == null || content.isEmpty()) {

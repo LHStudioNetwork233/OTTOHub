@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.ArrayList;
 import com.losthiro.ottohubclient.adapter.model.*;
 import com.losthiro.ottohubclient.ui.*;
+import com.losthiro.ottohubclient.impl.*;
 
 /**
  * @Author Hiro
@@ -85,6 +86,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 vH.follow.setOnClickListener(new OnClickListener(){
                         @Override
                         public void onClick(View v) {
+                            ClickSounds.playSound(v.getContext());
                             VideoInfoFragment.following(currentUser.getUID(), v);
                         }
                     });
@@ -92,6 +94,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 vH.root.setOnClickListener(new OnClickListener(){
                         @Override
                         public void onClick(View v) {
+                            ClickSounds.playSound(v.getContext());
                             Intent i=new Intent(main, AccountDetailActivity.class);
                             i.putExtra("uid", currentUser.getUID());
                             i.putExtra("avatar", currentUser.getAvatarURI());
@@ -110,6 +113,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 vH.avatar.setOnClickListener(new OnClickListener(){
                         @Override
                         public void onClick(View v) {
+                            ClickSounds.playSound(v.getContext());
                             Intent i=new Intent(main, AccountDetailActivity.class);
                             i.putExtra("uid", currentBlog.getUID());
                             Intent save=((Activity)main).getIntent();
@@ -137,6 +141,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 vH.root.setOnClickListener(new OnClickListener(){
                         @Override
                         public void onClick(View v) {
+                            ClickSounds.playSound(v.getContext());
                             Intent i=new Intent(main, BlogDetailActivity.class);
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             i.putExtra("bid", currentBlog.getBID());
@@ -166,6 +171,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 vH.root.setOnClickListener(new OnClickListener(){
                         @Override
                         public void onClick(View v) {
+                            ClickSounds.playSound(v.getContext());
                             Intent i=new Intent(main, PlayerActivity.class);
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             i.putExtra("vid", currentVideo.getVID());

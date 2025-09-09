@@ -128,6 +128,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 		vH.root.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+                ClickSounds.playSound(v.getContext());
 				manager.setLoginCallback(new Runnable() {
 					@Override
 					public void run() {

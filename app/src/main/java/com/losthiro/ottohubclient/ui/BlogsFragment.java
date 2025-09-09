@@ -30,6 +30,7 @@ public class BlogsFragment extends Fragment {
 	public static final String TAG = "Blogs";
 	private static final Handler uiThread = new Handler(Looper.getMainLooper());
 	private static final Semaphore request = new Semaphore(1);
+	private static final HashMap<Integer, Integer> offsetMap = new HashMap<>();
 	private Context ctx;
 	private int categoryIndex = 0;
 	private SwipeRefreshLayout blogRefresh;
@@ -54,36 +55,36 @@ public class BlogsFragment extends Fragment {
 		userMain = parent.findViewById(R.id.main_user_avatar);
 		blogRefresh = parent.findViewById(R.id.blog_refresh);
 		blogList = parent.findViewById(R.id.blogs_list);
-        blogRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    Toast.makeText(ctx, R.string.loading, Toast.LENGTH_SHORT).show();
-                    requestCategory(true);
-                }
-            });
-        GridLayoutManager layout = new GridLayoutManager(ctx, 1);
-        layout.setInitialPrefetchItemCount(6);
-        layout.setItemPrefetchEnabled(true);
-        blogList.setItemViewCacheSize(20);
-        blogList.setDrawingCacheEnabled(true);
-        blogList.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-        blogList.setLayoutManager(layout);
-        blogList.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(RecyclerView view, int state) {
-                    super.onScrollStateChanged(view, state);
-                    if (state == RecyclerView.SCROLL_STATE_IDLE) {
-                        int itemCount = view.getLayoutManager().getItemCount();
-                        int lastPos = ((LinearLayoutManager) view.getLayoutManager()).findLastVisibleItemPosition();
-                        if (lastPos >= itemCount - 1) {
-                            if (adapter != null) {
-                                adapter.startLoading();
-                            }
-                            requestCategory(false);
-                        }
-                    }
-                }
-            });
+		blogRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+			@Override
+			public void onRefresh() {
+				Toast.makeText(ctx, R.string.loading, Toast.LENGTH_SHORT).show();
+				requestCategory(true);
+			}
+		});
+		GridLayoutManager layout = new GridLayoutManager(ctx, 1);
+		layout.setInitialPrefetchItemCount(6);
+		layout.setItemPrefetchEnabled(true);
+		blogList.setItemViewCacheSize(20);
+		blogList.setDrawingCacheEnabled(true);
+		blogList.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
+		blogList.setLayoutManager(layout);
+		blogList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(RecyclerView view, int state) {
+				super.onScrollStateChanged(view, state);
+				if (state == RecyclerView.SCROLL_STATE_IDLE) {
+					int itemCount = view.getLayoutManager().getItemCount();
+					int lastPos = ((LinearLayoutManager) view.getLayoutManager()).findLastVisibleItemPosition();
+					if (lastPos >= itemCount - 1) {
+						if (adapter != null) {
+							adapter.startLoading();
+						}
+						requestCategory(false);
+					}
+				}
+			}
+		});
 		return parent;
 	}
 
@@ -129,8 +130,14 @@ public class BlogsFragment extends Fragment {
 	private void requestCategory(boolean isRefresh) {
 		String uri = APIManager.BlogURI.getRandomBlogURI(12);
 		int index = categoryIndex;
+        int current = offsetMap.getOrDefault(index, 0);
+        if (isRefresh) {
+            offsetMap.put(index, 0);
+        } else {
+            offsetMap.put(index, current + 12);
+        }
 		if (index == 1) {
-			uri = APIManager.BlogURI.getNewBlogURI(0, 12);
+			uri = APIManager.BlogURI.getNewBlogURI(current, 12);
 		}
 		if (index >= 2 && index < 5) {
 			int mode = -1;
@@ -143,7 +150,7 @@ public class BlogsFragment extends Fragment {
 			if (index == 4) {
 				mode = APIManager.BlogURI.QUARTERLY;
 			}
-			uri = APIManager.BlogURI.getPopularBlogURI(mode, 0, 12);
+			uri = APIManager.BlogURI.getPopularBlogURI(mode, current, 12);
 		}
 		request(uri, isRefresh);
 	}
@@ -236,7 +243,7 @@ public class BlogsFragment extends Fragment {
 						current.setBackgroundResource(i == index ? R.drawable.btn_bg : R.drawable.btn_empty_bg);
 						current.setTextColor(i == index ? Color.WHITE : ResourceUtils.getColor(R.color.colorSecondary));
 					}
-                    categoryIndex = index;
+					categoryIndex = index;
 					requestCategory(true);
 				}
 			});

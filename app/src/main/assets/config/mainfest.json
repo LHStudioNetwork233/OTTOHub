@@ -1,0 +1,54 @@
+{
+    "time": 1757367012152,
+    "id": "4a2123e6-ea72-4a55-be8a-f21ba9c21207",
+    "setting": [
+        {
+            "name": "ottohub/player/background_play",
+            "value": true
+        },
+        {
+            "name": "ottohub/account/auto_remove",
+            "value": false
+        },
+        {
+            "name": "ottohub/system/switch_theme",
+            "value": -1
+        },
+        {
+            "name": "ottohub/system/splash_bg",
+            "value": null
+        },
+        {
+            "name": "ottohub/msg/markdown_surpport",
+            "value": true
+        },
+        {
+            "name": "ottohub/player/image_display",
+            "value": 0
+        },
+        {
+            "name": "ottohub/player/auto_quit",
+            "value": true
+        },
+        {
+            "name": "ottohub/player/auto_fullscreen",
+            "value": true
+        },
+        {
+            "name": "ottohub/system/storage_edit",
+            "value": "/sdcard/OTTOHub/"
+        },
+        {
+            "name": "ottohub/system/click_sound",
+            "value": true
+        },
+        {
+            "name": "ottohub/account/auto_login",
+            "value": true
+        },
+        {
+            "name": "ottohub/system/permission_check",
+            "value": false
+        }
+    ]
+}

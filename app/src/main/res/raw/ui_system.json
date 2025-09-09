@@ -1,0 +1,26 @@
+{
+    "name": "系统设置",
+    "id": "[FILE_ID]",
+    "items": [
+    {
+            "type": "toggle",
+            "path": "ottohub/system/permission_check",
+            "title": "权限检查",
+            "msg": "每次启动时都检查一次权限，而不仅是在第一次启动",
+            "icon": "ic_inspection_black"
+        },
+        {
+            "type": "action",
+            "path": "ottohub/client/request_permission",
+            "title": "申请权限",
+            "msg": "手动申请所需权限",
+            "icon": "ic_permission_black"
+        },
+        {
+            "type": "action",
+            "path": "ottohub/client/reset",
+            "title": "重置设置",
+            "icon": "ic_reset_black"
+        }
+    ]
+    }

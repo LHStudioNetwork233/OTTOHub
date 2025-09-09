@@ -59,64 +59,64 @@ public final class R {
         public static int notification_top_pad_large_text = 0x7f050071;
     }
     public static final class drawable {
-        public static int jz_add_volume = 0x7f060086;
-        public static int jz_back_normal = 0x7f060087;
-        public static int jz_back_pressed = 0x7f060088;
-        public static int jz_back_tiny_normal = 0x7f060089;
-        public static int jz_back_tiny_pressed = 0x7f06008a;
-        public static int jz_backward_icon = 0x7f06008b;
-        public static int jz_battery_level_10 = 0x7f06008c;
-        public static int jz_battery_level_100 = 0x7f06008d;
-        public static int jz_battery_level_30 = 0x7f06008e;
-        public static int jz_battery_level_50 = 0x7f06008f;
-        public static int jz_battery_level_70 = 0x7f060090;
-        public static int jz_battery_level_90 = 0x7f060091;
-        public static int jz_bottom_bg = 0x7f060092;
-        public static int jz_bottom_progress = 0x7f060093;
-        public static int jz_bottom_seek_poster = 0x7f060094;
-        public static int jz_bottom_seek_progress = 0x7f060095;
-        public static int jz_brightness_video = 0x7f060096;
-        public static int jz_clarity_popwindow_bg = 0x7f060097;
-        public static int jz_click_back_selector = 0x7f060098;
-        public static int jz_click_back_tiny_selector = 0x7f060099;
-        public static int jz_click_pause_selector = 0x7f06009a;
-        public static int jz_click_play_selector = 0x7f06009b;
-        public static int jz_click_replay_selector = 0x7f06009c;
-        public static int jz_click_share_selector = 0x7f06009d;
-        public static int jz_close_volume = 0x7f06009e;
-        public static int jz_dialog_progress = 0x7f06009f;
-        public static int jz_dialog_progress_bg = 0x7f0600a0;
-        public static int jz_enlarge = 0x7f0600a1;
-        public static int jz_forward_icon = 0x7f0600a2;
-        public static int jz_loading = 0x7f0600a3;
-        public static int jz_loading_bg = 0x7f0600a4;
-        public static int jz_pause_normal = 0x7f0600a5;
-        public static int jz_pause_pressed = 0x7f0600a6;
-        public static int jz_play_normal = 0x7f0600a7;
-        public static int jz_play_pressed = 0x7f0600a8;
-        public static int jz_restart_normal = 0x7f0600a9;
-        public static int jz_restart_pressed = 0x7f0600aa;
-        public static int jz_retry = 0x7f0600ab;
-        public static int jz_seek_poster_normal = 0x7f0600ac;
-        public static int jz_seek_poster_pressed = 0x7f0600ad;
-        public static int jz_share_normal = 0x7f0600ae;
-        public static int jz_share_pressed = 0x7f0600af;
-        public static int jz_shrink = 0x7f0600b0;
-        public static int jz_title_bg = 0x7f0600b1;
-        public static int jz_volume_icon = 0x7f0600b2;
-        public static int jz_volume_progress_bg = 0x7f0600b3;
-        public static int notification_action_background = 0x7f0600b5;
-        public static int notification_bg = 0x7f0600b6;
-        public static int notification_bg_low = 0x7f0600b7;
-        public static int notification_bg_low_normal = 0x7f0600b8;
-        public static int notification_bg_low_pressed = 0x7f0600b9;
-        public static int notification_bg_normal = 0x7f0600ba;
-        public static int notification_bg_normal_pressed = 0x7f0600bb;
-        public static int notification_icon_background = 0x7f0600bc;
-        public static int notification_template_icon_bg = 0x7f0600bd;
-        public static int notification_template_icon_low_bg = 0x7f0600be;
-        public static int notification_tile_bg = 0x7f0600bf;
-        public static int notify_panel_notification_icon_bg = 0x7f0600c0;
+        public static int jz_add_volume = 0x7f06008b;
+        public static int jz_back_normal = 0x7f06008c;
+        public static int jz_back_pressed = 0x7f06008d;
+        public static int jz_back_tiny_normal = 0x7f06008e;
+        public static int jz_back_tiny_pressed = 0x7f06008f;
+        public static int jz_backward_icon = 0x7f060090;
+        public static int jz_battery_level_10 = 0x7f060091;
+        public static int jz_battery_level_100 = 0x7f060092;
+        public static int jz_battery_level_30 = 0x7f060093;
+        public static int jz_battery_level_50 = 0x7f060094;
+        public static int jz_battery_level_70 = 0x7f060095;
+        public static int jz_battery_level_90 = 0x7f060096;
+        public static int jz_bottom_bg = 0x7f060097;
+        public static int jz_bottom_progress = 0x7f060098;
+        public static int jz_bottom_seek_poster = 0x7f060099;
+        public static int jz_bottom_seek_progress = 0x7f06009a;
+        public static int jz_brightness_video = 0x7f06009b;
+        public static int jz_clarity_popwindow_bg = 0x7f06009c;
+        public static int jz_click_back_selector = 0x7f06009d;
+        public static int jz_click_back_tiny_selector = 0x7f06009e;
+        public static int jz_click_pause_selector = 0x7f06009f;
+        public static int jz_click_play_selector = 0x7f0600a0;
+        public static int jz_click_replay_selector = 0x7f0600a1;
+        public static int jz_click_share_selector = 0x7f0600a2;
+        public static int jz_close_volume = 0x7f0600a3;
+        public static int jz_dialog_progress = 0x7f0600a4;
+        public static int jz_dialog_progress_bg = 0x7f0600a5;
+        public static int jz_enlarge = 0x7f0600a6;
+        public static int jz_forward_icon = 0x7f0600a7;
+        public static int jz_loading = 0x7f0600a8;
+        public static int jz_loading_bg = 0x7f0600a9;
+        public static int jz_pause_normal = 0x7f0600aa;
+        public static int jz_pause_pressed = 0x7f0600ab;
+        public static int jz_play_normal = 0x7f0600ac;
+        public static int jz_play_pressed = 0x7f0600ad;
+        public static int jz_restart_normal = 0x7f0600ae;
+        public static int jz_restart_pressed = 0x7f0600af;
+        public static int jz_retry = 0x7f0600b0;
+        public static int jz_seek_poster_normal = 0x7f0600b1;
+        public static int jz_seek_poster_pressed = 0x7f0600b2;
+        public static int jz_share_normal = 0x7f0600b3;
+        public static int jz_share_pressed = 0x7f0600b4;
+        public static int jz_shrink = 0x7f0600b5;
+        public static int jz_title_bg = 0x7f0600b6;
+        public static int jz_volume_icon = 0x7f0600b7;
+        public static int jz_volume_progress_bg = 0x7f0600b8;
+        public static int notification_action_background = 0x7f0600ba;
+        public static int notification_bg = 0x7f0600bb;
+        public static int notification_bg_low = 0x7f0600bc;
+        public static int notification_bg_low_normal = 0x7f0600bd;
+        public static int notification_bg_low_pressed = 0x7f0600be;
+        public static int notification_bg_normal = 0x7f0600bf;
+        public static int notification_bg_normal_pressed = 0x7f0600c0;
+        public static int notification_icon_background = 0x7f0600c1;
+        public static int notification_template_icon_bg = 0x7f0600c2;
+        public static int notification_template_icon_low_bg = 0x7f0600c3;
+        public static int notification_tile_bg = 0x7f0600c4;
+        public static int notify_panel_notification_icon_bg = 0x7f0600c5;
     }
     public static final class id {
         public static int accessibility_action_clickable_span = 0x7f070006;
@@ -243,26 +243,26 @@ public final class R {
         public static int notification_template_part_time = 0x7f09005d;
     }
     public static final class string {
-        public static int click_to_restart = 0x7f0a0028;
-        public static int no_url = 0x7f0a0031;
-        public static int replay = 0x7f0a0032;
-        public static int status_bar_notification_info_overflow = 0x7f0a0034;
-        public static int tips_not_wifi = 0x7f0a0035;
-        public static int tips_not_wifi_cancel = 0x7f0a0036;
-        public static int tips_not_wifi_confirm = 0x7f0a0037;
-        public static int video_loading_failed = 0x7f0a0038;
+        public static int click_to_restart = 0x7f0b0028;
+        public static int no_url = 0x7f0b0031;
+        public static int replay = 0x7f0b0032;
+        public static int status_bar_notification_info_overflow = 0x7f0b0034;
+        public static int tips_not_wifi = 0x7f0b0035;
+        public static int tips_not_wifi_cancel = 0x7f0b0036;
+        public static int tips_not_wifi_confirm = 0x7f0b0037;
+        public static int video_loading_failed = 0x7f0b0038;
     }
     public static final class style {
-        public static int TextAppearance_Compat_Notification = 0x7f0b00ee;
-        public static int TextAppearance_Compat_Notification_Info = 0x7f0b00ef;
-        public static int TextAppearance_Compat_Notification_Line2 = 0x7f0b00f0;
-        public static int TextAppearance_Compat_Notification_Time = 0x7f0b00f1;
-        public static int TextAppearance_Compat_Notification_Title = 0x7f0b00f2;
-        public static int Widget_Compat_NotificationActionContainer = 0x7f0b015a;
-        public static int Widget_Compat_NotificationActionText = 0x7f0b015b;
-        public static int jz_popup_toast_anim = 0x7f0b015d;
-        public static int jz_style_dialog_progress = 0x7f0b015e;
-        public static int pop_animation = 0x7f0b015f;
+        public static int TextAppearance_Compat_Notification = 0x7f0c00ee;
+        public static int TextAppearance_Compat_Notification_Info = 0x7f0c00ef;
+        public static int TextAppearance_Compat_Notification_Line2 = 0x7f0c00f0;
+        public static int TextAppearance_Compat_Notification_Time = 0x7f0c00f1;
+        public static int TextAppearance_Compat_Notification_Title = 0x7f0c00f2;
+        public static int Widget_Compat_NotificationActionContainer = 0x7f0c015a;
+        public static int Widget_Compat_NotificationActionText = 0x7f0c015b;
+        public static int jz_popup_toast_anim = 0x7f0c015d;
+        public static int jz_style_dialog_progress = 0x7f0c015e;
+        public static int pop_animation = 0x7f0c015f;
     }
     public static final class styleable {
         public static int[] ColorStateListItem = { 0x010101a5, 0x0101031f, 0x7f020027 };
@@ -306,6 +306,6 @@ public final class R {
         public static int GradientColor_android_type = 0x00000002;
     }
     public static final class xml {
-        public static int jz_network_security_config = 0x7f0d0001;
+        public static int jz_network_security_config = 0x7f0e0001;
     }
 }

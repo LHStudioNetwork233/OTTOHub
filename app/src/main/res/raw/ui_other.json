@@ -1,0 +1,32 @@
+{
+    "name": "其他内容",
+    "id": "[FILE_ID]",
+    "items": [
+    {
+            "type": "action",
+            "path": "ottohub/client/group",
+            "title": "加入群聊",
+            "msg": "点击加入APP开发交流",
+            "icon": "ic_qgroup_black"
+        },
+        {
+            "type": "action",
+            "path": "ottohub/client/bug_report",
+            "title": "反馈",
+            "msg": "向软件作者发送bug反馈",
+            "icon": "ic_report_black"
+        },
+        {
+            "type": "action",
+            "path": "ottohub/client/share",
+            "title": "分享应用",
+            "icon": "ic_share_black"
+        },
+        {
+            "type": "action",
+            "path": "ottohub/client/about",
+            "title": "关于我们",
+            "icon": "ic_info_black"
+        }
+    ]
+    }

@@ -40,6 +40,8 @@ import android.text.Editable;
 import com.losthiro.ottohubclient.view.dialog.*;
 import com.losthiro.ottohubclient.adapter.model.*;
 import com.losthiro.ottohubclient.utils.*;
+import android.app.*;
+import java.util.*;
 
 /**
  * @Author Hiro
@@ -48,6 +50,7 @@ import com.losthiro.ottohubclient.utils.*;
 public class MessageActivity extends BasicActivity {
     public static final String TAG = "MessageActivity";
     private static final Semaphore request=new Semaphore(1);
+    private static final HashMap<Integer, Integer> offsetMap = new HashMap<>();
     private RecyclerView msgList;
     private SwipeRefreshLayout msgRefresh;
     private MessageAdapter adapter;
@@ -129,7 +132,7 @@ public class MessageActivity extends BasicActivity {
             if (!request.tryAcquire()) {
                 return;
             }
-            Account current = AccountManager.getInstance(this).getAccount();
+            final Account current = AccountManager.getInstance(this).getAccount();
             if (current == null) {
                 return;
             }
@@ -138,6 +141,19 @@ public class MessageActivity extends BasicActivity {
                     @Override
                     public void onSuccess(String content) {
                         Log.i("Network", content);
+                        runOnUiThread(new Runnable(){
+                                @Override
+                                public void run() {
+                                    // TODO: Implement this method
+                                    Activity mainAct = MainActivity.activity.get();
+                                    if (mainAct != null && mainAct instanceof MainActivity) {
+                                        ((MainActivity)mainAct).messageCallback(current.getToken());
+                                    }
+                                    if(adapter != null){
+                                        adapter.clear();
+                                    }
+                                }
+                            });
                     }
 
                     @Override
@@ -161,10 +177,17 @@ public class MessageActivity extends BasicActivity {
             if (current == null) {
                 return;
             }
+            int index = currentCategory;
+            int offset = offsetMap.getOrDefault(index, 0);
+            if (isRefresh) {
+                offsetMap.put(index, 0);
+            } else {
+                offsetMap.put(index, offset + 12);
+            }
             String token = current.getToken();
-            String uri=APIManager.MessageURI.getUnreadMessageURI(token, 0, 12);
-            if (currentCategory == 2) {
-                uri = APIManager.MessageURI.getReadMessageURI(token, 0, 12);
+            String uri=APIManager.MessageURI.getUnreadMessageURI(token, offset, 12);
+            if (index == 2) {
+                uri = APIManager.MessageURI.getReadMessageURI(token, offset, 12);
             }
             NetworkUtils.getNetwork.getNetworkJson(uri, new NetworkUtils.HTTPCallback(){
                     @Override

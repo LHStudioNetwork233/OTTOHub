@@ -1,0 +1,13 @@
+{
+    "name": "消息设置",
+    "id": "[FILE_ID]",
+    "items": [
+        {
+            "type": "toggle",
+            "path": "ottohub/msg/markdown_surpport",
+            "title": "Markdown解析器",
+            "msg": "关闭后将不会处理markdown格式的内容",
+            "icon": "ic_mark_black"
+        }
+    ]
+}

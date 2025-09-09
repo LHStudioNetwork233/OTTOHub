@@ -10,11 +10,13 @@ import com.losthiro.ottohubclient.utils.*;
 import java.util.*;
 import androidx.appcompat.app.*;
 import com.losthiro.ottohubclient.*;
+import cn.jzvd.*;
 
 public class ClientSettings {
 	private static final ClientSettings INSTANCE = new ClientSettings();
 	private static final String MAINFEST = "config/mainfest.json";
-	private HashMap<String, Object> mainfest = new HashMap<>();
+	private static final HashMap<String, Object> mainfest = new HashMap<>();
+    private static final HashMap<String, Object> defMap = new HashMap<>();
 	private Context ctx;
 
 	public static final ClientSettings getInstance() {
@@ -30,17 +32,17 @@ public class ClientSettings {
 		FileUtils.writeFile(ctx, FileUtils.getStorage(ctx, MAINFEST), mapToJson().toString(4));
 	}
 
-	public final synchronized void reset() {
+	public final synchronized void reset() throws Exception {
 		mainfest.putAll(createDef());
 	}
 
 	private void init() throws Exception {
 		String path = FileUtils.getStorage(ctx, MAINFEST);
 		String setting = FileUtils.readFile(ctx, path);
-		HashMap<String, Object> def = createDef();
+	    defMap.putAll(createDef());
 		if (setting.isEmpty()) {
-			mainfest.putAll(def);
-			FileUtils.createFile(ctx, path, mapToJson().toString(4));
+			mainfest.putAll(defMap);
+            FileUtils.AssetUtils.copyFileAssets(ctx, MAINFEST, FileUtils.getStorage(ctx, MAINFEST));
 		} else {
 			JSONArray content = new JSONObject(setting).optJSONArray("setting");
 			for (int i = 0; i < content.length(); i++) {
@@ -50,7 +52,7 @@ public class ClientSettings {
 					mainfest.putIfAbsent(name, obj.opt("value"));
 				}
 			}
-			for (HashMap.Entry<String, Object> entry : def.entrySet()) {
+			for (HashMap.Entry<String, Object> entry : defMap.entrySet()) {
 				String name = entry.getKey();
 				Object value = entry.getValue();
 				if (!mainfest.containsKey(name)) {
@@ -75,17 +77,29 @@ public class ClientSettings {
 		return settings;
 	}
 
-	private HashMap<String, Object> createDef() {
-		HashMap<String, Object> defMap = new HashMap<>();
-		defMap.put(SettingPool.ACCOUNT_AUTO_LOGIN, true);
-		defMap.put(SettingPool.ACCOUNT_AUTO_REMOVE, false);
-		defMap.put(SettingPool.MSG_MARKDOWN_SURPPORT, true);
-		defMap.put(SettingPool.PLAYER_BACKGROUND_PLAY, true);
-		defMap.put(SettingPool.SYSTEM_CHECK_PERMISSION, false);
-		defMap.put(SettingPool.SYSTEM_SWITCH_THEME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-        defMap.put(SettingPool.SYSTEM_STORAGE_EDIT, BasicActivity.OLD_STORAGE);
-        defMap.put(SettingPool.SYSTEM_SPLASH_BG, null);
-		return defMap;
+	private HashMap<String, Object> createDef() throws Exception {
+		HashMap<String, Object> def = new HashMap<>();
+		JSONObject defJson = new JSONObject(FileUtils.AssetUtils.readAssetsFile(ctx, MAINFEST));
+		JSONArray setting = defJson.optJSONArray("setting");
+		for (int i = 0; i < setting.length(); i++) {
+			JSONObject current = setting.optJSONObject(i);
+            String name = current.optString("name");
+            if (!name.isEmpty()) {
+                defMap.put(name, current.opt("value"));
+            }
+		}
+//		defMap.put(SettingPool.ACCOUNT_AUTO_LOGIN, true);
+//		defMap.put(SettingPool.ACCOUNT_AUTO_REMOVE, false);
+//		defMap.put(SettingPool.MSG_MARKDOWN_SURPPORT, true);
+//		defMap.put(SettingPool.PLAYER_BACKGROUND_PLAY, true);
+//		defMap.put(SettingPool.PLAYER_AUTO_QUIT, true);
+//		defMap.put(SettingPool.PLAYER_IMAGE_DISPLAY, Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER);
+//		defMap.put(SettingPool.SYSTEM_CHECK_PERMISSION, false);
+//		defMap.put(SettingPool.SYSTEM_CLICK_SOUND, true);
+//		defMap.put(SettingPool.SYSTEM_SWITCH_THEME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+//		defMap.put(SettingPool.SYSTEM_STORAGE_EDIT, BasicActivity.OLD_STORAGE);
+//		defMap.put(SettingPool.SYSTEM_SPLASH_BG, null);
+		return def;
 	}
 
 	public void putValue(String name, Object value) {
@@ -153,13 +167,17 @@ public class ClientSettings {
 		public static final String ACCOUNT_AUTO_REMOVE = "ottohub/account/auto_remove";
 
 		public static final String PLAYER_BACKGROUND_PLAY = "ottohub/player/background_play";
+		public static final String PLAYER_AUTO_QUIT = "ottohub/player/auto_quit";
+        public static final String PLAYER_AUTO_FULLSCREEN = "ottohub/player/auto_fullscreen";
+		public static final String PLAYER_IMAGE_DISPLAY = "ottohub/player/image_display";
 
 		public static final String MSG_MARKDOWN_SURPPORT = "ottohub/msg/markdown_surpport";
 
 		public static final String SYSTEM_CHECK_PERMISSION = "ottohub/system/permission_check";
+		public static final String SYSTEM_CLICK_SOUND = "ottohub/system/click_sound";
 		public static final String SYSTEM_SWITCH_THEME = "ottohub/system/switch_theme";
 		public static final String SYSTEM_STORAGE_EDIT = "ottohub/system/storage_edit";
-        public static final String SYSTEM_SPLASH_BG = "ottohub/system/splash_bg";
+		public static final String SYSTEM_SPLASH_BG = "ottohub/system/splash_bg";
 	}
 }
 

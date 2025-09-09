@@ -24,6 +24,7 @@ import com.losthiro.ottohubclient.adapter.model.*;
 public class AuditActivity extends BasicActivity {
 	public static final String TAG = "AuditActivity";
 	private static final Semaphore request = new Semaphore(1);
+    private static final HashMap<Integer, Integer> offsetMap = new HashMap<>();
 	private Account current;
     private boolean isFirst = true;
 	private int categoryIndex = 0;
@@ -57,7 +58,7 @@ public class AuditActivity extends BasicActivity {
 				if (status == RecyclerView.SCROLL_STATE_IDLE) {
 					int itemCount = view.getLayoutManager().getItemCount();
 					int lastPos = ((LinearLayoutManager) view.getLayoutManager()).findLastVisibleItemPosition();
-					if (lastPos >= itemCount - 1 && itemCount > 12) {
+					if (lastPos >= itemCount - 1 && itemCount >= 12) {
 						request(false);
 					}
 				}
@@ -68,7 +69,7 @@ public class AuditActivity extends BasicActivity {
 		auditRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
-				Toast.makeText(getApplication(), "走位中...", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplication(), R.string.loading, Toast.LENGTH_SHORT).show();
 				request(true);
 			}
 		});
@@ -124,11 +125,18 @@ public class AuditActivity extends BasicActivity {
 			if (!request.tryAcquire() || current == null) {
 				return;
 			}
+            int index = categoryIndex;
+            int offset = offsetMap.getOrDefault(index, 0);
+            if (isRefresh) {
+                offsetMap.put(index, 0);
+            } else {
+                offsetMap.put(index, offset + 12);
+            }
 			String token = current.getToken();
-			String[] uris = {APIManager.VideoURI.getAuditVideo(token, 0, 12),
-					APIManager.BlogURI.getAuditBlogURI(token, 0, 12),
-					APIManager.ProfileURI.getAuditAvatarURI(token, 0, 12),
-					APIManager.ProfileURI.getAuditCoverURI(token, 0, 12)};
+			String[] uris = {APIManager.VideoURI.getAuditVideo(token, offset, 12),
+					APIManager.BlogURI.getAuditBlogURI(token, offset, 12),
+					APIManager.ProfileURI.getAuditAvatarURI(token, offset, 12),
+					APIManager.ProfileURI.getAuditCoverURI(token, offset, 12)};
 			NetworkUtils.getNetwork.getNetworkJson(uris[categoryIndex], new NetworkUtils.HTTPCallback() {
 				@Override
 				public void onSuccess(String content) {

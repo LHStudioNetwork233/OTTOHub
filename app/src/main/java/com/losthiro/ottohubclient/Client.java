@@ -15,6 +15,7 @@ import com.losthiro.ottohubclient.impl.UploadManager;
 import java.util.*;
 import android.app.*;
 import com.losthiro.ottohubclient.impl.*;
+import com.losthiro.ottohubclient.view.window.*;
 
 /**
  * @Author Hiro
@@ -40,6 +41,7 @@ public class Client extends Application {
     @Override
     public void onTerminate() {
         Log.i(TAG, "————Application OnDestory————");
+        //InfoWindow.getInstance(null).release();
         super.onTerminate();
         activitys.clear();
         ImageDownloader.release();

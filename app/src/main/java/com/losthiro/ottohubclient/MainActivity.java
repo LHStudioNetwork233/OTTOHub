@@ -336,7 +336,7 @@ public class MainActivity extends BasicActivity {
 			dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dia, int which) {
-					SettingsActivity.checkPermission(a);
+					SettingsActivity.permission();
 				}
 			});
 			dialog.setNegativeButton(android.R.string.cancel, null);

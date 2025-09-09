@@ -28,6 +28,7 @@ public class CommentFragment extends Fragment {
 	private static final Semaphore request = new Semaphore(1);
 	private SwipeRefreshLayout commentRefresh;
 	private RecyclerView commentView;
+    private int offset;
 	public static EditText commentEdit;
 
 	public static CommentFragment newInstance(long id, int type) {
@@ -74,6 +75,7 @@ public class CommentFragment extends Fragment {
 						if (adapter != null && adapter instanceof CommentAdapter) {
 							((CommentAdapter) adapter).startLoading();
 						}
+                        offset = offset + 12;
 						loadComment(false);
 					}
 				}
@@ -84,6 +86,7 @@ public class CommentFragment extends Fragment {
 			@Override
 			public void onRefresh() {
 				Toast.makeText(ctx, R.string.loading, Toast.LENGTH_SHORT).show();
+                offset = 0;
 				loadComment(true);
 			}
 		});
@@ -104,11 +107,11 @@ public class CommentFragment extends Fragment {
 			final int type = arg.getInt("type");
 			AccountManager manager = AccountManager.getInstance(ctx);
 			String v = manager.isLogin()
-					? APIManager.CommentURI.getVideoCommentURI(id, 0, manager.getAccount().getToken(), 0, 12)
-					: APIManager.CommentURI.getVideoCommentURI(id, 0, 0, 12);
+					? APIManager.CommentURI.getVideoCommentURI(id, 0, manager.getAccount().getToken(), offset, 12)
+					: APIManager.CommentURI.getVideoCommentURI(id, 0, offset, 12);
 			String b = manager.isLogin()
-					? APIManager.CommentURI.getBlogCommentURI(id, 0, manager.getAccount().getToken(), 0, 12)
-					: APIManager.CommentURI.getBlogCommentURI(id, 0, 0, 12);
+					? APIManager.CommentURI.getBlogCommentURI(id, 0, manager.getAccount().getToken(), offset, 12)
+					: APIManager.CommentURI.getBlogCommentURI(id, 0, offset, 12);
 			String uri = type == Comment.TYPE_BLOG ? b : v;
 			NetworkUtils.getNetwork.getNetworkJson(uri, new NetworkUtils.HTTPCallback() {
 				@Override

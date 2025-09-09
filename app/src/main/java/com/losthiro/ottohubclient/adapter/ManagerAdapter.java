@@ -93,6 +93,7 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 						@Override
 						public void onClick(View v) {
 							// TODO: Implement this method
+                            ClickSounds.playSound(v.getContext());
 							Intent i = new Intent(main, BlogDetailActivity.class);
 							i.putExtra("bid", current.getBID());
 							Client.saveActivity(((Activity) main).getIntent());
@@ -132,6 +133,7 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
                             @Override
                             public void onClick(View v) {
                                 // TODO: Implement this method
+                                ClickSounds.playSound(v.getContext());
                                 Intent i = new Intent(main, PlayerActivity.class);
                                 i.putExtra("root_path", current.getRootPath());
                                 i.putExtra("vid", vid);
@@ -148,9 +150,9 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
                                 return false;
                             }
                         });
-                    vH.appeal.setVisibility(View.VISIBLE);
-                    vH.appeal.setText("导出");
-                    vH.appeal.setOnClickListener(new OnClickListener() {
+                    vH.share.setVisibility(View.VISIBLE);
+                    vH.share.setText("导出");
+                    vH.share.setOnClickListener(new OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 // TODO: Implement this method
@@ -204,6 +206,7 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 						@Override
 						public void onClick(View v) {
 							// TODO: Implement this method
+                            ClickSounds.playSound(v.getContext());
 							Intent i = new Intent(main, PlayerActivity.class);
 							i.putExtra("vid", current.getVID());
 							Intent save = ((Activity) main).getIntent();

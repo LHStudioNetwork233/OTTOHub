@@ -15,6 +15,7 @@ import com.losthiro.ottohubclient.utils.*;
 import android.graphics.drawable.*;
 import android.view.View.*;
 import android.text.*;
+import com.losthiro.ottohubclient.impl.*;
 
 public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHolder> {
 	private Context mContext;
@@ -78,6 +79,7 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 					@Override
 					public void onClick(View v) {
 						// TODO: Implement this method
+                        ClickSounds.playSound(v.getContext());
 						((SettingAction) current).run();
 					}
 				});
@@ -141,12 +143,14 @@ public class SettingsAdapter extends RecyclerView.Adapter<SettingsAdapter.ViewHo
 						@Override
 						public void onClick(View v) {
 							// TODO: Implement this method
+                            ClickSounds.playSound(v.getContext());
 							((SettingEdittext) current).setContent(vH.edit.getText().toString());
 						}
 					});
 				}
 				break;
 			case SettingBasic.TYPE_TITLE :
+                vH.title.setPadding(5, 10, 5, 5);
 				vH.icon.setVisibility(View.GONE);
 				vH.text.setVisibility(View.GONE);
 		}

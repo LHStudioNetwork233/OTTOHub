@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:background="#AA323232"
+	android:orientation="vertical"
+	android:padding="10dp">
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="调试信息"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_marginBottom="5dp"
+		android:textColor="#FFFFFF"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="FPS监测"
+		android:layout_marginBottom="5dp"
+		android:textColor="#FFFFFF"/>
+
+    <com.losthiro.ottohubclient.view.FPSListenerText
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="5dp"
+		android:textColor="#FFFFFF"/>
+    
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="内存使用情况"
+        android:layout_marginBottom="5dp"
+		android:textColor="#FFFFFF"/>
+    
+    <com.losthiro.ottohubclient.view.JVMListenerText
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="5dp"
+		android:textColor="#FFFFFF"/>
+
+</LinearLayout>
+

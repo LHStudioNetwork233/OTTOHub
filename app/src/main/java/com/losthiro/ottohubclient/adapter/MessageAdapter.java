@@ -38,6 +38,7 @@ import com.losthiro.ottohubclient.MainActivity;
 import com.losthiro.ottohubclient.MessageDetailActivity;
 import com.losthiro.ottohubclient.adapter.model.*;
 import android.widget.*;
+import com.losthiro.ottohubclient.impl.*;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 	public static final String TAG = "MessageAdapter";
@@ -75,9 +76,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 	public void onBindViewHolder(final MessageAdapter.ViewHolder vH, final int p) {
 		final Message current = data.get(p);
 		if (current.getType() == Message.TYPE_SYSTEM) {
-            ViewGroup.LayoutParams params = vH.avatar.getLayoutParams();
-            params.width = 0;
-            vH.avatar.setLayoutParams(params);
+			ViewGroup.LayoutParams params = vH.avatar.getLayoutParams();
+			params.width = 0;
+			vH.avatar.setLayoutParams(params);
 		} else {
 			final Handler h = new Handler(Looper.getMainLooper());
 			NetworkUtils.getNetwork.getNetworkJson(APIManager.UserURI.getUserDetail(current.getSendUID()),
@@ -118,6 +119,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 			vH.avatar.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+                    ClickSounds.playSound(v.getContext());
 					Intent i = new Intent(main, AccountDetailActivity.class);
 					i.putExtra("uid", current.getSendUID());
 					Intent save = ((Activity) main).getIntent();
@@ -132,6 +134,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 		vH.root.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+                ClickSounds.playSound(v.getContext());
 				readMsg(current);
 				data.remove(current);
 				notifyDataSetChanged();
@@ -168,7 +171,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 						Log.i(TAG, content);
 						Activity mainAct = MainActivity.activity.get();
 						if (mainAct != null && mainAct instanceof MainActivity) {
-							((MainActivity)mainAct).messageCallback(a.getToken());
+							((MainActivity) mainAct).messageCallback(a.getToken());
 						}
 						ClientString str = new ClientString(current.getContent());
 						if (current.getContent().contains("动态")) {
@@ -179,11 +182,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 							Client.saveActivity(save);
 							main.startActivity(i);
 						} else if (current.getContent().contains("视频")) {
-                            Intent i = new Intent(main, PlayerActivity.class);
-                            i.putExtra("vid", str.findID("VID+:"));
-                            Intent save = ((Activity) main).getIntent();
-                            Client.saveActivity(save);
-                            main.startActivity(i);
+							Intent i = new Intent(main, PlayerActivity.class);
+							i.putExtra("vid", str.findID("VID+:"));
+							Intent save = ((Activity) main).getIntent();
+							Client.saveActivity(save);
+							main.startActivity(i);
 						} else if (current.isEmail()) {
 							Intent i = new Intent(main, MessageDetailActivity.class);
 							i.putExtra("sender", current.getSendUID());
@@ -229,6 +232,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 		}
 		data.addAll(newData);
 		notifyItemRangeInserted(data.size() - newData.size(), newData.size());
+	}
+
+	public void clear() {
+		data.clear();
+        notifyDataSetChanged();
 	}
 }
 

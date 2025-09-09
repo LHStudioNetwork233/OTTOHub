@@ -44,6 +44,7 @@ import com.losthiro.ottohubclient.utils.StringUtils;
 import com.losthiro.ottohubclient.utils.DeviceUtils;
 import android.os.Build;
 import com.losthiro.ottohubclient.utils.*;
+import java.util.*;
 
 /**
  * @Author Hiro
@@ -53,6 +54,7 @@ public class SearchActivity extends BasicActivity {
     public static final String TAG = "SearchActivity";
     private static final LinkedList<String> history=new LinkedList<>();
     private static final Semaphore request=new Semaphore(1);
+    private static final HashMap<Integer, Integer> offsetMap = new HashMap<>();
     private LinearLayout searchCategorys;
     private LinearLayout onloadView;
     private RecyclerView searchCallback;
@@ -262,6 +264,12 @@ public class SearchActivity extends BasicActivity {
             APIManager.BlogURI.getSearchBlogURI(query, categoryIndex == 0 ?3: 12),
             APIManager.VideoURI.getSearchVideoURI(query, 12)
         };
+        int current = offsetMap.getOrDefault(categoryIndex, 0);
+        if (isRefresh) {
+            offsetMap.put(categoryIndex, 0);
+        } else {
+            offsetMap.put(categoryIndex, current + 12);
+        }
         switch (categoryIndex) {
             case 1:
                 NetworkUtils.getNetwork.getNetworkJson(uris[2], new NetworkUtils.HTTPCallback(){

@@ -14,7 +14,7 @@
         android:layout_weight="1.0"
         android:background="#FF000000">
 
-        <cn.jzvd.JzvdStd
+        <com.losthiro.ottohubclient.view.ClientVideoView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/main_video_view"

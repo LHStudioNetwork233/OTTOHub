@@ -25,6 +25,7 @@ public class FansActivity extends BasicActivity {
 	private static final Semaphore request = new Semaphore(1);
 	private long uid;
 	private int maxCount = 12;
+    private int offset;
 	private SwipeRefreshLayout refresh;
 	private RecyclerView view;
 
@@ -64,6 +65,7 @@ public class FansActivity extends BasicActivity {
 						int itemCount = view.getLayoutManager().getItemCount();
 						int lastPos = ((LinearLayoutManager) view.getLayoutManager()).findLastVisibleItemPosition();
 						if (lastPos >= itemCount - 1 && itemCount >= 12) {
+                            offset = offset + 12;
 							request(false);
 						}
 					}
@@ -78,7 +80,8 @@ public class FansActivity extends BasicActivity {
 			@Override
 			public void onRefresh() {
 				// TODO: Implement this method
-				Toast.makeText(getApplication(), "走位中...", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplication(), R.string.loading, Toast.LENGTH_SHORT).show();
+                offset = 0;
 				request(true);
 			}
 		});
@@ -112,7 +115,7 @@ public class FansActivity extends BasicActivity {
 			if (!manager.isLogin()) {
 				return;
 			}
-			NetworkUtils.getNetwork.getNetworkJson(APIManager.FollowingURI.getFanListURI(uid, 0, maxCount),
+			NetworkUtils.getNetwork.getNetworkJson(APIManager.FollowingURI.getFanListURI(uid, offset, maxCount),
 					new NetworkUtils.HTTPCallback() {
 						@Override
 						public void onSuccess(String content) {

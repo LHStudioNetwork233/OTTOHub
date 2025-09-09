@@ -44,6 +44,10 @@ import java.io.*;
 import androidx.appcompat.app.AppCompatDelegate;
 import android.os.Handler;
 import android.database.*;
+import cn.jzvd.*;
+import com.losthiro.ottohubclient.view.window.*;
+import org.json.*;
+import com.losthiro.ottohubclient.function.*;
 
 /**
  * @Author Hiro
@@ -51,6 +55,7 @@ import android.database.*;
  */
 public class SettingsActivity extends BasicActivity {
 	public static final String TAG = "SettingsActivity";
+	private static final HashMap<String, Object> callbacks = new HashMap<>();
 	private RecyclerView main;
 	private LogView mainLog;
 	private PopupWindow window;
@@ -62,8 +67,17 @@ public class SettingsActivity extends BasicActivity {
 		setContentView(R.layout.activity_settings);
 		main = findViewById(R.id.settings_list);
 		main.setLayoutManager(new GridLayoutManager(this, 1));
-		main.setAdapter(new SettingsAdapter(this, initSettings()));
+		//InfoWindow.getInstance(this);
+		//request();
+		initSettings();
 		initWindow();
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		// TODO: Implement this method
+		super.onPostCreate(savedInstanceState);
+		main.setAdapter(new SettingsAdapter(this, initSetting()));
 	}
 
 	@Override
@@ -138,192 +152,143 @@ public class SettingsActivity extends BasicActivity {
 		}
 	}
 
-	private List<SettingBasic> initSettings() {
-		final ClientSettings setting = ClientSettings.getInstance();
-		List<SettingBasic> data = new ArrayList<>();
-		data.add(new SettingTitle("客户端设置"));
-		SettingToggle autoLogin = new SettingToggle("自动登录", "每次打开时自动登录上次的账号",
-				setting.getBoolean(ClientSettings.SettingPool.ACCOUNT_AUTO_LOGIN));
-		autoLogin.setIcon(R.drawable.ic_login_black);
-		autoLogin.setOnToggleChangeListener(new SettingToggle.OnToggleChangeListener() {
-			@Override
-			public void onChange(boolean isToggle) {
-				// TODO: Implement this method
-				setting.putValue(ClientSettings.SettingPool.ACCOUNT_AUTO_LOGIN, isToggle);
-			}
-		});
-		data.add(autoLogin);
-		SettingToggle removeAccount = new SettingToggle("账号移除", "退出登录时移除列表中的当前账号",
-				setting.getBoolean(ClientSettings.SettingPool.ACCOUNT_AUTO_REMOVE));
-		removeAccount.setIcon(R.drawable.ic_remove_account);
-		removeAccount.setOnToggleChangeListener(new SettingToggle.OnToggleChangeListener() {
-			@Override
-			public void onChange(boolean isToggle) {
-				// TODO: Implement this method
-				setting.putValue(ClientSettings.SettingPool.ACCOUNT_AUTO_REMOVE, isToggle);
-			}
-		});
-		data.add(removeAccount);
-		SettingToggle permissionCheck = new SettingToggle("权限检查", "每次启动时检查权限，而不仅是第一次启动时检查",
-				setting.getBoolean(ClientSettings.SettingPool.SYSTEM_CHECK_PERMISSION));
-		permissionCheck.setIcon(R.drawable.ic_inspection_black);
-		permissionCheck.setOnToggleChangeListener(new SettingToggle.OnToggleChangeListener() {
-			@Override
-			public void onChange(boolean isToggle) {
-				// TODO: Implement this method
-				setting.putValue(ClientSettings.SettingPool.SYSTEM_CHECK_PERMISSION, isToggle);
-			}
-		});
-		data.add(permissionCheck);
-		SettingToggle useMarkdown = new SettingToggle("解析Markdown格式", "关闭后将不会处理markdown格式的内容",
-				setting.getBoolean(ClientSettings.SettingPool.MSG_MARKDOWN_SURPPORT));
-		useMarkdown.setIcon(R.drawable.ic_mark_black);
-		useMarkdown.setOnToggleChangeListener(new SettingToggle.OnToggleChangeListener() {
-			@Override
-			public void onChange(boolean isToggle) {
-				// TODO: Implement this method
-				setting.putValue(ClientSettings.SettingPool.MSG_MARKDOWN_SURPPORT, isToggle);
-			}
-		});
-		data.add(useMarkdown);
-		SettingToggle backgroundPlay = new SettingToggle("后台播放", "当应用切换到后台时，不停止视频播放",
-				setting.getBoolean(ClientSettings.SettingPool.PLAYER_BACKGROUND_PLAY));
-		backgroundPlay.setIcon(R.drawable.ic_video_black);
-		backgroundPlay.setOnToggleChangeListener(new SettingToggle.OnToggleChangeListener() {
-			@Override
-			public void onChange(boolean isToggle) {
-				// TODO: Implement this method
-				setting.putValue(ClientSettings.SettingPool.PLAYER_BACKGROUND_PLAY, isToggle);
-			}
-		});
-		data.add(backgroundPlay);
-		SettingEdittext storageEdit = new SettingEdittext("自定义存储(实验性)", "自定义APP外部数据存储目录(仅Android10及以下可用)",
-				"在此输入完整外部路径...", setting.getString(ClientSettings.SettingPool.SYSTEM_STORAGE_EDIT));
-
-		storageEdit.setOnTextChangeListener(new SettingEdittext.OnTextChangeListener() {
-			@Override
-			public void onChange(String newText) {
-				// TODO: Implement this method
-				if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
-					Toast.makeText(getApplication(), "不支持的android版本，外部存储被限制访问", Toast.LENGTH_SHORT).show();
-					return;
-				}
-				storageDia(newText);
-			}
-		});
-		data.add(storageEdit);
-		SettingAction cleanCache = new SettingAction("清理缓存", "点击清理APP缓存目录", new Runnable() {
+	private void initSettings() {
+		callbacks.putIfAbsent(Logout.TAG, new Logout(getApplication()));
+		callbacks.putIfAbsent(ClientSettings.SettingPool.SYSTEM_STORAGE_EDIT,
+				new SettingEdittext.OnTextChangeListener() {
+					@Override
+					public void onChange(String newText) {
+						// TODO: Implement this method
+						if (Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) {
+							Toast.makeText(getApplication(), "不支持的android版本，外部存储被限制访问", Toast.LENGTH_SHORT).show();
+							return;
+						}
+						storageDia(newText);
+					}
+				});
+		callbacks.putIfAbsent(ClearCache.TAG, new ClearCache(this));
+		callbacks.putIfAbsent(Import.TAG_VIDEO, new Import(this, FILE_REQUEST_CODE));
+		callbacks.putIfAbsent(Import.TAG_IMAGE, new Import(this, IMAGE_REQUEST_CODE));
+		callbacks.putIfAbsent(ClientSettings.SettingPool.PLAYER_IMAGE_DISPLAY, new Runnable() {
 			@Override
 			public void run() {
 				// TODO: Implement this method
-				cleanCache(true);
+				displayDia();
 			}
 		});
-		cleanCache.setIcon(R.drawable.ic_clear_black);
-		data.add(cleanCache);
-		SettingAction settingReset = new SettingAction("重置设置", "手动将所有设置项恢复为默认设置", new Runnable() {
-			@Override
-			public void run() {
-				// TODO: Implement this method
-				Toast.makeText(getApplication(), "操作成功", Toast.LENGTH_SHORT).show();
-				setting.reset();
-			}
-		});
-		settingReset.setIcon(R.drawable.ic_reset_black);
-		data.add(settingReset);
-		SettingAction importVideo = new SettingAction("导入视频", "手动导入已缓存视频", new Runnable() {
-			@Override
-			public void run() {
-				// TODO: Implement this method
-				Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-				i.setType("application/zip");
-				i.addCategory(Intent.CATEGORY_OPENABLE);
-				i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-				startActivityForResult(i, FILE_REQUEST_CODE);
-			}
-		});
-		importVideo.setIcon(R.drawable.ic_import_black);
-		data.add(importVideo);
-		SettingAction importBackground = new SettingAction("导入启动图", "自定义APP启动页面的背景图片", new Runnable() {
-			@Override
-			public void run() {
-				// TODO: Implement this method
-				Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-				startActivityForResult(i, IMAGE_REQUEST_CODE);
-			}
-		});
-		importBackground.setIcon(R.drawable.ic_background_black);
-		data.add(importBackground);
-		SettingAction checkPermission = new SettingAction("申请权限", "手动申请应用所需权限", new Runnable() {
-			@Override
-			public void run() {
-				// TODO: Implement this method
-				checkPermission(SettingsActivity.this);
-			}
-		});
-		checkPermission.setIcon(R.drawable.ic_permission_black);
-		data.add(checkPermission);
-		SettingAction group = new SettingAction("加入群聊", "点击加入APP开发交流", new Runnable() {
-			@Override
-			public void run() {
-				// TODO: Implement this method
-				SystemUtils.loadUri(getApplication(),
-						"http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=q8rrsHOdfjuh53isV_itsduydqiWgyUK&authKey=Dlb5xiPw0nwjBP%2BYg0rRv%2BBVRjLrS3Ogzzo2PuItgKJyOeVU6PP5qBhnY%2B72HomV&noverify=0&group_code=1039356559");
-			}
-		});
-		group.setIcon(R.drawable.ic_qgroup_black);
-		data.add(group);
-		SettingAction feedback = new SettingAction("反馈", "向软件作者反馈bug", new Runnable() {
-			@Override
-			public void run() {
-				// TODO: Implement this method
-				feedbackDia();
-			}
-		});
-		feedback.setIcon(R.drawable.ic_report_black);
-		data.add(feedback);
-		SettingAction themeSwitch = new SettingAction("主题切换", new Runnable() {
+		callbacks.putIfAbsent(ClientSettings.SettingPool.SYSTEM_SWITCH_THEME, new Runnable() {
 			@Override
 			public void run() {
 				// TODO: Implement this method
 				themeDia();
 			}
 		});
-		themeSwitch.setIcon(R.drawable.ic_platte_black);
-		data.add(themeSwitch);
-		SettingAction share = new SettingAction("分享软件", new Runnable() {
-			@Override
-			public void run() {
-				// TODO: Implement this method
-				Intent i = new Intent(Intent.ACTION_SEND);
-				i.setType("text/plain");
-				i.putExtra(Intent.EXTRA_TEXT,
-						"OTTOHub邀请你来体验APP端啦~\n点击下方链接下载↓\nhttps://www.123pan.com/s/fqQojv-oyZJH.html");
-				startActivity(Intent.createChooser(i, "share"));
+		callbacks.putIfAbsent(RequestPermission.TAG, new RequestPermission(this));
+		callbacks.putIfAbsent(Reset.TAG, new Reset(getApplication()));
+		callbacks.putIfAbsent(UriLoader.TAG_GROUP, new UriLoader(getApplication(),
+				"http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=q8rrsHOdfjuh53isV_itsduydqiWgyUK&authKey=Dlb5xiPw0nwjBP%2BYg0rRv%2BBVRjLrS3Ogzzo2PuItgKJyOeVU6PP5qBhnY%2B72HomV&noverify=0&group_code=1039356559"));
+		callbacks.putIfAbsent(BugReport.TAG, new BugReport(this));
+		callbacks.putIfAbsent(Share.TAG,
+				new Share(this, "OTTOHub邀请你来体验APP端啦~\n点击下方链接下载↓\nhttps://www.123pan.com/s/fqQojv-oyZJH.html"));
+		callbacks.putIfAbsent(ActivityLoader.TAG_INFO, new ActivityLoader(this, InfoActivity.class));
+	}
+
+	private List<SettingBasic> initSetting() {
+		List<SettingBasic> data = new ArrayList<>();
+		String content = FileUtils.readFile(this, R.raw.ui_categories);
+		if (content.isEmpty()) {
+			return data;
+		}
+		try {
+			JSONObject json = new JSONObject(content);
+			JSONArray categories = json.optJSONArray("categories");
+			if (categories == null) {
+				return data;
 			}
-		});
-		share.setIcon(R.drawable.ic_share_black);
-		data.add(share);
-		SettingAction logout = new SettingAction("退出登录", new Runnable() {
-			@Override
-			public void run() {
-				// TODO: Implement this method
-				Toast.makeText(getApplication(), "退出登录成功", Toast.LENGTH_SHORT).show();
-				AccountManager.getInstance(getApplication()).logout();
+			for (int i = 0; i < categories.length(); i++) {
+				int id = ResourceUtils.getResID(StringUtils.strCat("ui_", categories.optString(i)), "raw");
+				JSONObject subUI = new JSONObject(FileUtils.readFile(this, id));
+				data.add(new SettingTitle(subUI.optString("name", "客户端设置")));
+				if (subUI.has("items")) {
+					data.addAll(readType(subUI, 0));
+				}
 			}
-		});
-		logout.setIcon(R.drawable.ic_logout_black);
-		data.add(logout);
-		SettingAction appinfo = new SettingAction("关于我们", new Runnable() {
-			@Override
-			public void run() {
-				// TODO: Implement this method
-				startActivity(new Intent(SettingsActivity.this, InfoActivity.class));
-			}
-		});
-		appinfo.setIcon(R.drawable.ic_info_black);
-		data.add(appinfo);
+		} catch (Exception e) {
+			Log.e(TAG, "load json ui failed ", e);
+		}
 		return data;
+	}
+
+	private List<SettingBasic> readType(JSONObject json, int count) throws Exception {
+		List<SettingBasic> currentData = new ArrayList<>();
+		if (count > 3) {
+			return currentData;
+		}
+		JSONArray items = json.optJSONArray("items");
+		for (int i = 0; i < items.length(); i++) {
+			JSONObject item = items.optJSONObject(i);
+			if (!item.has("type") || !item.has("path")) {
+				throw new IllegalArgumentException("not found argument \"type\" or \"path\"! ");
+			}
+			ClientSettings setting = ClientSettings.getInstance();
+			final String path = item.optString("path");
+			String title = readJSONString(item.optString("title"));
+			String msg = readJSONString(item.optString("msg"));
+			Object callback = callbacks.get(path);
+			SettingBasic current = null;
+			switch (item.optString("type")) {
+				case "action" :
+					if (callback instanceof Runnable) {
+						current = new SettingAction(title, msg, (Runnable) callback);
+					}
+					break;
+				case "toggle" :
+					if (item.has("items")) {
+						current = new SettingToggle(title, msg, readType(items.optJSONObject(i), count++));
+					} else {
+						current = new SettingToggle(title, msg, setting.getBoolean(path));
+					}
+					((SettingToggle) current).setOnToggleChangeListener(new SettingToggle.OnToggleChangeListener() {
+						@Override
+						public void onChange(boolean isToggle) {
+							// TODO: Implement this method
+							ClientSettings.getInstance().putValue(path, isToggle);
+						}
+					});
+					break;
+				case "slider" :
+					break;
+				case "color" :
+					break;
+				case "edit" :
+					current = new SettingEdittext(title, msg, item.optString("hint"), setting.getString(path));
+					String btnText = item.optString("btn_text");
+					if (!btnText.isEmpty()) {
+						((SettingEdittext) current).setBtnText(btnText);
+					}
+					if (callback instanceof SettingEdittext.OnTextChangeListener) {
+						((SettingEdittext) current)
+								.setOnTextChangeListener((SettingEdittext.OnTextChangeListener) callback);
+					}
+					break;
+			}
+			if (current != null) {
+				String icon = item.optString("icon");
+				int id = ResourceUtils.getResID(icon, "drawable");
+				current.setIcon(id);
+				current.setTag(path);
+				currentData.add(current);
+			}
+		}
+		return currentData;
+	}
+
+	private String readJSONString(String content) {
+		int id = ResourceUtils.getResID(content, "string");
+		if (id == 0) {
+			return content;
+		}
+		return getString(id);
 	}
 
 	private File getRealFile(Context context, Uri uri) {
@@ -378,7 +343,69 @@ public class SettingsActivity extends BasicActivity {
 		window.setFocusable(false);
 	}
 
+	private void request() {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("需要权限");
+		builder.setMessage("请给予应用悬浮窗权限，否则无法启用一些内容");
+		builder.setCancelable(false);
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO: Implement this method
+			}
+		});
+		builder.setNegativeButton(android.R.string.cancel, null);
+		builder.create().show();
+	}
+
+	private void displayDia() {
+		int currentTheme = ClientSettings.getInstance().getInt(ClientSettings.SettingPool.PLAYER_IMAGE_DISPLAY,
+				Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER);
+		int index = 0;
+		switch (currentTheme) {
+			case Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_PARENT :
+				index = 1;
+				break;
+			case Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP :
+				index = 2;
+				break;
+			case Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_ORIGINAL :
+				index = 3;
+				break;
+		}
+		final CharSequence[] chars = {"自适应(推荐)", "填充(会拉伸)", "裁剪", "原始"};
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("切换播放器缩放模式");
+		builder.setCancelable(false);
+		builder.setSingleChoiceItems(chars, index, new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO: Implement this method
+				int mode = Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER;
+				switch (which) {
+					case 1 :
+						mode = Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_PARENT;
+						break;
+					case 2 :
+						mode = Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_FILL_SCROP;
+						break;
+					case 3 :
+						mode = Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_ORIGINAL;
+				}
+				ClientSettings setting = ClientSettings.getInstance();
+				setting.putValue(ClientSettings.SettingPool.PLAYER_IMAGE_DISPLAY, mode);
+				Toast.makeText(getApplication(), "操作成功", Toast.LENGTH_SHORT).show();
+				dialog.dismiss();
+			}
+		});
+		builder.setNegativeButton(android.R.string.cancel, null);
+		builder.create().show();
+	}
+
 	private void storageDia(final String newPath) {
+		if (getCurrentStorage().equals(newPath)) {
+			return;
+		}
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("设置新存储位置");
 		builder.setCancelable(false);
@@ -406,69 +433,6 @@ public class SettingsActivity extends BasicActivity {
 					Toast.makeText(getApplication(), "Android版本过高或出现未知错误", Toast.LENGTH_SHORT).show();
 				}
 				dialog.dismiss();
-			}
-		});
-		builder.setNegativeButton(android.R.string.cancel, null);
-		builder.create().show();
-	}
-
-	private void send(String text) {
-		AccountManager manager = AccountManager.getInstance(this);
-		if (!manager.isLogin()) {
-			Client.saveActivity(getIntent());
-			startActivity(new Intent(this, LoginActivity.class));
-			return;
-		}
-		Account current = manager.getAccount();
-		if (current == null) {
-			return;
-		}
-		NetworkUtils.getNetwork.getNetworkJson(APIManager.MessageURI.getSendMessageURI(current.getToken(), 5788, text),
-				new NetworkUtils.HTTPCallback() {
-					@Override
-					public void onSuccess(String content) {
-						if (content == null || content.isEmpty()) {
-							onFailed("content is empty");
-							return;
-						}
-						try {
-							final JSONObject detail = new JSONObject(content);
-							String status = detail.optString("status", "error");
-							if (status.equals("success")) {
-								runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										Toast.makeText(getApplication(), "反馈成功，请注意收件箱是否收到回信", Toast.LENGTH_SHORT)
-												.show();
-									}
-								});
-								return;
-							}
-							onFailed(detail.optString("message", "error"));
-						} catch (JSONException e) {
-							onFailed(e.toString());
-						}
-					}
-
-					@Override
-					public void onFailed(String cause) {
-						Log.e("Network", cause);
-					}
-				});
-	}
-
-	private void feedbackDia() {
-		final EditText text = new EditText(this);
-		text.setHint("在此处输入反馈内容...");
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("发送反馈");
-		builder.setCancelable(false);
-		builder.setView(text);
-		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dia, int which) {
-				send(text.getText().toString());
-				dia.dismiss();
 			}
 		});
 		builder.setNegativeButton(android.R.string.cancel, null);
@@ -549,23 +513,6 @@ public class SettingsActivity extends BasicActivity {
 		}
 	}
 
-	public static void checkPermission(final Activity a) {
-		PermissionHelper.requestPermissions(a,
-				new String[]{"android.permission.WRITE_EXTERNAL_STORAGE", "android.permission.READ_EXTERNAL_STORAGE"},
-				new PermissionHelper.PermissionCallback() {
-					@Override
-					public void onAllGranted() {
-						Toast.makeText(a, "权限授予成功", Toast.LENGTH_SHORT).show();
-						Client.initSettings(a);
-					}
-
-					@Override
-					public void onDeniedWithNeverAsk() {
-						Toast.makeText(a, "权限已拒绝(后续可在设置重新授予)", Toast.LENGTH_SHORT).show();
-					}
-				});
-	}
-
 	public void saveLog(View v) {
 		Object[] name = {FileUtils.getStorage(this, null), "OTTOHub_runlog_",
 				SystemUtils.getDate("yyyy_MM_dd_HH_mm_ss_"), SystemUtils.getTime(), ".log"};
@@ -577,6 +524,13 @@ public class SettingsActivity extends BasicActivity {
 
 	public void quit(View v) {
 		finish();
+	}
+
+	public static void permission() {
+		Object callback = callbacks.get(RequestPermission.TAG);
+		if (callback != null && callback instanceof Runnable) {
+			((Runnable) callback).run();
+		}
 	}
 }
 

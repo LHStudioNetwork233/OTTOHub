@@ -84,11 +84,11 @@ import com.losthiro.ottohubclient.impl.*;
  * @Author Hiro
  * @Date 2025/05/23 00:54
  */
-public class PlayerActivity extends BasicActivity implements VideoInfoFragment.OnRequestVideoListener {
+public class PlayerActivity extends BasicActivity implements VideoInfoFragment.OnRequestVideoListener, ScreenRotate.OrientationChangeListener {
 	public static final String TAG = "PlayerActivity";
 	private static final Semaphore request = new Semaphore(1);
 	private static final Handler mainHandler = new Handler(Looper.getMainLooper());
-	private static JzvdStd main;
+	private static ClientVideoView main;
 	private static IDanmakuView danmaku;
 	private Button[] pages;
 	private ViewPager videoPage;
@@ -96,7 +96,6 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 	private long vid;
 	private long uid;
 	private boolean isLocal;
-	private boolean isDanmakuOpen = true;
 	private boolean isOnInfo = true;
 	private boolean isFullScreen = false;
 	private int videoHeight;
@@ -133,6 +132,7 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 		if (vid == 0) {
 			return;
 		}
+        ScreenRotate.getInstance(getApplication()).setOrientationChangeListener(this);
 		Bundle callback = new Bundle();
 		callback.putParcelable("play_callback", getIntent());
 		videoPage = findViewById(R.id.video_player_page);
@@ -200,6 +200,7 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 	@Override
 	protected void onPause() {
 		super.onPause();
+        ScreenRotate.getInstance(this).stop();
 		if (danmaku != null && danmaku.isPrepared()) {
 			danmaku.pause();
 		}
@@ -212,6 +213,7 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 	@Override
 	protected void onResume() {
 		super.onResume();
+        ScreenRotate.getInstance(this).start(this);
 		if (danmaku != null && danmaku.isPrepared() && danmaku.isPaused()) {
 			danmaku.resume();
 		}
@@ -277,14 +279,27 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 		outState.putInt("video_height", videoHeight);
 	}
 
+    @Override
+    public void orientationChange(int orientation) {
+        if (!ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.PLAYER_AUTO_FULLSCREEN)) {
+            return;
+        }
+        if (Jzvd.CURRENT_JZVD != null
+            && (main.state == Jzvd.STATE_PLAYING || main.state == Jzvd.STATE_PAUSE)
+            && main.screen != Jzvd.SCREEN_TINY) {
+            if (orientation >= 45 && orientation <= 315 && main.screen == Jzvd.SCREEN_NORMAL) {
+                toFullScreen(ScreenRotate.orientationDirection);
+            } else if (((orientation >= 0 && orientation < 45) || orientation > 315) && main.screen == Jzvd.SCREEN_FULLSCREEN) {
+                toNormalScreen();
+            }
+        }
+    }
+    
 	@Override
 	public void onSuccess(final VideoInfoFragment.VideoInfo current, String title, long id) {
 		// TODO: Implement this method
 		uid = id;
-		main.setUp(current.getVideo(), title, Jzvd.SCREEN_NORMAL);
-		main.startPreloading();
-		main.posterImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		ImageDownloader.loader(main.posterImageView, current.getCover());
+		main.init(current, title, isLocal);
 		main.post(new Runnable() {
 			@Override
 			public void run() {
@@ -385,18 +400,31 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 					: ResourceUtils.getColor(R.color.text_color));
 		}
 	}
+    
+    private void toFullScreen(float x) {
+        if (main != null && main.screen != Jzvd.SCREEN_FULLSCREEN) {
+            if ((System.currentTimeMillis() - Jzvd.lastAutoFullscreenTime) > 2000) {
+                main.autoFullscreen(x);
+                Jzvd.lastAutoFullscreenTime = System.currentTimeMillis();
+            }
+        }
+    }
+    
+    private void toNormalScreen() {
+        if (main != null && main.screen == Jzvd.SCREEN_FULLSCREEN) {
+            main.autoQuitFullscreen();
+        }
+    }
 
 	public void switchDanmaku(View v) {
 		if (danmaku != null) {
-			if (isDanmakuOpen) {
+			if (danmaku.getView().getVisibility() == View.VISIBLE) {
 				((Button) v).setTextColor(Color.GRAY);
 				danmaku.setVisibility(View.GONE);
-				isDanmakuOpen = false;
 				return;
 			}
 			((Button) v).setTextColor(ResourceUtils.getColor(R.color.colorAccent));
 			danmaku.setVisibility(View.VISIBLE);
-			isDanmakuOpen = true;
 		}
 	}
 

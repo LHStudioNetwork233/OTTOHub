@@ -26,11 +26,18 @@ import com.losthiro.ottohubclient.view.drawer.*;
 import java.util.*;
 import java.util.concurrent.*;
 import org.json.*;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStore;
+import androidx.lifecycle.Observer;
+import android.app.Application;
 
 public class VideosFragment extends Fragment {
 	public final static String TAG = "Videos";
 	private final static Handler uiThread = new Handler(Looper.getMainLooper());
 	private static final Semaphore request = new Semaphore(1);
+    private static final HashMap<Integer, Integer> offsetMap = new HashMap<>();
 	private static Runnable mCallback;
 	private Context ctx;
 	private boolean isAuto = true;
@@ -55,6 +62,9 @@ public class VideosFragment extends Fragment {
 		// TODO: Implement this method
 		View parent = inflater.inflate(R.layout.fragment_videos, container, false);
 		ctx = parent.getContext();
+		if (savedInstanceState != null) {
+			categoryIndex = savedInstanceState.getInt("category");
+		}
 		popularList = parent.findViewById(R.id.popular_list);
 		videoList = parent.findViewById(R.id.videos_list);
 		videoRefresh = parent.findViewById(R.id.video_refresh);
@@ -121,7 +131,7 @@ public class VideosFragment extends Fragment {
 	}
 
 	@Override
-	public void onViewCreated(View parent, Bundle savedInstanceState) {
+	public void onViewCreated(final View parent, final Bundle savedInstanceState) {
 		// TODO: Implement this method
 		super.onViewCreated(parent, savedInstanceState);
 		AccountManager manager = AccountManager.getInstance(ctx);
@@ -150,6 +160,13 @@ public class VideosFragment extends Fragment {
 		}
 	}
 
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO: Implement this method
+		outState.putInt("category", categoryIndex);
+		super.onSaveInstanceState(outState);
+	}
+
 	private void initCategoryView() {
 		View contentView = getView();
 		final int categoryCount = 13;
@@ -169,7 +186,10 @@ public class VideosFragment extends Fragment {
 		categorys[12] = contentView.findViewWithTag("0");
 		for (int i = 0; i < categoryCount; i++) {
 			final int index = i;//防止越权
-			categorys[i].setOnClickListener(new OnClickListener() {
+            TextView current = categorys[i];
+            current.setBackgroundResource(i == categoryIndex ? R.drawable.btn_bg : R.drawable.btn_empty_bg);
+            current.setTextColor(i == categoryIndex ? Color.WHITE : ResourceUtils.getColor(R.color.colorSecondary));
+			current.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					if (categoryIndex == index) {
@@ -213,7 +233,7 @@ public class VideosFragment extends Fragment {
 							@Override
 							public void run() {
 								PopularAdapter popular = new PopularAdapter(ctx, data);
-								popularList.setAdapter(popular);
+                                popularList.setAdapter(popular);
 								updatePopular(parent);
 							}
 						});
@@ -268,8 +288,14 @@ public class VideosFragment extends Fragment {
 	private void requestCategory(boolean isRefresh) {
 		String uri = APIManager.VideoURI.getRandomVideoURI(12);
 		int index = categoryIndex;
+        int current = offsetMap.getOrDefault(index, 0);
+        if (isRefresh) {
+            offsetMap.put(index, 0);
+        } else {
+            offsetMap.put(index, current + 12);
+        }
 		if (index == 1) {
-			uri = APIManager.VideoURI.getNewVideoURI(0, 12);
+			uri = APIManager.VideoURI.getNewVideoURI(current, 12);
 		}
 		if (index >= 2 && index < 5) {
 			int mode = -1;
@@ -282,7 +308,7 @@ public class VideosFragment extends Fragment {
 			if (index == 4) {
 				mode = APIManager.VideoURI.QUARTERLY;
 			}
-			uri = APIManager.VideoURI.getPopularVideoURI(mode, 0, 12);
+			uri = APIManager.VideoURI.getPopularVideoURI(mode, current, 12);
 		}
 		if (index >= 5 && index < categorys.length - 1) {
 			uri = APIManager.VideoURI.getCategoryVideoURI(index - 4, 12);
@@ -328,21 +354,21 @@ public class VideosFragment extends Fragment {
 							uiThread.post(new Runnable() {
 								@Override
 								public void run() {
-									RecyclerView.Adapter adapter = videoList.getAdapter();
-									if (adapter == null) {
-										adapter = new VideoAdapter(ctx, data);
-										videoList.setAdapter(adapter);
-										return;
-									}
-									if (adapter instanceof VideoAdapter) {
-										VideoAdapter instance = (VideoAdapter) adapter;
-										if (isRefresh) {
-											instance.setData(data);
-										} else {
-											instance.addNewData(data);
-											instance.stopLoading();
-										}
-									}
+                                    RecyclerView.Adapter adapter = videoList.getAdapter();
+                                    if (adapter == null) {
+                                        adapter = new VideoAdapter(ctx, data);
+                                        videoList.setAdapter(adapter);
+                                        return;
+                                    }
+                                    if (adapter instanceof VideoAdapter) {
+                                        VideoAdapter video = (VideoAdapter) adapter;
+                                        if (isRefresh) {
+                                            video.setData(data);
+                                        } else {
+                                            video.addNewData(data);
+                                            video.stopLoading();
+                                        }
+                                    }
 								}
 							});
 							videoRefresh.setRefreshing(false);

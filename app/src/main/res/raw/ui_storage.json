@@ -1,0 +1,34 @@
+{
+    "name": "存储设置",
+    "id": "[FILE_ID]",
+    "items": [
+        {
+            "type": "edit",
+            "path": "ottohub/system/storage_edit",
+            "title": "自定义存储(实验性)",
+            "msg": "自定义APP外部数据存储目录(仅Android 10以下可用)",
+            "hint": "在此输入完整路径..."
+        },
+        {
+            "type": "action",
+            "path": "ottohub/storage/clear_cache",
+            "title": "缓存清理",
+            "msg": "点击清理APP缓存目录",
+            "icon": "ic_clear_black"
+        },
+        {
+            "type": "action",
+            "path": "ottohub/storage/import_video",
+            "title": "导入本地视频",
+            "msg": "手动导入缓存视频的压缩包",
+            "icon": "ic_import_black"
+        },
+        {
+            "type": "action",
+            "path": "ottohub/storage/import_cover",
+            "title": "导入启动图",
+            "msg": "自定义APP启动页面背景图",
+            "icon": "ic_background_black"
+        }
+    ]
+}
