@@ -75,6 +75,9 @@ import androidx.fragment.app.*;
 import pl.droidsonroids.gif.GifImageView;
 import com.losthiro.ottohubclient.impl.*;
 import androidx.appcompat.app.*;
+import android.content.*;
+import android.util.*;
+import com.losthiro.ottohubclient.view.*;
 
 /**
  * @Author Hiro
@@ -118,10 +121,22 @@ public class MainActivity extends BasicActivity {
 			public void run() {
 				// TODO: Implement this method
 				if (AccountManager.getInstance(getApplication()).isLogin()) {
-                    ((PagesAdapter) mainPage.getAdapter()).addItem(AccountFragment.newInstance());
-                }
+					((PagesAdapter) mainPage.getAdapter()).addItem(AccountFragment.newInstance());
+				}
 			}
 		};
+		main.post(new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				if (!hasWindowFocus()) {
+					main.postDelayed(this, 1000);
+					return;
+				}
+				checkClipBoard();
+				main.removeCallbacks(this);
+			}
+		});
 		if (!FileUtils.isStorageAvailable()) {
 			Toast.makeText(getApplication(), "你的内存不够保存东西了", Toast.LENGTH_SHORT).show();
 		}
@@ -185,20 +200,22 @@ public class MainActivity extends BasicActivity {
 
 	@Override
 	public void startActivityForResult(Intent intent, int requestCode) {
-		Client.saveActivity(getIntent());
 		super.startActivityForResult(intent, requestCode);
 	}
 
 	@Override
 	public void startActivity(Intent intent) {
-		Client.saveActivity(getIntent());
 		super.startActivity(intent);
 	}
 
 	private FragmentStatePagerAdapter initPager() {
 		PagesAdapter pages = new PagesAdapter(this);
-		pages.addItem(VideosFragment.newInstance());
-		pages.addItem(BlogsFragment.newInstance());
+        VideosFragment video = VideosFragment.newInstance();
+        video.setRetainInstance(true);
+		pages.addItem(video);
+        BlogsFragment blog = BlogsFragment.newInstance();
+        blog.setRetainInstance(true);
+		pages.addItem(blog);
 		if (AccountManager.getInstance(this).isLogin()) {
 			pages.addItem(AccountFragment.newInstance());
 		}
@@ -250,6 +267,30 @@ public class MainActivity extends BasicActivity {
 			Drawable icon = pages[i].getCompoundDrawables()[1];
 			if (icon != null) {
 				icon.setColorFilter(index == i ? colorAccent : color, PorterDuff.Mode.SRC_IN);
+			}
+		}
+	}
+
+	private void checkClipBoard() {
+		ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+		if (clipboard.hasPrimaryClip() && ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.SYSTEM_CHECK_CLIPBOARD)) {
+			String text = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
+			if (Patterns.WEB_URL.matcher(text).matches()) {
+				final String uri = ClientWebView.getLinks(text);
+				if (uri == null) {
+					return;
+				}
+				AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+				dialog.setTitle("跳转到复制的地址？");
+				dialog.setMessage(StringUtils.strCat("是否跳转到", uri));
+				dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dia, int which) {
+						ClientWebView.praseLinkAndLoad(MainActivity.this, uri);
+					}
+				});
+				dialog.setNegativeButton(android.R.string.cancel, null);
+				dialog.create().show();
 			}
 		}
 	}

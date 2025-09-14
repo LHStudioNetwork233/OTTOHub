@@ -147,6 +147,51 @@
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:layout_marginLeft="10dp"
+				android:text="所属合集(选填)"
+				android:layout_marginBottom="10dp"/>
+
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginBottom="5dp"
+				android:layout_marginEnd="5dp"
+				android:layout_marginStart="5dp">
+
+				<EditText
+					android:layout_width="match_parent"
+					android:ems="10"
+					android:layout_height="wrap_content"
+					android:hint="在此输入新合集名称..."
+					android:layout_weight="1.0"
+					android:id="@+id/edit_video_collection"/>
+
+				<ImageButton
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:src="@drawable/ic_down"
+                    android:background="@drawable/btn_bg"
+					android:layout_gravity="center"
+					android:layout_margin="5dp"
+					android:onClick="userCollection"/>
+
+			</LinearLayout>
+
+			<View
+				android:background="#FFE5E5E5"
+				android:layout_width="match_parent"
+				android:layout_height="1dp"
+				android:layout_marginLeft="3dp"
+				android:layout_marginRight="3dp"/>
+
+			<TextView
+				android:textSize="16sp"
+				android:textColor="#FF666666"
+				android:layout_gravity="left"
+				android:paddingTop="10dp"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="10dp"
 				android:text="分区"/>
 
 			<LinearLayout

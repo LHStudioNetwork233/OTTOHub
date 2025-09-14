@@ -84,11 +84,6 @@ public class AccountDetailActivity extends BasicActivity {
 	@Override
 	protected void onDestroy() {
 		// TODO: Implement this method
-		Intent last = Client.getLastActivity();
-		if (last != null && Client.isFinishingLast(last)) {
-			Client.removeActivity();
-			startActivity(last);
-		}
 		super.onDestroy();
 	}
 

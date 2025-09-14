@@ -113,7 +113,6 @@ public class CrashManager implements Thread.UncaughtExceptionHandler {
 		printWriter.close();
 		buffer.append(writer.toString());
 		try {
-            
 			Intent intent = new Intent(this.mContext, ErrorActivity.class);
 			intent.addFlags(0x10000000);
 			intent.putExtra("error_name", e.getLocalizedMessage());

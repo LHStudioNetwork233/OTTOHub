@@ -72,8 +72,6 @@ public class HonourAdapter extends RecyclerView.Adapter<HonourAdapter.ViewHolder
                     public void onClick(View v) {
                         Intent i=new Intent(main, SearchActivity.class);
                         i.putExtra("query", vH.content.getText().toString());
-                        Intent save=((Activity)main).getIntent();
-                        Client.saveActivity(save);
                         main.startActivity(i);
                     }
                 });

@@ -122,8 +122,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                     ClickSounds.playSound(v.getContext());
 					Intent i = new Intent(main, AccountDetailActivity.class);
 					i.putExtra("uid", current.getSendUID());
-					Intent save = ((Activity) main).getIntent();
-					Client.saveActivity(save);
 					main.startActivity(i);
 				}
 			});
@@ -178,22 +176,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 							Intent i = new Intent(main, BlogDetailActivity.class);
 							i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 							i.putExtra("bid", str.findID("BID+:"));
-							Intent save = ((Activity) main).getIntent();
-							Client.saveActivity(save);
 							main.startActivity(i);
 						} else if (current.getContent().contains("视频")) {
 							Intent i = new Intent(main, PlayerActivity.class);
 							i.putExtra("vid", str.findID("VID+:"));
-							Intent save = ((Activity) main).getIntent();
-							Client.saveActivity(save);
 							main.startActivity(i);
 						} else if (current.isEmail()) {
 							Intent i = new Intent(main, MessageDetailActivity.class);
 							i.putExtra("sender", current.getSendUID());
 							i.putExtra("content", current.getContent());
 							i.putExtra("time", current.getTime());
-							Intent save = ((Activity) main).getIntent();
-							Client.saveActivity(save);
 							main.startActivity(i);
 						}
 						return;

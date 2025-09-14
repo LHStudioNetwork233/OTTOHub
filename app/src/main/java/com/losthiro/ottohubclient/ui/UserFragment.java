@@ -159,7 +159,7 @@ public class UserFragment extends Fragment {
 				new Object[]{"UID: ", current.getID(), " - 性别: ", current.getSex(), " - 注册日: ", current.getTime()});
 		((TextView) view.findViewById(R.id.main_user_detail)).setText(userInfo);
 		((TextView) view.findViewById(R.id.main_user_intro)).setText(current.getIntro());
-		HonourAdapter adapter = new HonourAdapter(getContext(), Arrays.asList(current.getHonours()));
+		HonourAdapter adapter = new HonourAdapter(getContext(), Arrays.<String>asList(current.getHonours()));
 		adapter.setHiddenDef(false);
 		RecyclerView honourList = view.findViewById(R.id.main_user_honours);
 		honourList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -215,40 +215,8 @@ public class UserFragment extends Fragment {
 				updatePage(p);
 			}
 		});
-		Button followingBtn = view.findViewById(R.id.following_user);
-		followingBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				followingUser(v, current);
-			}
-		});
-		if (current.getID() == AccountManager.getInstance(getContext()).getAccount().getUID()) {
-			ImageView avatarEdit = view.findViewById(R.id.avatar_edit);
-			avatarEdit.setVisibility(View.VISIBLE);
-			avatarEdit.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					// TODO: Implement this method
-					Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-					requireActivity().startActivityForResult(i, BasicActivity.IMAGE_REQUEST_CODE);
-					Toast.makeText(getContext(), "请选择头像文件，大小不超过1MB", Toast.LENGTH_SHORT).show();
-				}
-			});
-			ImageView profileBtn = view.findViewById(R.id.profile_btn);
-			profileBtn.setVisibility(View.VISIBLE);
-			profileBtn.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					// TODO: Implement this method
-					FragmentActivity a = requireActivity();
-					if (a instanceof AccountDetailActivity) {
-						((AccountDetailActivity) a).loadUserProfile();
-					}
-				}
-			});
-		}
-		setFollowingStatus(followingBtn, current.getID());
 		initCategoryView(current.getID());
+        initIfLogin(current, view);
 	}
 
 	private PagerAdapter initPager(long uid) {
@@ -260,6 +228,48 @@ public class UserFragment extends Fragment {
 		data.addItem(UserVideo.newInstance(uid, true));
 		return data;
 	}
+    
+    private void initIfLogin(final UserInfo info, View view) {
+        long uid = info.getID();
+        Button followingBtn = view.findViewById(R.id.following_user);
+        followingBtn.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    followingUser(v, info);
+                }
+            });
+        Account account = AccountManager.getInstance(getContext()).getAccount();
+        if (account == null) {
+            Log.i(TAG, "not login");
+            return;
+        }
+        setFollowingStatus(followingBtn, uid);
+        if (uid == account.getUID()) {
+            ImageView avatarEdit = view.findViewById(R.id.avatar_edit);
+            avatarEdit.setVisibility(View.VISIBLE);
+            avatarEdit.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO: Implement this method
+                        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        requireActivity().startActivityForResult(i, BasicActivity.IMAGE_REQUEST_CODE);
+                        Toast.makeText(getContext(), "请选择头像文件，大小不超过1MB", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            ImageView profileBtn = view.findViewById(R.id.profile_btn);
+            profileBtn.setVisibility(View.VISIBLE);
+            profileBtn.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // TODO: Implement this method
+                        FragmentActivity a = requireActivity();
+                        if (a instanceof AccountDetailActivity) {
+                            ((AccountDetailActivity) a).loadUserProfile();
+                        }
+                    }
+                });
+		}
+    }
 
 	private void initCategoryView(long uid) {
 		boolean isMe = false;
@@ -411,6 +421,7 @@ public class UserFragment extends Fragment {
 	private void setFollowingStatus(final Button followingBtn, long uid) {
 		AccountManager manager = AccountManager.getInstance(getContext());
 		if (!manager.isLogin()) {
+            Log.i(TAG, "request following status failed: not login");
 			return;
 		}
 		NetworkUtils.getNetwork.getNetworkJson(

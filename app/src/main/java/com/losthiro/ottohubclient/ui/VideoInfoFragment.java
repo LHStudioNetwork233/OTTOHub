@@ -24,6 +24,8 @@ import android.widget.*;
 import android.view.View.*;
 import android.graphics.*;
 import com.losthiro.ottohubclient.*;
+import android.app.Dialog;
+import com.losthiro.ottohubclient.view.dialog.*;
 
 public class VideoInfoFragment extends Fragment {
 	public final static String TAG = "VideoInfo";
@@ -31,9 +33,12 @@ public class VideoInfoFragment extends Fragment {
 	private static final HashMap<String, Object> valueMap = new HashMap<>();
 	private VideoInfo current;
 	private OnRequestVideoListener mListener;
+    private BottomDialog collectionDialog;
 	private RecyclerView videoList;
 	private TextView likeCountView;
 	private TextView favouriteView;
+	private TextView collectionName;
+	private TextView collectionCount;
 
 	public static VideoInfoFragment newInstance(long vid) {
 		Bundle arg = new Bundle();
@@ -64,6 +69,17 @@ public class VideoInfoFragment extends Fragment {
 		videoList.setLayoutManager(new GridLayoutManager(c, 1));
 		likeCountView = root.findViewById(R.id.video_like_count);
 		favouriteView = root.findViewById(R.id.video_favorite_count);
+		collectionName = root.findViewWithTag("video_collection");
+		collectionCount = root.findViewWithTag("video_collection_count");
+        ((View)collectionName.getParent()).setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO: Implement this method
+                    if (collectionDialog != null) {
+                        collectionDialog.show();
+                    }
+                }
+            });
 		return root;
 	}
 
@@ -148,6 +164,64 @@ public class VideoInfoFragment extends Fragment {
 
 						@Override
 						public void onFailed(String cause) {
+							Log.e("Network", cause);
+						}
+					});
+			NetworkUtils.getNetwork.getNetworkJson(APIManager.CollectionURI.getCollectionGetURI(vid),
+					new NetworkUtils.HTTPCallback() {
+						@Override
+						public void onSuccess(String content) {
+							// TODO: Implement this method
+							try {
+								int now = 0;
+								JSONObject json = new JSONObject(content);
+                                if (!json.optString("status").equals("success")){
+                                    onFailed(json.optString("message"));
+                                    return;
+                                }
+								JSONArray array = json.optJSONArray("video_list");
+								final String name = json.optString("collection");
+								final List<Video> collectionList = new ArrayList<>();
+								for (int i = 0; i < array.length(); i++) {
+									Video video = new Video(ctx, array.optJSONObject(i), Video.VIDEO_DETAIL);
+									if (video.getVID() == vid) {
+										now = i;
+									}
+									collectionList.add(video);
+								}
+								final int index = now;
+								uiThread.post(new Runnable() {
+									@Override
+									public void run() {
+										// TODO: Implement this method
+										if (name.isEmpty()) {
+											return;
+										}
+										((View) collectionName.getParent()).setVisibility(View.VISIBLE);
+										collectionName.setText(name);
+										collectionCount.setText(StringUtils
+												.strCat(new Object[]{index, File.separator, collectionList.size()}));
+                                        collectionDialog = new BottomDialog(ctx, R.layout.dialog_video_collection);
+                                        View root = collectionDialog.getContent();
+                                        if (root == null) {
+                                            return;
+                                        }
+                                        TextView countView = root.findViewWithTag("collection_count");
+                                        countView.setText(StringUtils.strCat(new Object[]{countView.getText(), "(", collectionList.size(), ")"}));
+                                        ((TextView) root.findViewWithTag("collection_name")).setText(name);
+                                        RecyclerView list = root.findViewWithTag("collection_list");
+                                        list.setLayoutManager(new GridLayoutManager(ctx, 1));
+                                        list.setAdapter(new VideoAdapter(ctx, collectionList));
+									}
+								});
+							} catch (Exception e) {
+								onFailed(e.toString());
+							}
+						}
+
+						@Override
+						public void onFailed(String cause) {
+							// TODO: Implement this method
 							Log.e("Network", cause);
 						}
 					});
@@ -706,13 +780,13 @@ public class VideoInfoFragment extends Fragment {
 		}
 
 		public String[] getTags() {
-            String tags = main.optString("tag");
-            if(tags != null && !tags.isEmpty()) {
-                String[] tagArr = tags.split("#");
-                if(tagArr.length > 0) {
-                    return tagArr;
-                }
-            }
+			String tags = main.optString("tag");
+			if (tags != null && !tags.isEmpty()) {
+				String[] tagArr = tags.split("#");
+				if (tagArr.length > 0) {
+					return tagArr;
+				}
+			}
 			return new String[]{};
 		}
 

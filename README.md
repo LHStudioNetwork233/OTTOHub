@@ -98,8 +98,12 @@ _(纯手机操作，效果不好请见谅qwq)_
 ```gradle
 dependencies {
     implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
+	implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.29'
+	implementation 'cn.jzvd:jiaozivideoplayer:7.7.0'
     implementation 'androidx.drawerlayout:drawerlayout:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
+	implementation 'androidx.lifecycle:lifecycle-livedata:2.0.0'
     implementation 'androidx.appcompat:appcompat:1.0.0'
 }
 ```

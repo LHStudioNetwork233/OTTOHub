@@ -88,13 +88,25 @@ public class BlogDetailActivity extends BasicActivity {
 			return;
 		}
 		FragmentManager fragmanager = getSupportFragmentManager();
+        FragmentTransaction transacte = fragmanager.beginTransaction();
 		Fragment commentPage = fragmanager.findFragmentById(R.id.comment_page);
+        final Fragment comment = CommentFragment.newInstance(bid, Comment.TYPE_BLOG);
 		if (commentPage == null) {
-			commentPage = CommentFragment.newInstance(bid, Comment.TYPE_BLOG);
-			FragmentTransaction transacte = fragmanager.beginTransaction();
-			transacte.add(R.id.comment_page, commentPage);
-			transacte.commit();
+			transacte.add(R.id.comment_page, comment);
 		}
+        Fragment editPage = fragmanager.findFragmentById(R.id.comment_edit_view);
+        if (editPage == null) {
+            CommentEditFragment edit = CommentEditFragment.newInstance(bid, 0, Comment.TYPE_BLOG);
+            edit.setSendCallback(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO: Implement this method
+                        ((CommentFragment)comment).loadComment(true);
+                    }
+                });
+            transacte.add(R.id.comment_edit_view, edit);
+        }
+        transacte.commit();
 		AccountManager manager = AccountManager.getInstance(this);
 		String uri = manager.isLogin()
 				? APIManager.BlogURI.getBlogDetailURI(bid, manager.getAccount().getToken())
@@ -136,11 +148,6 @@ public class BlogDetailActivity extends BasicActivity {
 	public void onBackPressed() {
 		if (System.currentTimeMillis() - firstBackTime > 2000) {
 			Toast.makeText(this, "再按一次返回键退出", Toast.LENGTH_SHORT).show();
-			FragmentManager fragmanager = getSupportFragmentManager();
-			Fragment commentPage = fragmanager.findFragmentById(R.id.comment_page);
-			if (commentPage != null && commentPage instanceof CommentFragment) {
-				((CommentFragment) commentPage).onBack();
-			}
 			firstBackTime = System.currentTimeMillis();
 			return;
 		}
@@ -148,11 +155,6 @@ public class BlogDetailActivity extends BasicActivity {
 		View parent = manager.getLastParent();
 		manager.registerDrawer(parent, (ImageButton) parent.findViewById(R.id.main_slide_bar));
 		super.onBackPressed();
-		Intent last = Client.getLastActivity();
-		if (last != null && Client.isFinishingLast(last)) {
-			Client.removeActivity();
-			startActivity(last);
-		}
 	}
 
 	@Override
@@ -229,7 +231,6 @@ public class BlogDetailActivity extends BasicActivity {
 			public void onClick(View v) {
 				Intent i = new Intent(BlogDetailActivity.this, AccountDetailActivity.class);
 				i.putExtra("uid", current.getUID());
-				Client.saveActivity(getIntent());
 				startActivity(i);
 			}
 		});
@@ -241,6 +242,7 @@ public class BlogDetailActivity extends BasicActivity {
 		((TextView) findViewById(R.id.blog_info)).setText(info);
 		ClientWebView dataView = findViewById(R.id.blog_content_view);
         dataView.setTextData(current.getContent());
+        dataView.setFragmentManager(getSupportFragmentManager());
         dataView.load();
 		int color = ResourceUtils.getColor(R.color.colorSecondary);
 		((ImageButton) content.findViewWithTag("1")).setColorFilter(color);
@@ -396,20 +398,7 @@ public class BlogDetailActivity extends BasicActivity {
 	}
 
 	public void quit(View v) {
-		Intent last = Client.getLastActivity();
-		if (last != null && Client.isFinishingLast(last)) {
-			Client.removeActivity();
-			startActivity(last);
-		}
 		finish();
-	}
-
-	public void sendComment(View v) {
-		FragmentManager fragmanager = getSupportFragmentManager();
-		Fragment commentPage = fragmanager.findFragmentById(R.id.comment_page);
-		if (commentPage != null && commentPage instanceof CommentFragment) {
-			((CommentFragment) commentPage).sendComment();
-		}
 	}
 
 	public void shareBlog(View v) {

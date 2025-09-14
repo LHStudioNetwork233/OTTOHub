@@ -12,8 +12,6 @@ import android.animation.*;
 import android.os.*;
 
 public class BottomDialog extends Dialog {
-	private View root;
-
 	public BottomDialog(Context ctx, View v) {
 		super(ctx);
 		init(v);
@@ -23,29 +21,53 @@ public class BottomDialog extends Dialog {
 		super(ctx, themeResId);
 		init(v);
 	}
+    
+    public BottomDialog(Context ctx, int id) {
+        super(ctx);
+        init(id);
+    }
+
+    public BottomDialog(Context ctx, int id, int themeResId) {
+        super(ctx, themeResId);
+        init(id);
+	}
 
 	private void init(View content) {
-		root = content;
-		requestWindowFeature(1);
-		setContentView(content);
-		Window window = getWindow();
-		window.setFlags(4, 4);
-		if (window != null) {
-			window.setBackgroundDrawableResource(0x0106000d);
-		}
-		window.setGravity(80);
-		WindowManager.LayoutParams attributes = window.getAttributes();
-		attributes.y = 20;
-		attributes.dimAmount = 0.0f;
-		if (Build.VERSION.SDK_INT == 31) {
-			attributes.setBlurBehindRadius(20);
-		}
-		window.setAttributes(attributes);
+        requestWindowFeature(1);
+        if (content != null) {
+            setContentView(content);
+        }
+		init();
 	}
+    
+    private void init(int id) {
+        requestWindowFeature(1);
+        if (id > 0) {
+            setContentView(id);
+        }
+        init();
+    }
+    
+    private void init() {
+        Window window = getWindow();
+        window.setFlags(4, 4);
+        if (window != null) {
+            window.setBackgroundDrawableResource(0x0106000d);
+        }
+        window.setGravity(80);
+        WindowManager.LayoutParams attributes = window.getAttributes();
+        attributes.y = 20;
+        attributes.dimAmount = 0.0f;
+        if (Build.VERSION.SDK_INT == 31) {
+            attributes.setBlurBehindRadius(20);
+        }
+		window.setAttributes(attributes);
+    }
 
     @Override
     public void show() {
         // TODO: Implement this method
+        View root = getContent();
         if(root == null){
             return;
         }
@@ -53,6 +75,10 @@ public class BottomDialog extends Dialog {
         ofFloat.setDuration(1000L);
 		ofFloat.start();
         super.show();
+    }
+    
+    public View getContent() {
+        return findViewById(android.R.id.content);
     }
 }
 

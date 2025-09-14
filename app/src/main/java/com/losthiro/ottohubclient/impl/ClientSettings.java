@@ -159,7 +159,11 @@ public class ClientSettings {
 	}
 
 	public String getString(String name, String def) {
-		return (String) mainfest.getOrDefault(name, def);
+        Object obj = mainfest.getOrDefault(name, def);
+        if (obj == null) {
+            return def;
+        }
+		return obj.toString();
 	}
 
 	public static class SettingPool {
@@ -172,8 +176,10 @@ public class ClientSettings {
 		public static final String PLAYER_IMAGE_DISPLAY = "ottohub/player/image_display";
 
 		public static final String MSG_MARKDOWN_SURPPORT = "ottohub/msg/markdown_surpport";
+        public static final String MSG_AUTO_SAVE = "ottohub/msg/auto_save";
 
 		public static final String SYSTEM_CHECK_PERMISSION = "ottohub/system/permission_check";
+        public static final String SYSTEM_CHECK_CLIPBOARD = "ottohub/system/check_clipboard";
 		public static final String SYSTEM_CLICK_SOUND = "ottohub/system/click_sound";
 		public static final String SYSTEM_SWITCH_THEME = "ottohub/system/switch_theme";
 		public static final String SYSTEM_STORAGE_EDIT = "ottohub/system/storage_edit";

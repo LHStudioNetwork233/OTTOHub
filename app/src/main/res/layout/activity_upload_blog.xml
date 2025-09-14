@@ -36,53 +36,20 @@
 
 	</LinearLayout>
 
-	<EditText
+	<FrameLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:hint="标题不能超过44字"
 		android:layout_margin="10dp"
-		android:id="@+id/blog_upload_title"/>
+		android:id="@+id/blog_upload_title"
+		android:foregroundGravity="bottom"/>
 
-	<EditText
+	<FrameLayout
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:id="@+id/blog_upload_content"
-		android:layout_marginBottom="10dp"
-		android:layout_marginRight="10dp"
-		android:layout_marginLeft="10dp"
-		android:hint="内容不超过8888字"
-		android:gravity="top|start"
-		android:layout_weight="1.0"/>
-
-	<androidx.core.widget.NestedScrollView
-		android:layout_height="match_parent"
-		android:layout_width="match_parent"
-		android:id="@+id/blog_upload_view"
-		android:visibility="gone"
-		android:layout_weight="1.0">
-
-		<LinearLayout
-			android:orientation="vertical"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent">
-
-			<TextView
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:textAppearance="?android:attr/textAppearanceMedium"
-				android:layout_margin="5dp"
-				android:textColor="@color/colorSecondary"
-				android:id="@+id/blog_title"/>
-
-			<com.losthiro.ottohubclient.view.ClientWebView
-				android:layout_height="wrap_content"
-				android:layout_width="match_parent"
-				android:id="@+id/blog_content_view"
-				android:layout_margin="5dp"/>
-
-		</LinearLayout>
-
-	</androidx.core.widget.NestedScrollView>
+		android:layout_weight="1.0"
+		android:layout_margin="10dp"
+		android:foregroundGravity="bottom"/>
 
 	<View
 		android:background="#FFE5E5E5"

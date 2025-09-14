@@ -91,11 +91,6 @@ public class FansActivity extends BasicActivity {
 	@Override
 	protected void onDestroy() {
 		// TODO: Implement this method
-		Intent i = Client.getLastActivity();
-		if (i != null) {
-			Client.removeActivity();
-			startActivity(i);
-		}
 		super.onDestroy();
 	}
 

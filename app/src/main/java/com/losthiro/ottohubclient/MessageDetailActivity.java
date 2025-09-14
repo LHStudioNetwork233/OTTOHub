@@ -83,17 +83,13 @@ public class MessageDetailActivity extends BasicActivity {
         ((TextView)findViewById(R.id.message_time)).setText(time);
         ClientWebView contentView = findViewById(R.id.message_content);
         contentView.setTextData(content.substring(content.indexOf(":") + 1));
+        contentView.setFragmentManager(getSupportFragmentManager());
         contentView.load();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Intent last=Client.getLastActivity();
-        if (last != null && Client.isFinishingLast(last)) {
-            Client.removeActivity();
-            startActivity(last);
-        }
     }
 
     @Override
@@ -159,7 +155,6 @@ public class MessageDetailActivity extends BasicActivity {
     public void sendMsg(View v) {
         AccountManager manager=AccountManager.getInstance(this);
         if (!manager.isLogin()) {
-            Client.saveActivity(getIntent());
             startActivity(new Intent(this, LoginActivity.class));
             return;
         }

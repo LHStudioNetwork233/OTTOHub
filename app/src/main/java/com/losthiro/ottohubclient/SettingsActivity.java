@@ -88,11 +88,6 @@ public class SettingsActivity extends BasicActivity {
 			Log.e(TAG, "release setting failed", e);
 		}
 		super.onDestroy();
-		Intent last = Client.getLastActivity();
-		if (last != null && Client.isFinishingLast(last)) {
-			Client.removeActivity();
-			startActivity(last);
-		}
 		if (mainLog != null) {
 			mainLog.stopLogging();
 		}
@@ -180,7 +175,11 @@ public class SettingsActivity extends BasicActivity {
 			@Override
 			public void run() {
 				// TODO: Implement this method
-				themeDia();
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+					themeDia();
+				} else {
+                    Toast.makeText(getApplication(), "旧版Android不支持切换暗色模式", Toast.LENGTH_SHORT).show();
+                }
 			}
 		});
 		callbacks.putIfAbsent(RequestPermission.TAG, new RequestPermission(this));
@@ -343,20 +342,20 @@ public class SettingsActivity extends BasicActivity {
 		window.setFocusable(false);
 	}
 
-	private void request() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("需要权限");
-		builder.setMessage("请给予应用悬浮窗权限，否则无法启用一些内容");
-		builder.setCancelable(false);
-		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO: Implement this method
-			}
-		});
-		builder.setNegativeButton(android.R.string.cancel, null);
-		builder.create().show();
-	}
+	//	private void request() {
+	//		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	//		builder.setTitle("需要权限");
+	//		builder.setMessage("请给予应用悬浮窗权限，否则无法启用一些内容");
+	//		builder.setCancelable(false);
+	//		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+	//			@Override
+	//			public void onClick(DialogInterface dialog, int which) {
+	//				
+	//			}
+	//		});
+	//		builder.setNegativeButton(android.R.string.cancel, null);
+	//		builder.create().show();
+	//	}
 
 	private void displayDia() {
 		int currentTheme = ClientSettings.getInstance().getInt(ClientSettings.SettingPool.PLAYER_IMAGE_DISPLAY,

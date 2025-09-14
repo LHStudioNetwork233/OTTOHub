@@ -21,10 +21,10 @@ public class ClickSounds {
 		SoundPool sound = soundBuilder.build();
 		sound.load(context, id, 1);
 		sound.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-			@Override
-			public void onLoadComplete(SoundPool sp, int i, int i2) {
-				sp.play(1, 1.0f, 1.0f, 0, 0, 1.0f);
-			}
+                @Override
+                public void onLoadComplete(SoundPool sp, int id, int status) {
+                    sp.play(id, 1.0f, 1.0f, 0, 0, 1.0f);
+                }
 		});
 	}
 

@@ -88,8 +88,6 @@ public class BlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     ClickSounds.playSound(v.getContext());
 					Intent i = new Intent(main, AccountDetailActivity.class);
 					i.putExtra("uid", current.getUID());
-					Intent save = ((Activity) main).getIntent();
-					Client.saveActivity(save);
 					main.startActivity(i);
 				}
 			});
@@ -112,8 +110,6 @@ public class BlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 					Intent i = new Intent(main, BlogDetailActivity.class);
 					i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 					i.putExtra("bid", current.getBID());
-					Intent save = ((Activity) main).getIntent();
-					Client.saveActivity(save);
 					main.startActivity(i);
 				}
 			});

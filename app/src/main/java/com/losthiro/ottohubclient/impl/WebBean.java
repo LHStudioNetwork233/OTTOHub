@@ -30,6 +30,9 @@ import android.webkit.*;
 import org.json.*;
 import com.losthiro.ottohubclient.*;
 import java.util.*;
+import com.losthiro.ottohubclient.ui.*;
+import androidx.fragment.app.*;
+import com.losthiro.ottohubclient.view.*;
 
 /**
  * @Author Hiro
@@ -39,15 +42,14 @@ import java.util.*;
 public class WebBean {
 	public static final String TAG = "WebBean";
 	private Context ctx;
-	private String content = "loading";
+	private String content;
 	private String css;
 	private List<String> scripts = new ArrayList<>();
     private Parser parser;
     private HtmlRenderer renderer;
 
-	public WebBean(Context c, String defaultData) {
+	public WebBean(Context c) {
 		ctx = c;
-		content = defaultData;
         MutableDataSet options = new MutableDataSet();
         options.set(Parser.EXTENSIONS,
                     Arrays.asList(TablesExtension.create(), StrikethroughExtension.create(), TaskListExtension.create(),
@@ -131,13 +133,13 @@ public class WebBean {
 	}
 
 	private String replaceAt(String htmlContent) {
-		Pattern pattern = Pattern.compile("@\\S+[ \n]");
+		Pattern pattern = Pattern.compile("@.*\\s$");
 		Matcher matcher = pattern.matcher(htmlContent);
 		StringBuffer sb = new StringBuffer();
 		while (matcher.find()) {
 			String match = matcher.group();
 			matcher.appendReplacement(sb,
-					"<span class=\"colored-text\" style=\"color:" + getColor("e") + "\">" + match + "</span>");
+					"<span class=\"at-text\">"/* style=\"color:" + getColor("e") + "\">"*/ + match + "</span>");
 		}
 		matcher.appendTail(sb);
 		return sb.toString();
@@ -206,9 +208,9 @@ public class WebBean {
 	}
 
 	@JavascriptInterface
-	public String getData() {
-		if (content.equals("loading")) {
-			return content;
+	public String getData() {//将后端处理的数据传输到前端
+		if (content == null) {
+			return "loading";
 		}
 		String text = content;
 		try {
@@ -220,7 +222,99 @@ public class WebBean {
 		} catch (Exception unuse) {
 			text = replaceText(text);
 		}
-		return replaceLinks(text);
+        text = replaceAt(replaceLinks(text));
+		return text;
 	}
+    
+    public static class ImageBridge{
+        public static final String TAG = "ImageBridge";
+        private FragmentManager mFragment;
+        
+        public ImageBridge(FragmentManager manager) {
+            mFragment = manager;
+        }
+        
+        @JavascriptInterface
+        public boolean isHandle() {//是否启用拦截(待完善)
+            return true;
+        }
+        
+        @JavascriptInterface
+        public void callImageViewer(String uri) {//点击图片唤起大图查看器
+            if (mFragment == null) {
+                return;
+            }
+            ImageViewerFragment.newInstance(uri).show(mFragment, uri);
+        }
+    }
+    
+    public static class VideoBridge {
+        public static final String TAG = "VideoBridge";
+        private ClientVideoView mVideoView;
+        private WebView mContainer;
+        private boolean isPrepared;
+        
+        public VideoBridge(WebView view) {
+            mContainer = view;
+        }
+        
+        //调用顺序
+        //1. window.VideoBridge.initView(video, cover, title);
+        //允许 cover == null 不会影响实际播放
+        //2. window.VideoBridge.enabledWebSurrport(tag);
+        //tag 是你实际要调用的JavaScriptInterface名
+        //是的，我们支持自定义接口名了(最好不要和已有接口同名)
+        
+        //2. window.VideoBridge.enabledWebSurrportDef();
+        //使用默认接口名(ClientVideoBridge)
+        
+        //添加完之后:
+        //window./*你自己的接口名*/.addVideoViewToHTML(width, height, top, left);
+        //width, height : 视图宽高
+        //top : 顶部起始点
+        //left : 左方起始点
+        //可以自定义videoview的插入位置
+        
+        //该类会始终调用，但是如果不设置内容则不启用
+        
+        @JavascriptInterface
+        public void enabledWebSurrport(String tag) {
+            if (!isPrepared) {
+                return;
+            }
+            mVideoView.setWebViewBridge(mContainer, tag);
+        }
+        
+        @JavascriptInterface
+        public void enabledWebSurrportDef() {
+            if (!isPrepared) {
+                return;
+            }
+            mVideoView.setWebViewBridge(mContainer);
+        }
+        
+        @JavascriptInterface
+        public void initView(String videoUri, String posterUri, String title) {
+            if (videoUri == null) {
+                return;
+            }
+            mVideoView = new ClientVideoView(mContainer.getContext());
+            mVideoView.init(videoUri, posterUri, title);
+            isPrepared = true;
+        }
+        
+        @JavascriptInterface
+        public boolean equalTag(String other) {
+            if (other == null) {
+                return false;
+            }
+            return TAG.equals(other);
+        }
+        
+        @JavascriptInterface
+        public boolean isPrepared() {
+            return isPrepared;
+        }
+    }
 }
 

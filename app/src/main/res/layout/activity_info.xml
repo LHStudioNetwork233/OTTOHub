@@ -35,114 +35,124 @@
 
 	</LinearLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:fillViewport="true">
+	<androidx.core.widget.NestedScrollView
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:fillViewport="true">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:gravity="top|center"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent">
+		<LinearLayout
+			android:orientation="vertical"
+			android:gravity="top|center"
+			android:layout_height="match_parent"
+			android:layout_width="match_parent">
 
-            <LinearLayout
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_alignParentLeft="true">
+			<LinearLayout
+				android:gravity="center"
+				android:orientation="horizontal"
+				android:padding="5dp"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="30dp"
+				android:layout_alignParentLeft="true">
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/ic_launcher"
-                    android:layout_marginStart="30dp"/>
+				<ImageView
+					android:layout_width="100dp"
+					android:layout_height="100dp"
+					android:src="@drawable/ic_launcher"
+					android:layout_marginStart="30dp"/>
 
-                <LinearLayout
-                    android:gravity="center|left"
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp">
+				<LinearLayout
+					android:gravity="center|left"
+					android:orientation="vertical"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="20dp">
 
-                    <TextClock
-                        android:textSize="44sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:shadowDx="1.0"
-                        android:shadowDy="1.0"
-                        android:shadowRadius="10.0"
-                        android:format12Hour="hh:mm:ss"
-                        android:format24Hour="HH:mm:ss"
-                        android:textColor="@color/colorSecondary"
-                        android:textStyle="bold"/>
+					<TextClock
+						android:textSize="44sp"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:shadowDx="1.0"
+						android:shadowDy="1.0"
+						android:shadowRadius="10.0"
+						android:format12Hour="hh:mm:ss"
+						android:format24Hour="HH:mm:ss"
+						android:textColor="@color/colorSecondary"
+						android:textStyle="bold"/>
 
-                    <TextClock
-                        android:textSize="11sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:shadowDx="1.0"
-                        android:shadowDy="1.0"
-                        android:shadowRadius="10.0"
-                        android:format12Hour="yyyy.MM.dd  EEa"
-                        android:format24Hour="yyyy.MM.dd  EEa"
-                        android:textColor="@color/colorSecondary"/>
+					<TextClock
+						android:textSize="11sp"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:shadowDx="1.0"
+						android:shadowDy="1.0"
+						android:shadowRadius="10.0"
+						android:format12Hour="yyyy.MM.dd  EEa"
+						android:format24Hour="yyyy.MM.dd  EEa"
+						android:textColor="@color/colorSecondary"/>
 
-                </LinearLayout>
+				</LinearLayout>
 
-            </LinearLayout>
+			</LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="@color/colorAccent"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_marginTop="10dp"
-                android:shadowColor="@color/colorAccent"
-                android:shadowDy="2"
-                android:shadowRadius="4"
-                android:shadowDx="2"
-                android:textStyle="bold"
-                android:textSize="21sp"/>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/app_name"
+				android:textColor="@color/colorAccent"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:layout_marginTop="10dp"
+				android:shadowColor="@color/colorAccent"
+				android:shadowDy="2"
+				android:shadowRadius="4"
+				android:shadowDx="2"
+				android:textStyle="bold"
+				android:textSize="21sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:tag="device_info"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_gravity="start"/>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:tag="device_info"
+				android:layout_marginTop="10dp"
+				android:layout_marginStart="10dp"
+				android:layout_gravity="start"
+				android:textIsSelectable="true"/>
 
-            <TextView
-                android:layout_gravity="start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/infos"
-                android:tag="links"
-                android:linksClickable="true"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"/>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="作者QQ:\n2282336546"
+				android:layout_marginTop="10dp"
+				android:layout_marginStart="10dp"
+				android:layout_gravity="start"
+                android:textIsSelectable="true"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="APP更新日志"
-                android:textStyle="bold"/>
+			<TextView
+				android:layout_gravity="start"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="@string/infos"
+				android:tag="links"
+				android:linksClickable="true"
+				android:layout_marginTop="10dp"
+				android:layout_marginStart="10dp"/>
 
-            <android.webkit.WebView
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:tag="update_log"
-                android:layout_margin="5dp"/>
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="10dp"
+				android:text="APP更新日志"
+				android:textStyle="bold"/>
 
-        </LinearLayout>
+			<android.webkit.WebView
+				android:layout_height="wrap_content"
+				android:layout_width="match_parent"
+				android:tag="update_log"
+				android:layout_margin="5dp"/>
 
-    </androidx.core.widget.NestedScrollView>
+		</LinearLayout>
+
+	</androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
 

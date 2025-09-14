@@ -10,7 +10,7 @@ function loadData() {
     var content = document.getElementById("content");
 
     document.bgColor = window.dataBridge.getColor(0);
-    content.style.color = window.dataBridge.getColor(1);//设置适配颜色
+    content.style.color = window.dataBridge.getColor(1); //设置适配颜色
 
     var intervalId = setInterval(
         function() {
@@ -18,7 +18,8 @@ function loadData() {
             if (data !== "loading") {
                 console.log("onload data " + data);
                 clearInterval(intervalId);
-                content.innerHTML = data;//设置内部HTML
+                content.innerHTML = data; //设置内部HTML
+                onImageClick();
             }
         },
         500);
@@ -40,4 +41,21 @@ function loadScripts() {
             document.body.appendChild(script);
         }
     );
+}
+
+function onImageClick() {
+    if (window.ImageBridge.isHandle()) {
+        var content = document.getElementById("content");
+        var images = content.getElementsByTagName("img");
+        for (var i = 0; i < images.length; i++) {
+            images[i].addEventListener(
+                'click',
+                function(event) {
+                    event.preventDefault();
+                    var imageUrl = this.src;
+                    window.ImageBridge.callImageViewer(imageUrl);
+                },
+                true);
+        }
+    }
 }

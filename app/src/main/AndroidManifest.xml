@@ -5,13 +5,23 @@
     <!--写入/删除您的SD卡中的内容-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!--读取SD卡中的内容-->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission 
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"/>
+    <!-- 读取共享存储空间中的图片文件 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- 从共享存储空间读取音频文件 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <!-- 从共享存储空间读取视频文件 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <!-- 显示通知 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <!-- 拥有完全的网络访问权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 查看网络连接 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 读取剪贴板 -->
+    <uses-permission android:name="android.permission.ACCESS_CLIPBOARD" />
     <!-- 防止手机休眠 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- 运行前台服务 -->
@@ -52,7 +62,7 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/client_shortcut" />
         </activity>
-        
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -71,11 +81,11 @@
         <activity
             android:name=".AccountDetailActivity"
             android:exported="true"/>
-      
+
         <activity
             android:name=".SuscribeActivity"
             android:exported="true"/>
-        
+
         <activity
             android:name=".FansActivity"
             android:exported="true"/>
@@ -111,7 +121,7 @@
                     android:host="play" />
             </intent-filter>
         </activity>
-      
+
         <activity
             android:name=".BlogDetailActivity"
             android:exported="true">
@@ -135,12 +145,12 @@
             android:exported="true"
             android:launchMode="singleInstance"
             android:configChanges="keyboardHidden"/>
-        
+
         <activity
             android:name=".AuditActivity"
             android:exported="true"
             android:launchMode="singleInstance"/>
-        
+
         <activity
             android:name=".AuditViewActivity"
             android:exported="true"
@@ -150,12 +160,12 @@
             android:name=".SettingsActivity"
             android:exported="true"
             android:launchMode="singleInstance"/>
-        
+
         <activity
             android:name=".UploadBlogActivity"
             android:exported="true"
             android:launchMode="singleInstance"/>
-        
+
         <activity
             android:name=".UploadVideoActivity"
             android:exported="true"
@@ -165,7 +175,7 @@
             android:name=".UploadManagerActivity"
             android:exported="true"
             android:launchMode="singleInstance"/>
-        
+
         <activity
             android:name=".InfoActivity"
             android:exported="true"

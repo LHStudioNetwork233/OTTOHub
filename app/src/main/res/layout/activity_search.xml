@@ -100,35 +100,6 @@
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:id="@+id/search_list"/>
-    
-    <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/more_onload"
-        android:visibility="gone">
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="别急，走位中..."
-            android:layout_gravity="center"
-            android:shadowColor="#FFC4C4C4"
-            android:textStyle="bold"
-            android:shadowRadius="4"
-            android:textColor="@color/colorAccent"
-            android:shadowDx="4"
-            android:shadowDy="4"
-            android:layout_marginBottom="10dp"/>
-
-	</LinearLayout>
 
 </LinearLayout>
 

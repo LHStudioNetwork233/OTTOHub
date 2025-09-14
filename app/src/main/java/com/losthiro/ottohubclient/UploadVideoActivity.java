@@ -31,18 +31,21 @@ import java.net.*;
 import android.database.*;
 import com.losthiro.ottohubclient.view.dialog.*;
 import com.losthiro.ottohubclient.adapter.model.*;
+import android.os.Handler;
 
 public class UploadVideoActivity extends BasicActivity {
 	private Uri video;
 	private Uri cover;
 	private int videoCategory = -1;
 	private int videoCopyright = -1;
+	private boolean isOpen = false;
 	private TagAdapter adapter;
 	private ImageView coverView;
 	private TextView text;
 	private TextView info;
 	private Button categoryBtn;
 	private Button typeBtn;
+	private EditText collection;
 	private EditText title;
 	private EditText intro;
 	private EditText tag;
@@ -81,7 +84,7 @@ public class UploadVideoActivity extends BasicActivity {
 			}
 		});
 		info = parent.findViewWithTag("uploader_info");
-
+        collection = findViewById(R.id.edit_video_collection);
 		title = findViewById(R.id.video_upload_title);
 		intro = findViewById(R.id.video_upload_intro);
 		tag = findViewById(R.id.upload_tags_edit);
@@ -104,11 +107,6 @@ public class UploadVideoActivity extends BasicActivity {
 	@Override
 	protected void onDestroy() {
 		// TODO: Implement this method
-		Intent i = Client.getLastActivity();
-		if (i != null) {
-			Client.removeActivity();
-			startActivity(i);
-		}
 		super.onDestroy();
 	}
 
@@ -126,17 +124,17 @@ public class UploadVideoActivity extends BasicActivity {
 		if (data != null && resultCode == RESULT_OK) {
 			if (requestCode == VIDEO_REQUEST_CODE) {
 				video = data.getData();
-                if(checkVideo()){
-                    videoPicker();
-                    return;
-                }
+				if (checkVideo()) {
+					videoPicker();
+					return;
+				}
 				info.setText(getInfo());
 			} else if (requestCode == IMAGE_REQUEST_CODE) {
 				cover = data.getData();
-                if(checkCover()){
-                    coverPicker();
-                    return;
-                }
+				if (checkCover()) {
+					coverPicker();
+					return;
+				}
 				coverView.setImageURI(cover);
 				text.setTextColor(Color.WHITE);
 				text.setBackgroundResource(R.drawable.text_bg);
@@ -256,6 +254,7 @@ public class UploadVideoActivity extends BasicActivity {
 		root.put("video_uri", video.toString());
 		root.put("category", videoCategory);
 		root.put("type", videoCopyright);
+        root.put("collection", collection.getText().toString());
 		root.put("tags", new JSONArray(adapter.getTags()));
 		return root.toString(4);
 	}
@@ -567,8 +566,12 @@ public class UploadVideoActivity extends BasicActivity {
 					HashMap<String, Integer> typeMap = initCopyright();
 					HashMap<String, Integer> categoryMap = initCategorys();
 					JSONObject root = new JSONObject(content);
+                    String collectionName = root.optString("collection");
 					title.setText(root.optString("title", "大家好啊，今天来点大家想看的东西啊"));
 					intro.setText(root.optString("intro", "[填词时间]"));
+                    if (!collectionName.isEmpty()) {
+                        collection.setText(collectionName);
+                    }
 					video = Uri.parse(root.optString("video_uri"));
 					cover = Uri.parse(root.optString("cover_uri"));
 					coverView.setImageURI(cover);
@@ -612,6 +615,68 @@ public class UploadVideoActivity extends BasicActivity {
 		cateDia.show();
 	}
 
+	public void userCollection(View v) {
+		if (v instanceof ImageButton) {
+			isOpen = !isOpen;
+			((ImageButton) v).setImageResource(isOpen ? R.drawable.ic_up : R.drawable.ic_down);
+		}
+		AccountManager manager = AccountManager.getInstance(this);
+		if (isOpen && manager.isLogin()) {
+			NetworkUtils.getNetwork.getNetworkJson(
+					APIManager.CollectionURI.getCollectionListURI(manager.getAccount().getUID()),
+					new NetworkUtils.HTTPCallback() {
+						@Override
+						public void onSuccess(String content) {
+							// TODO: Implement this method
+							try {
+								JSONObject json = new JSONObject(content);
+								if (!json.optString("status").equals("success")) {
+									onFailed(json.optString("message"));
+									return;
+								}
+								JSONArray array = json.optJSONArray("collection_list");
+								final List<String> data = new ArrayList<>();
+								for (int i = 0; i < array.length(); i++) {
+									data.add(array.optString(i));
+								}
+								runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										// TODO: Implement this method
+										Context ctx = UploadVideoActivity.this;
+										ListView content = new ListView(ctx);
+										final BottomDialog collectionDia = new BottomDialog(ctx, content);
+										ArrayAdapter<String> category = new ArrayAdapter<String>(ctx,
+												android.R.layout.simple_list_item_1, data);
+										content.setBackgroundResource(R.drawable.video_card_bg);
+										content.setAdapter(category);
+										content.setOnItemClickListener(new OnItemClickListener() {
+											@Override
+											public void onItemClick(AdapterView<?> parent, View view, int position,
+													long id) {
+												// TODO: Implement this method
+												String current = (String) parent.getItemAtPosition(position);
+												collection.setText(current);
+												collectionDia.dismiss();
+											}
+										});
+										collectionDia.show();
+									}
+								});
+							} catch (Exception e) {
+								onFailed(e.toString());
+							}
+						}
+
+						@Override
+						public void onFailed(String cause) {
+							// TODO: Implement this method
+							Log.e("Network", cause);
+						}
+					});
+		}
+	}
+
 	public void quit(View v) {
 		finish();
 	}
@@ -644,46 +709,46 @@ public class UploadVideoActivity extends BasicActivity {
 				connection.setRequestProperty("Connection", "Keep-Alive");
 				connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
 				// 创建输出流
-                OutputStream outputStream = connection.getOutputStream();
-                PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
-                // 开始发送封面文件
-                writer.append("--" + boundary).append(CRLF);
-                writer.append("Content-Disposition: form-data; name=\"image\"; filename=\"" + file.getName() + "\"")
-                    .append(CRLF);
-                writer.append("Content-Type: image/" + getType(file)).append(CRLF);
-                writer.append(CRLF).flush();
-                InputStream cover = new FileInputStream(file);
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = cover.read(buffer)) != -1) {
-                    outputStream.write(buffer, 0, bytesRead);
-                }
-                outputStream.flush();
-                writer.append(CRLF).flush(); // 封面文件发送完毕
-                // 开始发送视频文件
-                writer.append("--" + boundary).append(CRLF);
-                writer.append("Content-Disposition: form-data; name=\"image\"; filename=\"" + file.getName() + "\"")
-                    .append(CRLF);
-                writer.append("Content-Type: video/" + getType(file)).append(CRLF);
-                writer.append(CRLF).flush();
-                InputStream inputStream = new FileInputStream(file);
-                byte[] buffer2 = new byte[4096];
-                int bytesRead2;
-                while ((bytesRead2 = inputStream.read(buffer2)) != -1) {
-                    outputStream.write(buffer2, 0, bytesRead2);
-                }
-                outputStream.flush();
-                writer.append(CRLF).flush(); // 视频文件发送完毕
-                writer.append("--" + boundary + "--").append(CRLF).flush();
-                requestCode = connection.getResponseCode();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                StringBuilder response = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                reader.close();
-                writer.close();
+				OutputStream outputStream = connection.getOutputStream();
+				PrintWriter writer = new PrintWriter(new OutputStreamWriter(outputStream, "UTF-8"), true);
+				// 开始发送封面文件
+				writer.append("--" + boundary).append(CRLF);
+				writer.append("Content-Disposition: form-data; name=\"image\"; filename=\"" + file.getName() + "\"")
+						.append(CRLF);
+				writer.append("Content-Type: image/" + getType(file)).append(CRLF);
+				writer.append(CRLF).flush();
+				InputStream cover = new FileInputStream(file);
+				byte[] buffer = new byte[4096];
+				int bytesRead;
+				while ((bytesRead = cover.read(buffer)) != -1) {
+					outputStream.write(buffer, 0, bytesRead);
+				}
+				outputStream.flush();
+				writer.append(CRLF).flush(); // 封面文件发送完毕
+				// 开始发送视频文件
+				writer.append("--" + boundary).append(CRLF);
+				writer.append("Content-Disposition: form-data; name=\"image\"; filename=\"" + file.getName() + "\"")
+						.append(CRLF);
+				writer.append("Content-Type: video/" + getType(file)).append(CRLF);
+				writer.append(CRLF).flush();
+				InputStream inputStream = new FileInputStream(file);
+				byte[] buffer2 = new byte[4096];
+				int bytesRead2;
+				while ((bytesRead2 = inputStream.read(buffer2)) != -1) {
+					outputStream.write(buffer2, 0, bytesRead2);
+				}
+				outputStream.flush();
+				writer.append(CRLF).flush(); // 视频文件发送完毕
+				writer.append("--" + boundary + "--").append(CRLF).flush();
+				requestCode = connection.getResponseCode();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				StringBuilder response = new StringBuilder();
+				String line;
+				while ((line = reader.readLine()) != null) {
+					response.append(line);
+				}
+				reader.close();
+				writer.close();
 				outputStream.close();
 				connection.disconnect();
 				return response.toString();

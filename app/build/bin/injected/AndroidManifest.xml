@@ -2,8 +2,8 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.losthiro.ottohubclient"
-	android:versionCode="2025090907"
-	android:versionName="v1.5.0">
+	android:versionCode="2025091408"
+	android:versionName="v1.5.1">
 
 	<uses-sdk
 		android:minSdkVersion="26"
@@ -13,7 +13,17 @@
 		android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
 	<uses-permission
-		android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+		android:name="android.permission.READ_EXTERNAL_STORAGE"
+		android:maxSdkVersion="32"/>
+
+	<uses-permission
+		android:name="android.permission.READ_MEDIA_IMAGES"/>
+
+	<uses-permission
+		android:name="android.permission.READ_MEDIA_AUDIO"/>
+
+	<uses-permission
+		android:name="android.permission.READ_MEDIA_VIDEO"/>
 
 	<uses-permission
 		android:name="android.permission.POST_NOTIFICATIONS"/>
@@ -23,6 +33,9 @@
 
 	<uses-permission
 		android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
+	<uses-permission
+		android:name="android.permission.ACCESS_CLIPBOARD"/>
 
 	<uses-permission
 		android:name="android.permission.WAKE_LOCK"/>

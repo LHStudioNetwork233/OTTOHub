@@ -92,8 +92,7 @@ public class ImageViewerFragment extends DialogFragment implements OnLongClickLi
 	}
 
 	private void imageDia() {
-		View imageDia = getLayoutInflater().inflate(R.layout.dialog_image, null, false);
-		final BottomDialog dialog = new BottomDialog(getContext(), imageDia);
+		final BottomDialog dialog = new BottomDialog(getContext(), R.layout.dialog_image);
 		final AlertDialog progress = new UploadDialog(getContext()).create();
 		final Runnable callback = new Runnable() {
 			@Override
@@ -103,6 +102,10 @@ public class ImageViewerFragment extends DialogFragment implements OnLongClickLi
 				Toast.makeText(getContext(), "下载成功", Toast.LENGTH_SHORT).show();
 			}
 		};
+        View imageDia = dialog.getContent();
+        if (imageDia == null) {
+            return;
+        }
 		if (mListener != null) {
 			TextView upload = imageDia.findViewWithTag("upload_image");
 			upload.setVisibility(View.VISIBLE);

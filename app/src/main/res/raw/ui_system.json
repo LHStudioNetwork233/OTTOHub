@@ -10,6 +10,13 @@
             "icon": "ic_inspection_black"
         },
         {
+            "type": "toggle",
+            "path": "ottohub/system/check_clipboard",
+            "title": "剪贴板检查",
+            "msg": "启动时检查剪贴板是否有可供跳转的地址",
+            "icon": "ic_inspection_black"
+        },
+        {
             "type": "action",
             "path": "ottohub/client/request_permission",
             "title": "申请权限",

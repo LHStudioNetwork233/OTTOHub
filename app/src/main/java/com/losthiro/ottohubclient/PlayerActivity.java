@@ -79,30 +79,29 @@ import com.losthiro.ottohubclient.adapter.page.*;
 import com.losthiro.ottohubclient.ui.*;
 import com.losthiro.ottohubclient.ui.VideoInfoFragment.*;
 import com.losthiro.ottohubclient.impl.*;
+import com.losthiro.ottohubclient.function.*;
 
 /**
  * @Author Hiro
  * @Date 2025/05/23 00:54
  */
-public class PlayerActivity extends BasicActivity implements VideoInfoFragment.OnRequestVideoListener, ScreenRotate.OrientationChangeListener {
+public class PlayerActivity extends BasicActivity
+		implements
+			VideoInfoFragment.OnRequestVideoListener,
+			ScreenRotate.OrientationChangeListener {
 	public static final String TAG = "PlayerActivity";
 	private static final Semaphore request = new Semaphore(1);
 	private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 	private static ClientVideoView main;
-	private static IDanmakuView danmaku;
 	private Button[] pages;
 	private ViewPager videoPage;
 	private BottomDialog danmakuDia;
 	private long vid;
 	private long uid;
 	private boolean isLocal;
-	private boolean isOnInfo = true;
-	private boolean isFullScreen = false;
 	private int videoHeight;
 	private int currentColor;
 	private long firstBackTime;
-	private DanmakuContext controller;
-	private ClientDanmakuParser danmakuParser;
 	private int currentSize;
 	private String danmakuType;
 	private EditText danmakuEdit;
@@ -132,7 +131,7 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 		if (vid == 0) {
 			return;
 		}
-        ScreenRotate.getInstance(getApplication()).setOrientationChangeListener(this);
+		ScreenRotate.getInstance(getApplication()).setOrientationChangeListener(this);
 		Bundle callback = new Bundle();
 		callback.putParcelable("play_callback", getIntent());
 		videoPage = findViewById(R.id.video_player_page);
@@ -175,35 +174,16 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 			});
 		}
 		danmakuEdit = findViewById(R.id.video_danmaku_edit);
-		danmaku = findViewById(R.id.main_danmaku);
-		danmaku.setCallback(new DrawHandler.Callback() {
-			@Override
-			public void prepared() {
-				danmaku.start();
-			}
-
-			@Override
-			public void updateTimer(DanmakuTimer timer) {
-			}
-
-			@Override
-			public void danmakuShown(BaseDanmaku danmaku) {
-			}
-
-			@Override
-			public void drawingFinished() {
-			}
-		});
 		main = findViewById(R.id.main_video_view);
+        main.setThemeColor(ResourceUtils.getColor(R.color.colorAccent));
+        main.setAutoQuit(ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.PLAYER_AUTO_QUIT));
+        main.setVideoImageDisplayType(ClientSettings.getInstance().getInt(ClientSettings.SettingPool.PLAYER_IMAGE_DISPLAY));
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-        ScreenRotate.getInstance(this).stop();
-		if (danmaku != null && danmaku.isPrepared()) {
-			danmaku.pause();
-		}
+		ScreenRotate.getInstance(this).stop();
 		if (main != null
 				&& !ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.PLAYER_BACKGROUND_PLAY)) {
 			main.goOnPlayOnPause();
@@ -213,10 +193,7 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 	@Override
 	protected void onResume() {
 		super.onResume();
-        ScreenRotate.getInstance(this).start(this);
-		if (danmaku != null && danmaku.isPrepared() && danmaku.isPaused()) {
-			danmaku.resume();
-		}
+		ScreenRotate.getInstance(this).start(this);
 		if (main != null
 				&& !ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.PLAYER_BACKGROUND_PLAY)) {
 			main.goOnPlayOnResume();
@@ -226,16 +203,7 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (danmaku != null) {
-			danmaku.release();
-			danmaku = null;
-		}
-		main.releaseAllVideos();
-		Intent last = Client.getLastActivity();
-		if (last != null && Client.isFinishingLast(last)) {
-			Client.removeActivity();
-			startActivity(last);
-		}
+		main.release();
 	}
 
 	@Override
@@ -246,31 +214,9 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 		if (System.currentTimeMillis() - firstBackTime > 2000) {
 			Toast.makeText(this, "再按一次返回键退出播放", Toast.LENGTH_SHORT).show();
 			firstBackTime = System.currentTimeMillis();
-			if (videoPage == null) {
-				return;
-			}
-			PagerAdapter adapter = videoPage.getAdapter();
-			if (adapter == null) {
-				return;
-			}
-			if (adapter instanceof PagesAdapter) {
-				Fragment view = ((PagesAdapter) adapter).getItem(videoPage.getCurrentItem());
-				if (view instanceof CommentFragment) {
-					((CommentFragment) view).onBack();
-				}
-			}
 			return;
 		}
 		super.onBackPressed();
-		if (danmaku != null) {
-			danmaku.release();
-			danmaku = null;
-		}
-		Intent last = Client.getLastActivity();
-		if (last != null && Client.isFinishingLast(last)) {
-			Client.removeActivity();
-			startActivity(last);
-		}
 	}
 
 	@Override
@@ -279,46 +225,42 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 		outState.putInt("video_height", videoHeight);
 	}
 
-    @Override
-    public void orientationChange(int orientation) {
-        if (!ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.PLAYER_AUTO_FULLSCREEN)) {
-            return;
-        }
-        if (Jzvd.CURRENT_JZVD != null
-            && (main.state == Jzvd.STATE_PLAYING || main.state == Jzvd.STATE_PAUSE)
-            && main.screen != Jzvd.SCREEN_TINY) {
-            if (orientation >= 45 && orientation <= 315 && main.screen == Jzvd.SCREEN_NORMAL) {
-                toFullScreen(ScreenRotate.orientationDirection);
-            } else if (((orientation >= 0 && orientation < 45) || orientation > 315) && main.screen == Jzvd.SCREEN_FULLSCREEN) {
-                toNormalScreen();
-            }
-        }
-    }
-    
+	@Override
+	public void orientationChange(int orientation) {
+		if (!ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.PLAYER_AUTO_FULLSCREEN)) {
+			return;
+		}
+		if (Jzvd.CURRENT_JZVD != null && (main.state == Jzvd.STATE_PLAYING || main.state == Jzvd.STATE_PAUSE)
+				&& main.screen != Jzvd.SCREEN_TINY) {
+			if (orientation >= 45 && orientation <= 315 && main.screen == Jzvd.SCREEN_NORMAL) {
+				toFullScreen(ScreenRotate.orientationDirection);
+			} else if (((orientation >= 0 && orientation < 45) || orientation > 315)
+					&& main.screen == Jzvd.SCREEN_FULLSCREEN) {
+				toNormalScreen();
+			}
+		}
+	}
+
 	@Override
 	public void onSuccess(final VideoInfoFragment.VideoInfo current, String title, long id) {
 		// TODO: Implement this method
 		uid = id;
 		main.init(current, title, isLocal);
-		main.post(new Runnable() {
+		main.mVideoShare.setOnClickListener(new OnClickListener() {
 			@Override
-			public void run() {
-				View parent = (View) main.getParent();
-				if (parent != null) {
-					videoHeight = main.getHeight();
-					ViewGroup.LayoutParams params = parent.getLayoutParams();
-					params.height = videoHeight;
-					parent.setLayoutParams(params);
-				}
-				JSONArray array = null;
-				try {
-					array = current.getDanmakuList(PlayerActivity.this);
-				} catch (JSONException unuse) {
-				}
-				loadDanmaku(array);
-				main.startVideoAfterPreloading();
+			public void onClick(View v) {
+				// TODO: Implement this method
+				String msg = StringUtils.strCat("OTTOHub邀请你来看视频啦~\n点击下方链接跳转哦↓\nhttps://m.ottohub.cn/v/",
+						StringUtils.toStr(vid));
+				new Share(PlayerActivity.this, msg).run();
 			}
 		});
+        JSONArray array = null;
+        try {
+            array = current.getDanmakuList(PlayerActivity.this);
+        } catch (JSONException unuse) {
+        }
+        loadDanmaku(array);
 	}
 
 	private FragmentStatePagerAdapter initPage(long vid, String rootPath) {
@@ -338,21 +280,9 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 	}
 
 	private void loadDanmaku(JSONArray array) {
-		HashMap<Integer, Integer> maxLinesPair = new HashMap<Integer, Integer>();
-		maxLinesPair.put(BaseDanmaku.TYPE_SCROLL_LR, 5);
-		HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<Integer, Boolean>();
-		overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_LR, true);
-		overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);
-		controller = DanmakuContext.create();
-		controller.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3);
-		controller.setDuplicateMergingEnabled(false);
-		controller.setScrollSpeedFactor(1.2f);
-		controller.setScaleTextSize(1.2f);
-		controller.setMaximumLines(maxLinesPair);
-		controller.preventOverlapping(overlappingEnablePair);
-		controller.setDanmakuMargin(40);
 		if (isLocal && array != null) {
-			danmaku.prepare(new ClientDanmakuParser(array), controller);
+			main.initDanmaku(new ClientDanmakuParser(array));
+			main.startVideoAfterPreloading();
 		} else {
 			NetworkUtils.getNetwork.getNetworkJson(APIManager.DanmakuURI.getListURI(vid),
 					new NetworkUtils.HTTPCallback() {
@@ -376,8 +306,8 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 								mainHandler.post(new Runnable() {
 									@Override
 									public void run() {
-										danmakuParser = new ClientDanmakuParser(root.optJSONArray("data"));
-										danmaku.prepare(danmakuParser, controller);
+										main.initDanmaku(new ClientDanmakuParser(root.optJSONArray("data")));
+										main.startVideoAfterPreloading();
 									}
 								});
 							} catch (JSONException e) {
@@ -394,38 +324,59 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 	}
 
 	private void updatePage(int index) {
+		FragmentManager manager = getSupportFragmentManager();
+		FragmentTransaction tran = manager.beginTransaction();
+		Fragment edit = manager.findFragmentById(R.id.comment_edit_view);
+		final Fragment current = ((PagesAdapter) videoPage.getAdapter()).getItem(index);
+		if (current instanceof CommentFragment && edit == null) {
+			Bundle arg = current.getArguments();
+			if (arg != null) {
+				long id = arg.getLong("id");
+				int type = arg.getInt("type");
+				CommentEditFragment page = CommentEditFragment.newInstance(id, 0, type);
+				page.setSendCallback(new Runnable() {
+					@Override
+					public void run() {
+						// TODO: Implement this method
+						((CommentFragment) current).loadComment(true);
+					}
+				});
+				tran.add(R.id.comment_edit_view, page);
+			}
+		} else {
+			tran.remove(edit);
+		}
+		tran.commit();
 		for (int i = 0; i < pages.length; i++) {
 			pages[i].setTextColor(i == index
 					? ResourceUtils.getColor(R.color.colorAccent)
 					: ResourceUtils.getColor(R.color.text_color));
 		}
 	}
-    
-    private void toFullScreen(float x) {
-        if (main != null && main.screen != Jzvd.SCREEN_FULLSCREEN) {
-            if ((System.currentTimeMillis() - Jzvd.lastAutoFullscreenTime) > 2000) {
-                main.autoFullscreen(x);
-                Jzvd.lastAutoFullscreenTime = System.currentTimeMillis();
-            }
-        }
-    }
-    
-    private void toNormalScreen() {
-        if (main != null && main.screen == Jzvd.SCREEN_FULLSCREEN) {
-            main.autoQuitFullscreen();
-        }
-    }
+
+	private void toFullScreen(float x) {
+		if (main != null && main.screen != Jzvd.SCREEN_FULLSCREEN) {
+			if ((System.currentTimeMillis() - Jzvd.lastAutoFullscreenTime) > 2000) {
+				main.autoFullscreen(x);
+				Jzvd.lastAutoFullscreenTime = System.currentTimeMillis();
+			}
+		}
+	}
+
+	private void toNormalScreen() {
+		if (main != null && main.screen == Jzvd.SCREEN_FULLSCREEN) {
+			main.autoQuitFullscreen();
+		}
+	}
 
 	public void switchDanmaku(View v) {
-		if (danmaku != null) {
-			if (danmaku.getView().getVisibility() == View.VISIBLE) {
-				((Button) v).setTextColor(Color.GRAY);
-				danmaku.setVisibility(View.GONE);
-				return;
-			}
-			((Button) v).setTextColor(ResourceUtils.getColor(R.color.colorAccent));
-			danmaku.setVisibility(View.VISIBLE);
+		if (main.isShowDanmaku()) {
+			((Button) v).setTextColor(Color.GRAY);
+			main.hideDanmaku();
+			return;
 		}
+		((Button) v).setTextColor(ResourceUtils.getColor(R.color.colorAccent));
+		main.showDanmaku();
 	}
 
 	public void userDetail(View v) {
@@ -434,7 +385,6 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 		}
 		Intent i = new Intent(PlayerActivity.this, AccountDetailActivity.class);
 		i.putExtra("uid", uid);
-		Client.saveActivity(getIntent());
 		startActivity(i);
 	}
 
@@ -475,7 +425,6 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 			}
 		});
 		main.goOnPlayOnPause();
-		danmaku.pause();
 		danmakuType = "scroll";
 		currentColor = Color.WHITE;
 		currentSize = 10;
@@ -580,22 +529,22 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 						if (danmakuType.equals("top")) {
 							type = BaseDanmaku.TYPE_FIX_TOP;
 						}
-						final BaseDanmaku data = controller.mDanmakuFactory.createDanmaku(type);
-						if (data == null || danmaku == null) {
+						final BaseDanmaku data = main.getDanmakuController().mDanmakuFactory.createDanmaku(type);
+						if (data == null) {
 							return;
 						}
 						data.text = danmakuContent;
 						data.padding = 5;
 						data.priority = 1;
 						data.setTime((long) pos);
-						data.textSize = currentSize * (danmakuParser.getDisplayer().getDensity() - 0.6f);
+						data.textSize = currentSize * (main.getDanmakuParser().getDisplayer().getDensity() - 0.6f);
 						data.textColor = currentColor;
 						data.textShadowColor = currentColor <= Color.BLACK ? Color.WHITE : Color.BLACK;
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
 								// TODO: Implement this method
-								danmaku.addDanmaku(data);
+								main.addNewDanmaku(data);
 								Toast.makeText(getApplication(), "发送成功", Toast.LENGTH_SHORT).show();
 							}
 						});
@@ -613,19 +562,7 @@ public class PlayerActivity extends BasicActivity implements VideoInfoFragment.O
 				Log.e("Network", cause);
 			}
 		});
-		danmaku.resume();
 		main.goOnPlayOnResume();
-	}
-
-	public void sendComment(View v) {
-		PagesAdapter adapter = (PagesAdapter) videoPage.getAdapter();
-		if (adapter == null) {
-			return;
-		}
-		Fragment current = adapter.getItem(videoPage.getCurrentItem());
-		if (current instanceof CommentFragment) {
-			((CommentFragment) current).sendComment();
-		}
 	}
 
 	public void downloadVideo(View v) {

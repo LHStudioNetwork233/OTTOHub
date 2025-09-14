@@ -34,7 +34,7 @@ public class ResourceUtils {
 	}
 
 	public static int getColor(int resID) {
-		return getColor(Client.getCurrentActivity(c), resID);
+		return getColor(MainActivity.activity.get(), resID);
 	}
     
     public static int getColor(Activity act, int resID) {

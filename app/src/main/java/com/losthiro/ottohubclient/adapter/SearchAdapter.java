@@ -98,8 +98,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                             Intent i=new Intent(main, AccountDetailActivity.class);
                             i.putExtra("uid", currentUser.getUID());
                             i.putExtra("avatar", currentUser.getAvatarURI());
-                            Intent save=((Activity)main).getIntent();
-                            Client.saveActivity(save);
                             main.startActivity(i);
                         }
                     });
@@ -116,8 +114,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                             ClickSounds.playSound(v.getContext());
                             Intent i=new Intent(main, AccountDetailActivity.class);
                             i.putExtra("uid", currentBlog.getUID());
-                            Intent save=((Activity)main).getIntent();
-                            Client.saveActivity(save);
                             main.startActivity(i);
                         }
                     });
@@ -145,8 +141,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                             Intent i=new Intent(main, BlogDetailActivity.class);
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             i.putExtra("bid", currentBlog.getBID());
-                            Intent save=((Activity)main).getIntent();
-                            Client.saveActivity(save);
                             main.startActivity(i);
                         }
                     });
@@ -175,8 +169,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                             Intent i=new Intent(main, PlayerActivity.class);
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             i.putExtra("vid", currentVideo.getVID());
-                            Intent save=((Activity)main).getIntent();
-                            Client.saveActivity(save);
                             main.startActivity(i);
                         }
                     });

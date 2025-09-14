@@ -1,4 +1,4 @@
-# view res/layout/activity_info.xml #generated:137
+# view res/layout/activity_info.xml #generated:147
 -keep class android.webkit.WebView { <init>(...); }
 
 # view res/layout/abc_alert_dialog_button_bar_material.xml #generated:43
@@ -75,10 +75,10 @@
 
 # view res/layout/abc_alert_dialog_material.xml #generated:41
 # view res/layout/activity_audit_view.xml #generated:43
-# view res/layout/activity_blog_detail.xml #generated:64
+# view res/layout/activity_blog_detail.xml #generated:68
 # view res/layout/activity_info.xml #generated:38
 # view res/layout/activity_message_detail.xml #generated:77
-# view res/layout/activity_upload_blog.xml #generated:57
+# view res/layout/fragment_blog_preview.xml #generated:6
 -keep class androidx.core.widget.NestedScrollView { <init>(...); }
 
 # view res/layout/activity_blog_detail.xml #generated:2
@@ -94,11 +94,11 @@
 # view res/layout/activity_suscribe.xml #generated:44
 # view res/layout/activity_upload_manager.xml #generated:102
 # view res/layout/activity_upload_video.xml #generated:93
-# view res/layout/dialog_child_comment.xml #generated:33
+# view res/layout/dialog_child_comment.xml #generated:38
 # view res/layout/fragment_account.xml #generated:184
 # view res/layout/fragment_account.xml #generated:82
 # view res/layout/fragment_blogs.xml #generated:123
-# view res/layout/fragment_comment_list.xml #generated:16
+# view res/layout/fragment_comment_list.xml #generated:15
 # view res/layout/fragment_profile.xml #generated:8
 # view res/layout/fragment_user.xml #generated:97
 # view res/layout/fragment_user_favourite.xml #generated:47
@@ -107,7 +107,7 @@
 # view res/layout/fragment_video_info.xml #generated:206
 # view res/layout/fragment_video_info.xml #generated:39
 # view res/layout/fragment_videos.xml #generated:300
-# view res/layout/list_comment.xml #generated:34
+# view res/layout/list_comment.xml #generated:35
 # view res/layout/window_account_switch.xml #generated:30
 -keep class androidx.recyclerview.widget.RecyclerView { <init>(...); }
 
@@ -125,7 +125,7 @@
 -keep class androidx.swiperefreshlayout.widget.SwipeRefreshLayout { <init>(...); }
 
 # view res/layout/activity_main.xml #generated:18
-# view res/layout/activity_player.xml #generated:109
+# view res/layout/activity_player.xml #generated:113
 # view res/layout/fragment_user.xml #generated:270
 # view res/layout/fragment_videos.xml #generated:266
 -keep class androidx.viewpager.widget.ViewPager { <init>(...); }
@@ -133,64 +133,64 @@
 # view res/layout/fragment_image_viewer.xml #generated:8
 -keep class com.github.chrisbanes.photoview.PhotoView { <init>(...); }
 
-# view AndroidManifest.xml #generated:70
+# view AndroidManifest.xml #generated:76
 -keep class com.losthiro.ottohubclient.AccountDetailActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:135
+# view AndroidManifest.xml #generated:141
 -keep class com.losthiro.ottohubclient.AuditActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:139
+# view AndroidManifest.xml #generated:145
 -keep class com.losthiro.ottohubclient.AuditViewActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:110
+# view AndroidManifest.xml #generated:116
 -keep class com.losthiro.ottohubclient.BlogDetailActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:20
+# view AndroidManifest.xml #generated:26
 -keep class com.losthiro.ottohubclient.Client { <init>(...); }
 
-# view AndroidManifest.xml #generated:163
+# view AndroidManifest.xml #generated:169
 -keep class com.losthiro.ottohubclient.ErrorActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:76
+# view AndroidManifest.xml #generated:82
 -keep class com.losthiro.ottohubclient.FansActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:159
+# view AndroidManifest.xml #generated:165
 -keep class com.losthiro.ottohubclient.InfoActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:66
+# view AndroidManifest.xml #generated:72
 -keep class com.losthiro.ottohubclient.LoginActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:57
+# view AndroidManifest.xml #generated:63
 -keep class com.losthiro.ottohubclient.MainActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:79
+# view AndroidManifest.xml #generated:85
 -keep class com.losthiro.ottohubclient.MessageActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:83
+# view AndroidManifest.xml #generated:89
 -keep class com.losthiro.ottohubclient.MessageDetailActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:87
+# view AndroidManifest.xml #generated:93
 -keep class com.losthiro.ottohubclient.PlayerActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:130
+# view AndroidManifest.xml #generated:136
 -keep class com.losthiro.ottohubclient.SearchActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:143
+# view AndroidManifest.xml #generated:149
 -keep class com.losthiro.ottohubclient.SettingsActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:32
+# view AndroidManifest.xml #generated:38
 -keep class com.losthiro.ottohubclient.SplashActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:73
+# view AndroidManifest.xml #generated:79
 -keep class com.losthiro.ottohubclient.SuscribeActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:147
+# view AndroidManifest.xml #generated:153
 -keep class com.losthiro.ottohubclient.UploadBlogActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:155
+# view AndroidManifest.xml #generated:161
 -keep class com.losthiro.ottohubclient.UploadManagerActivity { <init>(...); }
 
-# view AndroidManifest.xml #generated:151
+# view AndroidManifest.xml #generated:157
 -keep class com.losthiro.ottohubclient.UploadVideoActivity { <init>(...); }
 
 # view res/layout/list_video.xml #generated:2
@@ -205,10 +205,10 @@
 -keep class com.losthiro.ottohubclient.view.ClientVideoView { <init>(...); }
 
 # view res/layout/activity_audit_view.xml #generated:74
-# view res/layout/activity_blog_detail.xml #generated:90
+# view res/layout/activity_blog_detail.xml #generated:94
 # view res/layout/activity_message_detail.xml #generated:86
-# view res/layout/activity_upload_blog.xml #generated:77
-# view res/layout/list_comment.xml #generated:43
+# view res/layout/fragment_blog_preview.xml #generated:24
+# view res/layout/list_comment.xml #generated:44
 -keep class com.losthiro.ottohubclient.view.ClientWebView { <init>(...); }
 
 # view res/layout/fragment_account.xml #generated:30
@@ -222,7 +222,7 @@
 -keep class com.losthiro.ottohubclient.view.JVMListenerText { <init>(...); }
 
 # view res/layout/activity_player.xml #generated:81
-# view res/layout/fragment_comment_list.xml #generated:35
+# view res/layout/fragment_comment_edit.xml #generated:14
 -keep class com.losthiro.ottohubclient.view.RandomTextEdit { <init>(...); }
 
 # view res/layout/activity_blog_detail.xml #generated:28
@@ -237,7 +237,7 @@
 # view res/layout/list_account.xml #generated:18
 # view res/layout/list_blog.xml #generated:9
 # view res/layout/list_blog_manager.xml #generated:9
-# view res/layout/list_comment.xml #generated:9
+# view res/layout/list_comment.xml #generated:10
 # view res/layout/list_user.xml #generated:13
 # view res/layout/list_video.xml #generated:60
 -keep class com.losthiro.ottohubclient.view.RoundImageView { <init>(...); }
@@ -265,10 +265,10 @@
 # onClick res/layout/window_account_switch.xml #generated:36
 -keepclassmembers class * { *** addAccount(...); }
 
-# onClick res/layout/activity_upload_blog.xml #generated:142
+# onClick res/layout/activity_upload_blog.xml #generated:101
 -keepclassmembers class * { *** addImage(...); }
 
-# onClick res/layout/activity_upload_blog.xml #generated:125
+# onClick res/layout/activity_upload_blog.xml #generated:84
 -keepclassmembers class * { *** addImageURI(...); }
 
 # onClick res/layout/activity_upload_video.xml #generated:111
@@ -338,7 +338,7 @@
 # onClick res/layout/activity_audit_view.xml #generated:197
 -keepclassmembers class * { *** rejectCurrent(...); }
 
-# onClick res/layout/activity_blog_detail.xml #generated:175
+# onClick res/layout/activity_blog_detail.xml #generated:179
 -keepclassmembers class * { *** reportBlog(...); }
 
 # onClick res/layout/fragment_video_info.xml #generated:101
@@ -353,7 +353,7 @@
 # onClick res/layout/activity_error.xml #generated:26
 -keepclassmembers class * { *** restart_client(...); }
 
-# onClick res/layout/activity_upload_blog.xml #generated:154
+# onClick res/layout/activity_upload_blog.xml #generated:113
 -keepclassmembers class * { *** saveCurrent(...); }
 
 # onClick res/layout/activity_settings.xml #generated:162
@@ -371,11 +371,8 @@
 # onClick res/layout/activity_settings.xml #generated:181
 -keepclassmembers class * { *** sendApp(...); }
 
-# onClick res/layout/activity_upload_blog.xml #generated:168
+# onClick res/layout/activity_upload_blog.xml #generated:127
 -keepclassmembers class * { *** sendBlog(...); }
-
-# onClick res/layout/fragment_comment_list.xml #generated:43
--keepclassmembers class * { *** sendComment(...); }
 
 # onClick res/layout/dialog_color_picker.xml #generated:14
 -keepclassmembers class * { *** sendDanmaku(...); }
@@ -399,10 +396,10 @@
 # onClick res/layout/activity_settings.xml #generated:175
 -keepclassmembers class * { *** sendWeb(...); }
 
-# onClick res/layout/activity_blog_detail.xml #generated:152
+# onClick res/layout/activity_blog_detail.xml #generated:156
 -keepclassmembers class * { *** shareBlog(...); }
 
-# onClick res/layout/activity_blog_detail.xml #generated:241
+# onClick res/layout/activity_blog_detail.xml #generated:253
 # onClick res/layout/activity_main.xml #generated:124
 -keepclassmembers class * { *** switchAccountDia(...); }
 

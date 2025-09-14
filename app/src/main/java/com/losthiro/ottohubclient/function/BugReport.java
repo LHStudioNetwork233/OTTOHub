@@ -47,7 +47,6 @@ public class BugReport implements Runnable {
     private void send(String text) {
         AccountManager manager = AccountManager.getInstance(mContext);
         if (!manager.isLogin()) {
-            Client.saveActivity(((Activity)mContext).getIntent());
             mContext.startActivity(new Intent(mContext, LoginActivity.class));
             return;
         }

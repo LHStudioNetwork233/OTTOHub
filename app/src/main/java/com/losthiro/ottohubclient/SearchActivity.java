@@ -56,7 +56,6 @@ public class SearchActivity extends BasicActivity {
     private static final Semaphore request=new Semaphore(1);
     private static final HashMap<Integer, Integer> offsetMap = new HashMap<>();
     private LinearLayout searchCategorys;
-    private LinearLayout onloadView;
     private RecyclerView searchCallback;
     private ListView searchHistory;
     private SearchView search;
@@ -80,7 +79,6 @@ public class SearchActivity extends BasicActivity {
                     if (manager.isLogin()) {
                         Toast.makeText(getApplication(), "登录完了还点干嘛", Toast.LENGTH_SHORT).show();
                     } else {
-                        Client.saveActivity(getIntent());
                         startActivity(new Intent(SearchActivity.this, LoginActivity.class));
                     }
                 }
@@ -133,7 +131,6 @@ public class SearchActivity extends BasicActivity {
                     searchRequest(current);
                 }
             });
-        onloadView = findViewById(R.id.more_onload);
         searchCategorys = findViewById(R.id.search_categorys);
         searchCategorys.setVisibility(View.GONE);
         initCategory();
@@ -175,11 +172,6 @@ public class SearchActivity extends BasicActivity {
     @Override
     protected void onDestroy() {
         saveHistory(this);
-        Intent last=Client.getLastActivity();
-        if (last != null && Client.isFinishingLast(last)) {
-            Client.removeActivity();
-            startActivity(last);
-        }
         super.onDestroy();
     }
 
@@ -211,7 +203,6 @@ public class SearchActivity extends BasicActivity {
                         itemCount = view.getLayoutManager().getItemCount();
                         lastPos = ((LinearLayoutManager)view.getLayoutManager()).findLastVisibleItemPosition();
                         if (lastPos >= itemCount - 1) {
-                            onloadView.setVisibility(View.VISIBLE);
                             requestCategory(query, false);
                         }
                     }
@@ -227,7 +218,6 @@ public class SearchActivity extends BasicActivity {
             Intent i=new Intent(this, BlogDetailActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             i.putExtra("bid", str.findID("(?i)(bid|ob)\\s*"));
-            Client.saveActivity(getIntent());
             startActivity(i);
             return;
         }
@@ -235,14 +225,12 @@ public class SearchActivity extends BasicActivity {
             Intent i=new Intent(this, PlayerActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             i.putExtra("vid", str.findID("(?i)(vid|ov)\\s*"));
-            Client.saveActivity(Client.getCurrentActivity(this).getIntent());
             startActivity(i);
             return;
         }
         if (query.contains("OU") || query.contains("ou") || query.contains("uid") || query.contains("UID")) {
             Intent i=new Intent(this, AccountDetailActivity.class);
             i.putExtra("uid", str.findID("(?i)(uid|ou)\\s*"));
-            Client.saveActivity(getIntent());
             startActivity(i);
             return;
         }
@@ -300,7 +288,6 @@ public class SearchActivity extends BasicActivity {
                                                     adapter.setData(data);
                                                     return;
                                                 }
-                                                onloadView.setVisibility(View.GONE);
                                                 adapter.addNewData(data);
                                             }
                                         });
@@ -345,7 +332,6 @@ public class SearchActivity extends BasicActivity {
                                                     adapter.setData(data);
                                                     return;
                                                 }
-                                                onloadView.setVisibility(View.GONE);
                                                 adapter.addNewData(data);
                                             }
                                         });
@@ -390,7 +376,6 @@ public class SearchActivity extends BasicActivity {
                                                     adapter.setData(data);
                                                     return;
                                                 }
-                                                onloadView.setVisibility(View.GONE);
                                                 adapter.addNewData(data);
                                             }
                                         });
@@ -499,7 +484,6 @@ public class SearchActivity extends BasicActivity {
                                         runOnUiThread(new Runnable(){
                                                 @Override
                                                 public void run() {
-                                                    onloadView.setVisibility(View.GONE);
                                                     adapter.addNewData(data);
                                                 }
                                             });

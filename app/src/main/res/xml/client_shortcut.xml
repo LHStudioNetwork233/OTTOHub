@@ -12,4 +12,16 @@
             android:action="android.intent.action.MAIN"
             android:targetClass="com.losthiro.ottohubclient.SettingsActivity" />
     </shortcut>
+    <shortcut
+        android:icon="@drawable/ic_search_black"
+        android:enabled="true"
+        android:shortcutId="search"
+        android:shortcutShortLabel="@string/label_search"
+        android:shortcutLongLabel="@string/label_search">
+        <categories android:name="android.intent.category.LAUNCHER" />
+        <intent
+            android:targetPackage="com.losthiro.ottohubclient"
+            android:action="android.intent.action.MAIN"
+            android:targetClass="com.losthiro.ottohubclient.SearchActivity" />
+    </shortcut>
 </shortcuts>

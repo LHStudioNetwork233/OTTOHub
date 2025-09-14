@@ -1,46 +1,46 @@
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:20
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:26
 -keep class androidx.core.app.CoreComponentFactory { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:70
--keep class com.losthiro.ottohubclient.AccountDetailActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:135
--keep class com.losthiro.ottohubclient.AuditActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:139
--keep class com.losthiro.ottohubclient.AuditViewActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:110
--keep class com.losthiro.ottohubclient.BlogDetailActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:20
--keep class com.losthiro.ottohubclient.Client { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:163
--keep class com.losthiro.ottohubclient.ErrorActivity { <init>(); }
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:76
+-keep class com.losthiro.ottohubclient.AccountDetailActivity { <init>(); }
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:141
+-keep class com.losthiro.ottohubclient.AuditActivity { <init>(); }
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:145
+-keep class com.losthiro.ottohubclient.AuditViewActivity { <init>(); }
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:116
+-keep class com.losthiro.ottohubclient.BlogDetailActivity { <init>(); }
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:26
+-keep class com.losthiro.ottohubclient.Client { <init>(); }
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:169
+-keep class com.losthiro.ottohubclient.ErrorActivity { <init>(); }
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:82
 -keep class com.losthiro.ottohubclient.FansActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:159
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:165
 -keep class com.losthiro.ottohubclient.InfoActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:66
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:72
 -keep class com.losthiro.ottohubclient.LoginActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:57
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:63
 -keep class com.losthiro.ottohubclient.MainActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:79
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:85
 -keep class com.losthiro.ottohubclient.MessageActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:83
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:89
 -keep class com.losthiro.ottohubclient.MessageDetailActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:87
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:93
 -keep class com.losthiro.ottohubclient.PlayerActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:130
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:136
 -keep class com.losthiro.ottohubclient.SearchActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:143
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:149
 -keep class com.losthiro.ottohubclient.SettingsActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:32
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:38
 -keep class com.losthiro.ottohubclient.SplashActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:73
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:79
 -keep class com.losthiro.ottohubclient.SuscribeActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:147
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:153
 -keep class com.losthiro.ottohubclient.UploadBlogActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:155
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:161
 -keep class com.losthiro.ottohubclient.UploadManagerActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:151
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/build/bin/merged/AndroidManifest.xml:157
 -keep class com.losthiro.ottohubclient.UploadVideoActivity { <init>(); }
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_info.xml:137
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_info.xml:147
 -keep class android.webkit.WebView { <init>(...); }
 
 # Referenced at /storage/emulated/0/.aide/maven/androidx/appcompat/appcompat/1.0.0/appcompat-1.0.0.exploded.aar/res/layout/abc_alert_dialog_button_bar_material.xml:43
@@ -109,10 +109,10 @@
 
 # Referenced at /storage/emulated/0/.aide/maven/androidx/appcompat/appcompat/1.0.0/appcompat-1.0.0.exploded.aar/res/layout/abc_alert_dialog_material.xml:41
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_audit_view.xml:43
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:64
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:68
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_info.xml:38
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_message_detail.xml:77
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_blog.xml:57
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_blog_preview.xml:6
 -keep class androidx.core.widget.NestedScrollView { <init>(...); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:2
@@ -128,17 +128,18 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_suscribe.xml:44
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_manager.xml:102
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_video.xml:93
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_child_comment.xml:33
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_child_comment.xml:38
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_video_collection.xml:32
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_account.xml:82
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_blogs.xml:123
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_comment_list.xml:16
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_comment_list.xml:15
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_profile.xml:8
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_user.xml:97
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_user_favourite.xml:47
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_user_list.xml:13
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_video_info.xml:39
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_video_info.xml:41
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_videos.xml:300
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_comment.xml:34
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_comment.xml:35
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/window_account_switch.xml:30
 -keep class androidx.recyclerview.widget.RecyclerView { <init>(...); }
 
@@ -156,7 +157,7 @@
 -keep class androidx.swiperefreshlayout.widget.SwipeRefreshLayout { <init>(...); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_main.xml:18
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:109
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:100
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_user.xml:270
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_videos.xml:266
 -keep class androidx.viewpager.widget.ViewPager { <init>(...); }
@@ -172,14 +173,14 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_color_picker.xml:99
 -keep class com.losthiro.ottohubclient.view.ClientColorPicker { <init>(...); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:17
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:9
 -keep class com.losthiro.ottohubclient.view.ClientVideoView { <init>(...); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_audit_view.xml:74
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:90
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:94
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_message_detail.xml:86
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_blog.xml:77
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_comment.xml:43
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_blog_preview.xml:24
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_comment.xml:44
 -keep class com.losthiro.ottohubclient.view.ClientWebView { <init>(...); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_account.xml:30
@@ -192,8 +193,8 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/window_info.xml:38
 -keep class com.losthiro.ottohubclient.view.JVMListenerText { <init>(...); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:81
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_comment_list.xml:35
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:68
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_comment_edit.xml:14
 -keep class com.losthiro.ottohubclient.view.RandomTextEdit { <init>(...); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:28
@@ -202,16 +203,17 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_search.xml:28
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_blogs.xml:31
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_user.xml:23
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_video_info.xml:158
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_video_info.xml:160
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_videos.xml:86
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_account.xml:18
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_blog.xml:9
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_blog_manager.xml:9
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_comment.xml:9
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_comment.xml:10
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_user.xml:13
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_video.xml:60
 -keep class com.losthiro.ottohubclient.view.RoundImageView { <init>(...); }
 
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_video_info.xml:211
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_blog.xml:16
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_blog_manager.xml:16
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/list_video.xml:69
@@ -223,7 +225,7 @@
 -keep class com.losthiro.ottohubclient.view.WaveView { <init>(...); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_login.xml:8
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:23
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/view_video_player.xml:302
 -keep class master.flame.danmaku.ui.widget.DanmakuView { <init>(...); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_splash.xml:30
@@ -233,10 +235,10 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/window_account_switch.xml:36
 -keepclassmembers class * { *** addAccount(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_blog.xml:142
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_blog.xml:109
 -keepclassmembers class * { *** addImage(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_blog.xml:125
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_blog.xml:92
 -keepclassmembers class * { *** addImageURI(android.view.View); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_video.xml:111
@@ -248,7 +250,7 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_video.xml:123
 -keepclassmembers class * { *** clearTags(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_video_info.xml:124
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_video_info.xml:126
 -keepclassmembers class * { *** downloadVideo(android.view.View); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_error.xml:38
@@ -266,7 +268,7 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_user_favourite.xml:19
 -keepclassmembers class * { *** loadFavoriteVideo(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_video.xml:300
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_video.xml:345
 -keepclassmembers class * { *** loadVideo(android.view.View); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_login.xml:59
@@ -306,10 +308,10 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_audit_view.xml:197
 -keepclassmembers class * { *** rejectCurrent(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:175
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:179
 -keepclassmembers class * { *** reportBlog(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_video_info.xml:101
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_video_info.xml:103
 -keepclassmembers class * { *** reportVideo(android.view.View); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_reset.xml:111
@@ -321,7 +323,7 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_error.xml:26
 -keepclassmembers class * { *** restart_client(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_blog.xml:154
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_blog.xml:121
 -keepclassmembers class * { *** saveCurrent(android.view.View); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_settings.xml:162
@@ -330,7 +332,7 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_message_edit.xml:30
 -keepclassmembers class * { *** saveMsg(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_video.xml:288
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_video.xml:333
 -keepclassmembers class * { *** saveVideo(android.view.View); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_videos.xml:43
@@ -339,11 +341,8 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_settings.xml:181
 -keepclassmembers class * { *** sendApp(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_blog.xml:168
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_blog.xml:135
 -keepclassmembers class * { *** sendBlog(android.view.View); }
-
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_comment_list.xml:43
--keepclassmembers class * { *** sendComment(android.view.View); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_color_picker.xml:14
 -keepclassmembers class * { *** sendDanmaku(android.view.View); }
@@ -351,7 +350,7 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_message_edit.xml:45
 -keepclassmembers class * { *** sendDia(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:88
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:75
 -keepclassmembers class * { *** sendDialog(android.view.View); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_message.xml:132
@@ -367,14 +366,14 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_settings.xml:175
 -keepclassmembers class * { *** sendWeb(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:152
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:156
 -keepclassmembers class * { *** shareBlog(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:241
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_blog_detail.xml:253
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_main.xml:124
 -keepclassmembers class * { *** switchAccountDia(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:63
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_player.xml:50
 -keepclassmembers class * { *** switchDanmaku(android.view.View); }
 
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/dialog_color_picker.xml:73
@@ -383,12 +382,15 @@
 # Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_videos.xml:52
 -keepclassmembers class * { *** upload(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_video.xml:312
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_video.xml:357
 -keepclassmembers class * { *** uploadVideo(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_video_info.xml:147
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_video.xml:169
+-keepclassmembers class * { *** userCollection(android.view.View); }
+
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/fragment_video_info.xml:149
 -keepclassmembers class * { *** userDetail(android.view.View); }
 
-# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_video.xml:276
+# Referenced at /storage/emulated/0/AppProjects/OTTOHub/app/src/main/res/layout/activity_upload_video.xml:321
 -keepclassmembers class * { *** videoPicker(android.view.View); }
 

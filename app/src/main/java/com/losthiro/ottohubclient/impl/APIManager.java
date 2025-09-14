@@ -501,5 +501,37 @@ public class APIManager {
         public static final String getListURI(long vid) {
             return StringUtils.strCat(new Object[]{getDanmakuURI(), "get_danmaku&vid=", vid});
         }
+        
+        public static final String getDeleteURI(String id, String token) {
+            return StringUtils.strCat(new Object[]{getDanmakuURI(), "delete_danmaku&danmaku_id=", id, "&token=", token});
+        }
+        
+        public static final String getReportURI(String id, String token) {
+            return StringUtils.strCat(new Object[]{getDanmakuURI(), "report_danmaku&danmku_id=", id, "&token=", token});
+        }
+    }
+    
+    //合集类
+    
+    public static final class CollectionURI {
+        private static final String getCollectionURI() {
+            return StringUtils.strCat(API_URL, "collection&action=");
+        }
+        
+        public static final String getCollectionSetURI(long vid, String token, String name) {
+            return StringUtils.strCat(new Object[]{getCollectionURI(), "set_video_collection&vid=", vid, "&token=", token, "&collection=", name});
+        }
+        
+        public static final String getCollectionGetURI(long vid) {
+            return StringUtils.strCat(new Object[]{getCollectionURI(), "get_video_collection&vid=", vid});
+        }
+        
+        public static final String getCollectionListURI(long uid) {
+            return StringUtils.strCat(new Object[]{getCollectionURI(), "get_user_video_collection&uid=", uid});
+        }
+        
+        public static final String getCollectionInfoURI(long uid, String name) {
+            return StringUtils.strCat(new Object[]{getCollectionURI(), "video_collection_list&uid=", uid, "&collection=", name});
+        }
     }
 }

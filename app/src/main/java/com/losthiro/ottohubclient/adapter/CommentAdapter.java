@@ -48,6 +48,9 @@ import android.os.*;
 import android.widget.*;
 import com.losthiro.ottohubclient.view.dialog.*;
 import com.losthiro.ottohubclient.adapter.model.*;
+import androidx.fragment.app.*;
+import com.losthiro.ottohubclient.ui.*;
+import java.util.*;
 
 /**
  * @Author Hiro
@@ -57,10 +60,11 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 	public static final String TAG = "CommentAdapter";
 	private static final int STATUS_DEF = 0;
 	private static final int STATUS_LOADING = 1;
-	private String currentHint;
-	private boolean isShowChild;
+	private static final HashMap<Long, JSONArray> subMap = new HashMap<>();
 	private boolean isLoading = false;
 	private Context main;
+	private FragmentManager fragManager;
+	private CommentDialogFragment dialog;
 	private List<Comment> data;
 
 	public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -90,9 +94,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 		}
 	}
 
-	public CommentAdapter(Context ctx, List<Comment> list, boolean showChild) {
-		isShowChild = showChild;
+	public CommentAdapter(Context ctx, FragmentManager manager, List<Comment> list, CommentDialogFragment parentDia) {
+		dialog = parentDia;
 		main = ctx;
+		fragManager = manager;
 		data = new ArrayList<Comment>(new HashSet<Comment>(list));
 		data.sort(new Comparator<Comment>() {
 			@Override
@@ -118,14 +123,19 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 		if (holder instanceof ViewHolder) {
 			final ViewHolder vH = (ViewHolder) holder;
 			final Comment currect = data.get(p);
+			if (dialog == null) {
+				if (currect.getChildCount() > 0) {
+					loadChildComment(vH.childCommentList, currect);
+				} else {
+					subMap.put(currect.getCID(), new JSONArray());
+				}
+			}
 			currect.setAvatar(vH.userIcon);
 			vH.userIcon.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					Intent i = new Intent(main, AccountDetailActivity.class);
 					i.putExtra("uid", currect.getUID());
-					Intent save = ((Activity) main).getIntent();
-					Client.saveActivity(save);
 					main.startActivity(i);
 				}
 			});
@@ -133,14 +143,18 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 			vH.commentInfo.setText(StringUtils.strCat(new Object[]{currect.getTime(),
 					(currect.getType() == Comment.TYPE_VIDEO ? " OVC" : " OBC"), currect.getCID()}));
 			vH.commentContent.setTextData(currect.getContent());
-            vH.commentContent.load();
+            vH.commentContent.setFragmentManager(fragManager);
+			vH.commentContent.load();
 			vH.root.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					for (Comment another : data) {
-						another.setCurrent(false);
+					if (dialog == null) {
+						CommentDialogFragment
+								.newInstance(currect, subMap.getOrDefault(currect.getCID(), new JSONArray()))
+								.show(fragManager);
+					} else {
+						dialog.changeCurrent(currect);
 					}
-					currect.setCurrent(true);
 				}
 			});
 			vH.report.setOnClickListener(new OnClickListener() {
@@ -182,16 +196,13 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 			if (manager.isLogin()) {
 				Account current = manager.getAccount();
 				if (current.getUID() == currect.getUID()) {
-					vH.delete.setVisibility(View.GONE);
+					vH.delete.setVisibility(View.VISIBLE);
 				}
 			}
 			String[] honours = currect.getHonours();
 			if (honours.length > 1) {
 				vH.honourList.setAdapter(new HonourAdapter(main, Arrays.<String>asList(honours)));
 				vH.honourList.setLayoutManager(new LinearLayoutManager(main, LinearLayoutManager.HORIZONTAL, false));
-			}
-			if (currect.getChildCount() > 0 && isShowChild) {
-				currect.loadChildComment(vH.childCommentList, new CallComment(main), currect.getType());
 			}
 		}
 	}
@@ -211,6 +222,73 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 			}
 		}
 		return false;
+	}
+
+	private void loadChildComment(final TextView text, final Comment current) {
+		text.setVisibility(View.VISIBLE);
+		AccountManager manager = AccountManager.getInstance(text.getContext());
+		String video = manager.isLogin()
+				? APIManager.CommentURI.getVideoCommentURI(current.getID(), current.getCID(),
+						manager.getAccount().getToken(), 0, 12)
+				: APIManager.CommentURI.getVideoCommentURI(current.getID(), current.getCID(), 0, 12);
+		String blog = manager.isLogin()
+				? APIManager.CommentURI.getBlogCommentURI(current.getID(), current.getCID(),
+						manager.getAccount().getToken(), 0, 12)
+				: APIManager.CommentURI.getBlogCommentURI(current.getID(), current.getCID(), 0, 12);
+		String uri = current.getType() == Comment.TYPE_VIDEO ? video : blog;
+		final Handler h = new Handler(Looper.getMainLooper());
+		NetworkUtils.getNetwork.getNetworkJson(uri, new NetworkUtils.HTTPCallback() {
+			@Override
+			public void onSuccess(final String content) {
+				if (content == null || content.isEmpty()) {
+					onFailed("empty content");
+					return;
+				}
+				try {
+					final JSONObject root = new JSONObject(content);
+					if (root == null) {
+						onFailed("null json");
+						return;
+					}
+					if (root.optString("status", "error").equals("success")) {
+						final JSONArray array = root.optJSONArray("comment_list");
+						final StringBuilder viewText = new StringBuilder();
+						for (int i = 0; i < array.length(); i++) {
+							Comment now = new Comment(main, array.optJSONObject(i), current.getID(), current.getType());
+							String message = now.getContent();
+							if (message.length() > 16) {
+								message = message.substring(0, 16) + "...";
+							}
+							if (i < 3) {
+								viewText.append(now.getUser()).append(":").append(message)
+										.append(System.lineSeparator());
+							}
+						}
+						subMap.put(current.getCID(), array);
+						viewText.append("查看全部").append(current.getChildCount()).append("条评论");
+						h.post(new Runnable() {
+							@Override
+							public void run() {
+								text.setText(viewText);
+								text.setOnClickListener(new OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										CommentDialogFragment.newInstance(current, array).show(fragManager);
+									}
+								});
+							}
+						});
+					}
+				} catch (JSONException e) {
+					onFailed(e.toString());
+				}
+			}
+
+			@Override
+			public void onFailed(final String cause) {
+				Log.e("Network", cause);
+			}
+		});
 	}
 
 	private void deleteDia(final Comment current) {
@@ -272,23 +350,16 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 		data.addAll(newData);
 		notifyItemRangeInserted(data.size() - newData.size(), newData.size());
 	}
-    
-    public void setData(List<Comment> newData){
-        data.clear();
-        data.addAll(newData);
-        notifyDataSetChanged();
-    }
-    
-    public void onBack(EditText commentEdit){
-        commentEdit.setHint(currentHint);
-        for (Comment current : data) {
-            current.setCurrent(false);
+
+	public void setData(List<Comment> newData) {
+		data.clear();
+		data.addAll(newData);
+		if (dialog != null) {
+			dialog.dismiss();
+			dialog = null;
 		}
-    }
-    
-    public void cacheHint(String hint){
-        currentHint = hint;
-    }
+		notifyDataSetChanged();
+	}
 
 	public Comment getCurrent() {
 		for (Comment current : data) {
@@ -298,36 +369,18 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 		}
 		return null;
 	}
-    
-    public void startLoading() {
-        if (isLoading) {
-            return;
-        }
-        isLoading = true;
-        notifyItemInserted(data.size());
-    }
 
-    public void stopLoading() {
-        isLoading = false;
-        notifyItemRemoved(data.size());
+	public void startLoading() {
+		if (isLoading) {
+			return;
+		}
+		isLoading = true;
+		notifyItemInserted(data.size());
 	}
 
-	public static class CallComment {
-		private Context ctx;
-
-		public CallComment(Context c) {
-			ctx = c;
-		}
-
-		public void showChildComment(List<Comment> childList, int count) {
-			View inflate = LayoutInflater.from(ctx).inflate(R.layout.dialog_child_comment, null);
-			BottomDialog commentDialog = new BottomDialog(ctx, inflate);
-			((TextView) inflate.findViewWithTag("comment_count")).setText("总共" + count + "条评论");
-			RecyclerView view = inflate.findViewWithTag("child_comment_list");
-			view.setAdapter(new CommentAdapter(ctx, childList, false));
-			view.setLayoutManager(new GridLayoutManager(ctx, 1));
-			commentDialog.show();
-		}
+	public void stopLoading() {
+		isLoading = false;
+		notifyItemRemoved(data.size());
 	}
 }
 

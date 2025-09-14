@@ -24,12 +24,11 @@ import android.graphics.*;
 
 public class CommentFragment extends Fragment {
 	public final static String TAG = "Comments";
-    private static final Handler uiThread = new Handler(Looper.getMainLooper());
+	private static final Handler uiThread = new Handler(Looper.getMainLooper());
 	private static final Semaphore request = new Semaphore(1);
 	private SwipeRefreshLayout commentRefresh;
 	private RecyclerView commentView;
-    private int offset;
-	public static EditText commentEdit;
+	private int offset;
 
 	public static CommentFragment newInstance(long id, int type) {
 		Bundle arg = new Bundle();
@@ -47,7 +46,6 @@ public class CommentFragment extends Fragment {
 		View root = inflater.inflate(R.layout.fragment_comment_list, container, false);
 		commentRefresh = root.findViewById(R.id.refresh);
 		commentView = root.findViewById(R.id.comment_list);
-		commentEdit = root.findViewById(R.id.comment_edit);
 		return root;
 	}
 
@@ -75,25 +73,25 @@ public class CommentFragment extends Fragment {
 						if (adapter != null && adapter instanceof CommentAdapter) {
 							((CommentAdapter) adapter).startLoading();
 						}
-                        offset = offset + 12;
+						offset = offset + 12;
 						loadComment(false);
 					}
 				}
 			}
 		});
-        commentRefresh.setRefreshing(true);
+		commentRefresh.setRefreshing(true);
 		commentRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				Toast.makeText(ctx, R.string.loading, Toast.LENGTH_SHORT).show();
-                offset = 0;
+				offset = 0;
 				loadComment(true);
 			}
 		});
 		loadComment(true);
 	}
 
-	private void loadComment(final boolean isRefresh) {
+	public void loadComment(final boolean isRefresh) {
 		try {
 			if (!request.tryAcquire()) {
 				return;
@@ -141,8 +139,7 @@ public class CommentFragment extends Fragment {
 								public void run() {
 									RecyclerView.Adapter adapter = commentView.getAdapter();
 									if (adapter == null) {
-										CommentAdapter comment = new CommentAdapter(ctx, data, true);
-										comment.cacheHint(commentEdit.getHint().toString());
+										CommentAdapter comment = new CommentAdapter(getActivity(), getChildFragmentManager(), data, null);
 										commentView.setAdapter(comment);
 										return;
 									}
@@ -171,100 +168,6 @@ public class CommentFragment extends Fragment {
 			Thread.currentThread().interrupt();
 		} finally {
 			request.release();
-		}
-	}
-
-	private void sendComment(long parent) {
-		final Context ctx = getContext();
-		Bundle arg = getArguments();
-		if (arg == null) {
-			return;
-		}
-		long id = arg.getLong("id");
-		int type = arg.getInt("type");
-		AccountManager manager = AccountManager.getInstance(ctx);
-		if (!manager.isLogin()) {
-			Toast.makeText(ctx, "没登录发牛魔", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		String content = commentEdit.getText().toString();
-		if (content.isEmpty()) {
-			Toast.makeText(ctx, "你发的是棍母", Toast.LENGTH_SHORT).show();
-			return;
-		}
-		String uri = type == Comment.TYPE_BLOG
-				? APIManager.CommentURI.getCommentBlogURI(id, parent, manager.getAccount().getToken(), content)
-				: APIManager.CommentURI.getCommentVideoURI(id, parent, manager.getAccount().getToken(), content);
-		NetworkUtils.getNetwork.getNetworkJson(uri, new NetworkUtils.HTTPCallback() {
-			@Override
-			public void onSuccess(String content) {
-				if (content.isEmpty() || content == null) {
-					onFailed("empty content");
-					return;
-				}
-				try {
-					final JSONObject root = new JSONObject(content);
-					new Handler(Looper.getMainLooper()).post(new Runnable() {
-						@Override
-						public void run() {
-							commentRefresh.setRefreshing(true);
-							String status = root.optString("status", "error");
-							if (status.equals("success")) {
-								int callback = root.optInt("if_get_experience", 0);
-								String msg = "评论发送成功~";
-								if (callback == 1) {
-									msg = msg + "经验+3";
-								}
-								Toast.makeText(ctx, msg, Toast.LENGTH_SHORT).show();
-								commentEdit.setText("");
-								loadComment(true);
-								return;
-							}
-							String message = root.optString("message", "error");
-							if (message.equals("content_too_long")) {
-								Toast.makeText(ctx, "不许你发小作文", Toast.LENGTH_SHORT).show();
-							}
-							if (message.equals("content_too_short")) {
-								Toast.makeText(ctx, "才发两三个字是什么意思啊", Toast.LENGTH_SHORT).show();
-							}
-							if (message.equals("error_parent")) {
-								Toast.makeText(ctx, "这个嘛...目前还没有楼中楼中楼功能哦", Toast.LENGTH_SHORT).show();
-							}
-							if (message.equals("warn")) {
-								Toast.makeText(ctx, "冰不许爆(把你违禁词删了)", Toast.LENGTH_SHORT).show();
-							}
-							onFailed(message);
-						}
-					});
-				} catch (JSONException e) {
-					onFailed(e.toString());
-				}
-			}
-
-			@Override
-			public void onFailed(final String cause) {
-				Log.e("Network", cause);
-			}
-		});
-	}
-
-	public void sendComment() {
-		CommentAdapter adapter = (CommentAdapter) commentView.getAdapter();
-		if (adapter == null) {
-			return;
-		}
-		Comment c = adapter.getCurrent();
-		long parent = c == null ? 0 : c.getCID();
-		sendComment(parent);
-	}
-
-	public void onBack() {
-		RecyclerView.Adapter adapter = commentView.getAdapter();
-		if (adapter == null) {
-			return;
-		}
-		if (adapter instanceof CommentAdapter) {
-			((CommentAdapter) adapter).onBack(commentEdit);
 		}
 	}
 }

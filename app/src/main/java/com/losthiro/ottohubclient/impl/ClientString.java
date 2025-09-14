@@ -28,34 +28,34 @@ public class ClientString {
         oldData = content;
     }
 
-    private static String getIDColor(String content) {
-        String regex = "(?i)(ov[0-9])|(uid[0-9])";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(content);
-        StringBuilder result = new StringBuilder();
-        int lastEnd = 0;
-        boolean find = false;
-        while (matcher.find()) {
-            result.append(content, lastEnd, matcher.start());
-            result.append("§d").append(matcher.group()).append("§0");
-            lastEnd = matcher.end();
-            find = true;
-        }
-        result.append(content.substring(lastEnd));
-        return find ? result.toString() : content;
-    }
-
-    private static String[] extractImageUrls(String htmlString) {
-        Pattern pattern = Pattern.compile("<img src=\"(.*?)\"");
-        Matcher matcher = pattern.matcher(htmlString);
-        int start = 0;
-        String[] imageUrls = new String[matcher.groupCount()];
-        while (matcher.find()) {
-            imageUrls[matcher.start() - start] = matcher.group(1);
-            start = matcher.end();
-        }
-        return imageUrls;
-    }
+//    private static String getIDColor(String content) {
+//        String regex = "(?i)(ov[0-9])|(uid[0-9])";
+//        Pattern pattern = Pattern.compile(regex);
+//        Matcher matcher = pattern.matcher(content);
+//        StringBuilder result = new StringBuilder();
+//        int lastEnd = 0;
+//        boolean find = false;
+//        while (matcher.find()) {
+//            result.append(content, lastEnd, matcher.start());
+//            result.append("§d").append(matcher.group()).append("§0");
+//            lastEnd = matcher.end();
+//            find = true;
+//        }
+//        result.append(content.substring(lastEnd));
+//        return find ? result.toString() : content;
+//    }
+//
+//    private static String[] extractImageUrls(String htmlString) {
+//        Pattern pattern = Pattern.compile("<img src=\"(.*?)\"");
+//        Matcher matcher = pattern.matcher(htmlString);
+//        int start = 0;
+//        String[] imageUrls = new String[matcher.groupCount()];
+//        while (matcher.find()) {
+//            imageUrls[matcher.start() - start] = matcher.group(1);
+//            start = matcher.end();
+//        }
+//        return imageUrls;
+//    }
 
     public static SpannableString getColorText(String content) {
         List<ColorRange> colorRanges=new ArrayList<>();

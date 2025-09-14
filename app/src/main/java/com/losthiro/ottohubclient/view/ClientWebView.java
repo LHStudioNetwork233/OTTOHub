@@ -28,6 +28,8 @@ import android.provider.*;
 import android.graphics.*;
 import com.losthiro.ottohubclient.*;
 import android.webkit.*;
+import java.util.regex.*;
+import androidx.fragment.app.*;
 
 /**
  * @Author Hiro
@@ -59,7 +61,7 @@ public class ClientWebView extends WebView {
 	}
 
 	private void init() {
-        main = new WebBean(getContext(), "loading");
+        main = new WebBean(getContext());
 		int windowStatus = getContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
 		WebSettings setting = getSettings();
 		setting.setJavaScriptEnabled(true);
@@ -76,7 +78,7 @@ public class ClientWebView extends WebView {
 		setting.setCacheMode(WebSettings.LOAD_DEFAULT);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 			setting.setAlgorithmicDarkeningAllowed(windowStatus == Configuration.UI_MODE_NIGHT_YES);
-		} else {
+		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
 			setting.setForceDark(windowStatus == Configuration.UI_MODE_NIGHT_YES
 					? WebSettings.FORCE_DARK_ON
 					: WebSettings.FORCE_DARK_OFF);
@@ -85,6 +87,7 @@ public class ClientWebView extends WebView {
 		setWebChromeClient(new ChromeClient());
 		setWebViewClient(new ViewClient(getContext()));
         setBackgroundColor(Color.TRANSPARENT);
+        setInitialScale(1);
         addJavascriptInterface(main, "dataBridge");
         isInit = true;
 	}
@@ -106,12 +109,32 @@ public class ClientWebView extends WebView {
         main.setData(content);
 	}
     
+    public void setFragmentManager(FragmentManager manager) {
+        addJavascriptInterface(new WebBean.ImageBridge(manager), WebBean.ImageBridge.TAG);
+    }
+    
     public void setCSS(String cssUri) {
         main.setCssURI(cssUri);
     }
     
     public void addScript(String jsUri) {
         main.addScript(jsUri);
+    }
+    
+    public void enabledClientVideoSurrport(boolean isEnabled) {
+        if (isEnabled) {
+            addJavascriptInterface(new WebBean.VideoBridge(this), WebBean.VideoBridge.TAG);
+        }
+    }
+    
+    public static String getLinks(String text) {
+        String regex = "https?://(?:www\\.)?m.ottohub.cn/[^\\s]*";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(text);
+        if (matcher.find()) {
+            return matcher.group();
+        }
+        return null;
     }
     
     public static boolean praseLinkAndLoad(Context ctx, String uri) {
@@ -125,7 +148,6 @@ public class ClientWebView extends WebView {
                         Intent i = new Intent(ctx, BlogDetailActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         i.putExtra("bid", bid);
-                        Client.saveActivity(Client.getCurrentActivity(ctx).getIntent());
                         ctx.startActivity(i);
                     }
                 }
@@ -135,7 +157,6 @@ public class ClientWebView extends WebView {
                         Intent i=new Intent(ctx, PlayerActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         i.putExtra("vid", vid);
-                        Client.saveActivity(Client.getCurrentActivity(ctx).getIntent());
                         ctx.startActivity(i);
                     }
                 }
@@ -145,7 +166,6 @@ public class ClientWebView extends WebView {
                         Intent i = new Intent(ctx, AccountDetailActivity.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         i.putExtra("uid", uid);
-                        Client.saveActivity(Client.getCurrentActivity(ctx).getIntent());
                         ctx.startActivity(i);
                     }
                 }

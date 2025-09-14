@@ -121,42 +121,49 @@ public class FileUtils {
 		}
 		return false;
 	}
-    
-    public static boolean createFile(String path, byte[] defaultContent) {
-        File f = new File(path);
-        if (f.exists() || !isExternalStorageMounted()) {
-            return false;
-        }
-        if (!f.getParentFile().exists()) {
-            createDir(StringUtils.strCat(f.getParent(), File.separator));
-        }
-        try {
-            boolean isSuccess = f.createNewFile();
-            if (isSuccess) {
-                writeFile(path, defaultContent);
-            }
-            return isSuccess;
-        } catch (Exception e) {
-            Log.e(TAG, " create File " + path + " ERROR: ", e);
-        }
-        return false;
+
+	public static boolean createFile(String path, byte[] defaultContent) {
+		File f = new File(path);
+		if (f.exists() || !isExternalStorageMounted()) {
+			return false;
+		}
+		if (!f.getParentFile().exists()) {
+			createDir(StringUtils.strCat(f.getParent(), File.separator));
+		}
+		try {
+			boolean isSuccess = f.createNewFile();
+			if (isSuccess) {
+				writeFile(path, defaultContent);
+			}
+			return isSuccess;
+		} catch (Exception e) {
+			Log.e(TAG, " create File " + path + " ERROR: ", e);
+		}
+		return false;
 	}
 
 	public static boolean deleteFile(String file) {
 		File f = new File(file);
 		if (f.exists() && isExternalStorageMounted()) {
-			return f.isDirectory() ? deleteDir(file) : f.delete();
+			return f.isDirectory() ? deleteDir(file, 0) : f.delete();
 		}
 		return false;
 	}
 
-	public static boolean deleteDir(String path) {
+	public static boolean deleteDir(String path, int count) {
+        if (count > 5) {
+            return false;
+        }
 		File f = new File(path);
 		if (f.exists() && f.isDirectory()) {
 			File[] list = f.listFiles();
 			if (list != null) {
 				for (File sub : list) {
-					sub.delete();
+					if (sub.isDirectory()) {
+						deleteDir(sub.getPath(), count++);
+					} else {
+						sub.delete();
+					}
 				}
 				return f.delete();
 			} else {
@@ -407,23 +414,23 @@ public class FileUtils {
 			ZipEntry zipEntry = zis.getNextEntry();
 			while (zipEntry != null) {
 				File file = new File(dest, zipEntry.getName());
-                File parent = file.getParentFile();
-                if (parent.exists() || parent.mkdirs()) {
-                    if (!zipEntry.isDirectory() && file.createNewFile()) {
-                        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
-                        int len;
-                        while ((len = zis.read(buffer)) > 0) {
-                            bos.write(buffer, 0, len);
-                        }
-                        bos.close();
-                    }
-                    zis.closeEntry();
-                }
+				File parent = file.getParentFile();
+				if (parent.exists() || parent.mkdirs()) {
+					if (!zipEntry.isDirectory() && file.createNewFile()) {
+						BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+						int len;
+						while ((len = zis.read(buffer)) > 0) {
+							bos.write(buffer, 0, len);
+						}
+						bos.close();
+					}
+					zis.closeEntry();
+				}
 				zis.closeEntry();
 				zipEntry = zis.getNextEntry();
 			}
 			zis.closeEntry();
-            zis.close();
+			zis.close();
 		}
 	}
 

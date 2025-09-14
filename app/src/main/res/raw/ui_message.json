@@ -8,6 +8,13 @@
             "title": "Markdown解析器",
             "msg": "关闭后将不会处理markdown格式的内容",
             "icon": "ic_mark_black"
+        },
+        {
+            "type": "toggle",
+            "path": "ottohub/msg/auto_save",
+            "title": "动态自动保存",
+            "msg": "是否在退出动态发布页面时自动保存动态内容",
+            "icon": "ic_save_black"
         }
     ]
 }

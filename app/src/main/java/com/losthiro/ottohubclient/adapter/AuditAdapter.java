@@ -63,7 +63,6 @@ public class AuditAdapter extends RecyclerView.Adapter<AuditAdapter.ViewHolder> 
 						i.putExtra("tag", current.getTags());
 						i.putExtra("cover_uri", current.getCover());
 						i.putExtra("video_uri", current.getVideo());
-						Client.saveActivity(((Activity) main).getIntent());
 						main.startActivity(i);
 					}
 				});
@@ -90,7 +89,6 @@ public class AuditAdapter extends RecyclerView.Adapter<AuditAdapter.ViewHolder> 
 						i.putExtra("bid", current.getVID());
 						i.putExtra("title", current.getTitle());
 						i.putExtra("content", current.getIntro());
-						Client.saveActivity(((Activity) main).getIntent());
 						main.startActivity(i);
 					}
 				});
@@ -109,7 +107,6 @@ public class AuditAdapter extends RecyclerView.Adapter<AuditAdapter.ViewHolder> 
 						i.putExtra("uid", current.getUID());
 						i.putExtra("name", current.getName());
 						i.putExtra("avatar_uri", current.getAvatar());
-						Client.saveActivity(((Activity) main).getIntent());
 						main.startActivity(i);
 					}
 				});
@@ -128,7 +125,6 @@ public class AuditAdapter extends RecyclerView.Adapter<AuditAdapter.ViewHolder> 
                             i.putExtra("uid", current.getUID());
                             i.putExtra("name", current.getName());
                             i.putExtra("cover_uri", current.getAvatar());
-                            Client.saveActivity(((Activity) main).getIntent());
                             main.startActivity(i);
                         }
                     });

@@ -23,6 +23,10 @@
             "value": true
         },
         {
+            "name": "ottohub/msg/auto_save",
+            "value": false
+        },
+        {
             "name": "ottohub/player/image_display",
             "value": 0
         },
@@ -44,6 +48,10 @@
         },
         {
             "name": "ottohub/account/auto_login",
+            "value": true
+        },
+        {
+            "name": "ottohub/system/check_clipboard",
             "value": true
         },
         {

@@ -42,6 +42,7 @@ public class AuditViewActivity extends BasicActivity {
 				textContent.setText(content);
 				final ClientWebView webContent = findViewById(R.id.blog_content_view);
 				webContent.setTextData(content);
+                webContent.setFragmentManager(getSupportFragmentManager());
                 webContent.load();
 				Switch mode = findViewById(R.id.audit_blog_mode);
 				mode.setVisibility(View.VISIBLE);
@@ -95,11 +96,6 @@ public class AuditViewActivity extends BasicActivity {
 	@Override
 	protected void onDestroy() {
 		// TODO: Implement this method
-		Intent i = Client.getLastActivity();
-		if (i != null) {
-			Client.removeActivity();
-			startActivity(i);
-		}
 		super.onDestroy();
 	}
 

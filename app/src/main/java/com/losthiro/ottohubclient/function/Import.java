@@ -23,7 +23,7 @@ public class Import implements Runnable {
 	@Override
 	public void run() {
 		// TODO: Implement this method
-		Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);;
+		Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 		if (mCode == BasicActivity.FILE_REQUEST_CODE) {
 			i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 			i.setType("application/zip");

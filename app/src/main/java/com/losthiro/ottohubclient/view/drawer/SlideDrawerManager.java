@@ -111,7 +111,7 @@ public class SlideDrawerManager {
 			});
 		}
 		final Context main = parent.getContext();
-        final ImageView cover = (ImageView) parent.findViewById(R.id.main_user_cover);
+        final ImageView cover = parent.findViewById(R.id.main_user_cover);
         action = new UpdateDrawer() {
             @Override
             public void update(Account now) {
@@ -131,7 +131,6 @@ public class SlideDrawerManager {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				ImageItem current = (ImageItem) parent.getItemAtPosition(position);
 				Intent i = new Intent(main, current.getLink());
-				Client.saveActivity(((Activity) main).getIntent());
 				main.startActivity(i);
 			}
 		});

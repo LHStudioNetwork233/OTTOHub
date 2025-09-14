@@ -38,11 +38,6 @@ public class InfoActivity extends BasicActivity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		Intent last = Client.getLastActivity();
-		if (last != null && Client.isFinishingLast(last)) {
-			Client.removeActivity();
-			startActivity(last);
-		}
 	}
 
 	@Override

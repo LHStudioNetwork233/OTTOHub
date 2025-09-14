@@ -13,7 +13,7 @@ public class ClientAnim {
 	public static final int ANIM_SPEED = 300;
 	private static final float POTATION_VALUE = 7.0f;
 	private static final float SCALE_END = 0.95f;
-	private static final float SHADOW_END = 0.0f;
+	//private static final float SHADOW_END = 0.0f;
 	public static OvershootInterpolator interpolator = new OvershootInterpolator(3.0f);
 
 	public static int startAnimDown(View view, boolean isAnim, float x, float y) {
@@ -64,7 +64,7 @@ public class ClientAnim {
 	}
 
 	public static void startAnimUp(View view, int status) {
-		int i2;
+		//int i2;
 		if (view.isClickable()) {
 			if (status != 0) {
 				switch (status) {
@@ -145,14 +145,14 @@ public class ClientAnim {
 
 	public static void froSmall_ToBig(View view) {
 		float lastTranslate = 0;
-		int i;
-		int i2;
-		int i3;
-		float currentTranslate = 0;
+//		int i;
+//		int i2;
+//		int i3;
+//		float currentTranslate = 0;
 		try {
 			Object tag = view.getTag(0x7f1000fc);
 			if (Build.VERSION.SDK_INT >= 21) {
-				currentTranslate = view.getTranslationZ();
+				//currentTranslate = view.getTranslationZ();
 				if (tag != null && (tag instanceof Float)) {
 					lastTranslate = ((Float) tag).floatValue();
 					//                    i = af[0];

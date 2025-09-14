@@ -42,7 +42,7 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 	}
 
 	@Override
-	public void onBindViewHolder(ManagerAdapter.ViewHolder vH, int p) {
+	public void onBindViewHolder(ManagerAdapter.ViewHolder vH, final int p) {
 		// TODO: Implement this method
 		final ManagerModel current = data.get(p);
 		if (current.getType() == ManagerModel.TYPE_BLOG) {
@@ -96,7 +96,6 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
                             ClickSounds.playSound(v.getContext());
 							Intent i = new Intent(main, BlogDetailActivity.class);
 							i.putExtra("bid", current.getBID());
-							Client.saveActivity(((Activity) main).getIntent());
 							main.startActivity(i);
 						}
 					});
@@ -137,8 +136,6 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
                                 Intent i = new Intent(main, PlayerActivity.class);
                                 i.putExtra("root_path", current.getRootPath());
                                 i.putExtra("vid", vid);
-                                Intent save = ((Activity) main).getIntent();
-                                Client.saveActivity(save);
                                 main.startActivity(i);
                             }
                         });
@@ -146,7 +143,7 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
                             @Override
                             public boolean onLongClick(View v) {
                                 // TODO: Implement this method
-                                localManagerDia(current);
+                                localManagerDia(p);
                                 return false;
                             }
                         });
@@ -209,8 +206,6 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
                             ClickSounds.playSound(v.getContext());
 							Intent i = new Intent(main, PlayerActivity.class);
 							i.putExtra("vid", current.getVID());
-							Intent save = ((Activity) main).getIntent();
-							Client.saveActivity(save);
 							main.startActivity(i);
 						}
 					});
@@ -398,16 +393,17 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 		dialog.create().show();
 	}
 
-	private void localManagerDia(final ManagerModel current) {
+	private void localManagerDia(final int pos) {
+        final ManagerModel current = data.get(pos);
 		AlertDialog.Builder dialog = new AlertDialog.Builder(main);
 		dialog.setTitle("确定删除？");
 		dialog.setMessage(StringUtils.strCat("是否删除本地视频？本地存储目录: ", current.getRootPath()));
 		dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dia, int which) {
-				if (FileUtils.deleteDir(current.getRootPath()) && data.remove(current)) {
+				if (FileUtils.deleteDir(current.getRootPath(), 0) && data.remove(current)) {
 					Toast.makeText(main, "删除成功", Toast.LENGTH_SHORT).show();
-					notifyDataSetChanged();
+					notifyItemRemoved(pos);
 				}
 				dia.dismiss();
 			}

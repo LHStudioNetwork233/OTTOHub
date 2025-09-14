@@ -20,7 +20,7 @@
 		android:tag="comment_count"
 		android:shadowRadius="4"
 		android:textStyle="bold"
-        android:textColor="@color/colorSecondary"
+		android:textColor="@color/colorSecondary"
 		android:layout_margin="5dp"/>
 
 	<View
@@ -30,11 +30,23 @@
 		android:layout_marginLeft="3dp"
 		android:layout_marginRight="3dp"/>
 
-	<androidx.recyclerview.widget.RecyclerView
+	<FrameLayout
+		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:layout_width="wrap_content"
-		android:tag="child_comment_list"
-		android:layout_marginTop="10dp"/>
+		android:layout_marginTop="10dp">
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:layout_height="wrap_content"
+			android:layout_width="match_parent"
+			android:id="@+id/comment_list"/>
+
+		<FrameLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:id="@+id/comment_edit_view"
+			android:layout_gravity="bottom"/>
+
+	</FrameLayout>
 
 </LinearLayout>
 

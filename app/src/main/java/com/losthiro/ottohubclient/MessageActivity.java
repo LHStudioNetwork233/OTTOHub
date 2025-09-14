@@ -108,11 +108,6 @@ public class MessageActivity extends BasicActivity {
     protected void onDestroy() {
         super.onDestroy();
         UploadManager.getInstance(this).save();
-        Intent last=Client.getLastActivity();
-        if (last != null && Client.isFinishingLast(last)) {
-            Client.removeActivity();
-            startActivity(last);
-        }
     }
 
     @Override
@@ -371,7 +366,6 @@ public class MessageActivity extends BasicActivity {
     public void sendMsg(View v) {
         AccountManager manager=AccountManager.getInstance(this);
         if (!manager.isLogin()) {
-            Client.saveActivity(getIntent());
             startActivity(new Intent(this, LoginActivity.class));
             return;
         }

@@ -136,8 +136,6 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 							Intent i = new Intent(main, PlayerActivity.class);
 							i.putExtra("root_path", currect.getRootPath());
 							i.putExtra("vid", vid);
-							Intent save = ((Activity) main).getIntent();
-							Client.saveActivity(save);
 							main.startActivity(i);
 						}
 					});
@@ -166,8 +164,6 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 						public void onClick(View v) {
 							Intent i = new Intent(main, AccountDetailActivity.class);
 							i.putExtra("uid", uid);
-							Intent save = ((Activity) main).getIntent();
-							Client.saveActivity(save);
 							main.startActivity(i);
 						}
 					});
@@ -197,8 +193,6 @@ public class VideoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
 					public void onClick(View v) {
 						Intent i = new Intent(main, PlayerActivity.class);
 						i.putExtra("vid", vid);
-						Intent save = ((Activity) main).getIntent();
-						Client.saveActivity(save);
 						main.startActivity(i);
 					}
 				});

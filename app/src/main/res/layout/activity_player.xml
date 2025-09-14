@@ -1,117 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@color/colorMain"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:background="@color/colorMain"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
-    <FrameLayout
-        android:paddingBottom="10dp"
-        android:minHeight="200dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.0"
-        android:background="#FF000000">
+	<com.losthiro.ottohubclient.view.ClientVideoView
+		android:minHeight="200dp"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:id="@+id/main_video_view"
+		android:layout_gravity="center"
+		android:layout_weight="0.25"/>
 
-        <com.losthiro.ottohubclient.view.ClientVideoView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/main_video_view"
-            android:layout_gravity="center"/>
+	<LinearLayout
+		android:orientation="vertical"
+		android:layout_width="match_parent"
+		android:paddingRight="10dp"
+		android:layout_height="0dp"
+		android:paddingLeft="10dp"
+		android:layout_weight="0.75">
 
-        <master.flame.danmaku.ui.widget.DanmakuView
-            android:id="@+id/main_danmaku"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+		<LinearLayout
+			android:orientation="horizontal"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="5dp"
+			android:layout_marginBottom="5dp">
 
-    </FrameLayout>
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="详情"
+				style="?android:attr/buttonBarButtonStyle"
+				android:layout_marginLeft="5dp"
+				android:textColor="@color/colorAccent"
+				android:id="@+id/video_detail_info_btn"/>
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:paddingRight="10dp"
-        android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:layout_weight="1.0">
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="评论"
+				style="?android:attr/buttonBarButtonStyle"
+				android:layout_marginLeft="5dp"
+				android:textColor="@color/text_color"
+				android:id="@+id/video_detail_comment_btn"/>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp">
+			<Button
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="滚幕"
+				style="?android:attr/buttonBarButtonStyle"
+				android:layout_marginLeft="5dp"
+				android:onClick="switchDanmaku"
+				android:textColor="@color/colorAccent"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="详情"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_marginLeft="5dp"
-                android:textColor="@color/colorAccent"
-                android:id="@+id/video_detail_info_btn"/>
+			<LinearLayout
+				android:orientation="horizontal"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="right"
+				android:background="@drawable/video_card_bg"
+				android:elevation="4dp"
+				android:paddingStart="5dp">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="评论"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_marginLeft="5dp"
-                android:textColor="@color/text_color"
-                android:id="@+id/video_detail_comment_btn"/>
+				<com.losthiro.ottohubclient.view.RandomTextEdit
+					android:layout_width="200dp"
+					android:layout_height="50dp"
+					android:id="@+id/video_danmaku_edit"
+					android:textSize="10sp"
+					android:layout_weight="1.0"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="滚幕"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_marginLeft="5dp"
-                android:onClick="switchDanmaku"
-                android:textColor="@color/colorAccent"/>
+				<Button
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="冲刺"
+					android:onClick="sendDialog"
+					android:background="@drawable/btn_bg"
+					android:textColor="#FFFFFFFF"
+					android:shadowDx="4"
+					android:shadowDy="4"
+					android:shadowColor="#FFC0C0C0"
+					android:shadowRadius="4"/>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:background="@drawable/video_card_bg"
-                android:elevation="4dp"
-                android:paddingStart="5dp">
+			</LinearLayout>
 
-                <com.losthiro.ottohubclient.view.RandomTextEdit
-                    android:layout_width="200dp"
-                    android:layout_height="50dp"
-                    android:id="@+id/video_danmaku_edit"
-                    android:textSize="10sp"
-                    android:layout_weight="1.0"/>
+		</LinearLayout>
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="冲刺"
-                    android:onClick="sendDialog"
-                    android:background="@drawable/btn_bg"
-                    android:textColor="#FFFFFFFF"
-                    android:shadowDx="4"
-                    android:shadowDy="4"
-                    android:shadowColor="#FFC0C0C0"
-                    android:shadowRadius="4"/>
+		<View
+			android:background="#FFE5E5E5"
+			android:layout_width="match_parent"
+			android:layout_height="1dp"/>
 
-            </LinearLayout>
+		<RelativeLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
 
-        </LinearLayout>
+			<androidx.viewpager.widget.ViewPager
+				android:layout_height="match_parent"
+				android:layout_width="match_parent"
+				android:id="@+id/video_player_page"/>
 
-        <View
-            android:background="#FFE5E5E5"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"/>
+			<FrameLayout
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:id="@+id/comment_edit_view"/>
 
-        <androidx.viewpager.widget.ViewPager
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:id="@+id/video_player_page"/>
+		</RelativeLayout>
 
-    </LinearLayout>
+	</LinearLayout>
 
 </LinearLayout>
 

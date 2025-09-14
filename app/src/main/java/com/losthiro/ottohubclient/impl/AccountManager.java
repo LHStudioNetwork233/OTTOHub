@@ -29,7 +29,7 @@ public class AccountManager {
 	private SharedPreferences prefs;
 	private Runnable callback;
 	private Account current;
-	private int keyUpdateTime = 30;
+//	private int keyUpdateTime = 30;
 
 	private AccountManager(Context ctx) {
 		main = ctx;
@@ -231,10 +231,10 @@ public class AccountManager {
 		});
 	}
 
-	private boolean isNeedUpdate() {
-		long lastUpdate = prefs.getLong("key_last_update", 0);
-		long time = SystemUtils.getTime() - lastUpdate;
-		return time > keyUpdateTime * 86400000;
-	}
+//	private boolean isNeedUpdate() {
+//		long lastUpdate = prefs.getLong("key_last_update", 0);
+//		long time = SystemUtils.getTime() - lastUpdate;
+//		return time > keyUpdateTime * 86400000;
+//	}
 }
 
