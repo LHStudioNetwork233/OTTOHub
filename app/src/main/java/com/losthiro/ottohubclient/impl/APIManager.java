@@ -50,12 +50,13 @@ public class APIManager {
 
         public static final int CATEGORY_OTHER=0;
         public static final int CATEGORY_FUN=1;
-        public static final int CATEGORY_MAD=2;
-        public static final int CATEGORY_VOCALOID=3;
-        public static final int CATEGORY_THEATER=4;
-        public static final int CATEGORY_GAME=5;
-        public static final int CATEGORY_OLD=6;
-        public static final int CATEGORY_MUSIC=7;
+        @Deprecated
+        public static final int CATEGORY_MAD=2;//时代的眼泪，现在分区已经合并了(悲)
+        public static final int CATEGORY_VOCALOID=2;
+        public static final int CATEGORY_THEATER=3;
+        public static final int CATEGORY_GAME=4;
+        public static final int CATEGORY_OLD=5;
+        public static final int CATEGORY_MUSIC=6;
 
         private static final String getVideoURI() {
             return StringUtils.strCat(API_URL, "video&action=");
@@ -502,11 +503,11 @@ public class APIManager {
             return StringUtils.strCat(new Object[]{getDanmakuURI(), "get_danmaku&vid=", vid});
         }
         
-        public static final String getDeleteURI(String id, String token) {
+        public static final String getDeleteURI(long id, String token) {
             return StringUtils.strCat(new Object[]{getDanmakuURI(), "delete_danmaku&danmaku_id=", id, "&token=", token});
         }
         
-        public static final String getReportURI(String id, String token) {
+        public static final String getReportURI(long id, String token) {
             return StringUtils.strCat(new Object[]{getDanmakuURI(), "report_danmaku&danmku_id=", id, "&token=", token});
         }
     }

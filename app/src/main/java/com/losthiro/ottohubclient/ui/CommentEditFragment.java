@@ -16,6 +16,7 @@ import com.losthiro.ottohubclient.utils.*;
 import org.json.*;
 import android.util.*;
 import android.view.View.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 public class CommentEditFragment extends Fragment implements OnClickListener{
 	public final static String TAG = "CommentEdit";
@@ -152,6 +153,7 @@ public class CommentEditFragment extends Fragment implements OnClickListener{
                 @Override
                 public void onFailed(final String cause) {
                     Log.e("Network", cause);
+                    NetworkException.getInstance(getContext()).handlerError(cause);
                 }
             });
 	}

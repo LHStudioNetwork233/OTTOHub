@@ -57,6 +57,10 @@
         {
             "name": "ottohub/system/permission_check",
             "value": false
+        },
+        {
+            "name": "ottohub/system/use_decor",
+            "value": false
         }
     ]
 }

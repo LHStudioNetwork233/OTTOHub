@@ -132,7 +132,7 @@ public class ClientWebView extends WebView {
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(text);
         if (matcher.find()) {
-            return matcher.group();
+            return matcher.group(0);
         }
         return null;
     }

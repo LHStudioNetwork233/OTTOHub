@@ -22,6 +22,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import org.json.*;
 import com.losthiro.ottohubclient.adapter.model.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 public class SuscribeActivity extends BasicActivity {
 	private static final Semaphore request = new Semaphore(1);
@@ -159,6 +160,7 @@ public class SuscribeActivity extends BasicActivity {
 						@Override
 						public void onFailed(String cause) {
 							Log.e("Network", cause);
+                            NetworkException.getInstance(getApplication()).handlerError(cause);
 							refresh.setRefreshing(false);
 						}
 					});

@@ -32,6 +32,7 @@ import android.database.*;
 import com.losthiro.ottohubclient.view.dialog.*;
 import com.losthiro.ottohubclient.adapter.model.*;
 import android.os.Handler;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 public class UploadVideoActivity extends BasicActivity {
 	private Uri video;
@@ -407,49 +408,7 @@ public class UploadVideoActivity extends BasicActivity {
 			public void onFailed(final String message) {
 				// TODO: Implement this method
 				Log.e("Network", message);
-				runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						// TODO: Implement this method
-						String msg = "视频发布失败Σ(ﾟдﾟlll)";
-						switch (message) {
-							case "title_too_long" :
-								msg = "标题笑传之长长版";
-								break;
-							case "title_too_short" :
-								msg = "标题还是太短了";
-								break;
-							case "intro_too_long" :
-								msg = "不能在简介写小作文";
-								break;
-							case "intro_too_short" :
-								msg = "我缺的简介这一块";
-								break;
-							case "error_type" :
-								msg = "请选择一个版权声明";
-								break;
-							case "error_category" :
-								msg = "至少选一个分区罢";
-								break;
-							case "error_tag" :
-								msg = "标签笑传之错错报";
-								break;
-							case "error_file" :
-								msg = "抱歉目前还不支持这种格式捏∑(￣□￣)";
-								break;
-							case "warn" :
-								msg = "这是碰也不能碰的话题(ﾉ ○ Д ○)ﾉ　";
-								break;
-							case "file_not_found" :
-								msg = "你好像还没选择文件呢";
-								break;
-							case "too_big_file" :
-								msg = "不能上传太大的文件啊";
-								break;
-						}
-						Toast.makeText(getApplication(), msg, Toast.LENGTH_SHORT).show();
-					}
-				});
+				NetworkException.getInstance(getApplication()).handlerError(message);
 			}
 		});
 	}
@@ -672,6 +631,7 @@ public class UploadVideoActivity extends BasicActivity {
 						public void onFailed(String cause) {
 							// TODO: Implement this method
 							Log.e("Network", cause);
+                            NetworkException.getInstance(getApplication()).handlerError(cause);
 						}
 					});
 		}

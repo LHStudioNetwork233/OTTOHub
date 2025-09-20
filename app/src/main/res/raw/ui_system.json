@@ -2,7 +2,7 @@
     "name": "系统设置",
     "id": "[FILE_ID]",
     "items": [
-    {
+        {
             "type": "toggle",
             "path": "ottohub/system/permission_check",
             "title": "权限检查",
@@ -15,6 +15,13 @@
             "title": "剪贴板检查",
             "msg": "启动时检查剪贴板是否有可供跳转的地址",
             "icon": "ic_inspection_black"
+        },
+        {
+            "type": "toggle",
+            "path": "ottohub/system/use_decor",
+            "title": "使用刘海屏",
+            "msg": "窗口内容是否铺满全屏",
+            "icon": "ic_window_black"
         },
         {
             "type": "action",
@@ -30,4 +37,4 @@
             "icon": "ic_reset_black"
         }
     ]
-    }
+}

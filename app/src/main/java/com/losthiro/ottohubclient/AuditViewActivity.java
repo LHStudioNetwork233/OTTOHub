@@ -19,6 +19,7 @@ import java.util.*;
 import android.util.*;
 import org.json.*;
 import com.losthiro.ottohubclient.adapter.model.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 public class AuditViewActivity extends BasicActivity {
 	private long currentID;
@@ -167,6 +168,7 @@ public class AuditViewActivity extends BasicActivity {
 				public void onFailed(String cause) {
 					// TODO: Implement this method
                     Log.e("Network", cause);
+                    NetworkException.getInstance(getApplication()).handlerError(cause);
 				}
 			});
 		}
@@ -234,6 +236,7 @@ public class AuditViewActivity extends BasicActivity {
                     public void onFailed(String cause) {
                         // TODO: Implement this method
                         Log.e("Network", cause);
+                        NetworkException.getInstance(getApplication()).handlerError(cause);
                     }
                 });
         }

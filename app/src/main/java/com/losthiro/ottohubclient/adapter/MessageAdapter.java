@@ -39,6 +39,7 @@ import com.losthiro.ottohubclient.MessageDetailActivity;
 import com.losthiro.ottohubclient.adapter.model.*;
 import android.widget.*;
 import com.losthiro.ottohubclient.impl.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 	public static final String TAG = "MessageAdapter";
@@ -114,6 +115,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 						@Override
 						public void onFailed(String cause) {
 							Log.e("Network", cause);
+                            NetworkException.getInstance(main).handlerError(cause);
 						}
 					});
 			vH.avatar.setOnClickListener(new OnClickListener() {
@@ -199,6 +201,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 			@Override
 			public void onFailed(String cause) {
 				Log.e("Network", cause);
+                NetworkException.getInstance(main).handlerError(cause);
 			}
 		});
 	}

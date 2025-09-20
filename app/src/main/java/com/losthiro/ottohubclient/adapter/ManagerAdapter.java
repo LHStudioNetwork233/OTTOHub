@@ -19,6 +19,7 @@ import com.losthiro.ottohubclient.utils.*;
 import java.util.*;
 import org.json.*;
 import com.losthiro.ottohubclient.adapter.model.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHolder> {
 	private Context main;
@@ -298,6 +299,7 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 			public void onFailed(String cause) {
 				// TODO: Implement this method
 				Log.e("Network", cause);
+                NetworkException.getInstance(main).handlerError(cause);
 			}
 		});
 	}
@@ -365,6 +367,7 @@ public class ManagerAdapter extends RecyclerView.Adapter<ManagerAdapter.ViewHold
 			public void onFailed(String cause) {
 				// TODO: Implement this method
 				Log.e("Network", cause);
+                NetworkException.getInstance(main).handlerError(cause);
 			}
 		});
 	}

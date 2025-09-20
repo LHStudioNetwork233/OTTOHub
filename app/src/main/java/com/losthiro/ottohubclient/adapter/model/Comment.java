@@ -29,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.losthiro.ottohubclient.impl.ClientString;
 import com.losthiro.ottohubclient.adapter.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 /**
  * @Author Hiro
@@ -182,6 +183,7 @@ public class Comment {
                     @Override
                     public void onFailed(String cause) {
                         Log.e("Network", cause);
+                        NetworkException.getInstance(main).handlerError(cause);
                     }
                 });
         } catch (Exception e) {

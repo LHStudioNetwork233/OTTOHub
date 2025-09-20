@@ -2,8 +2,8 @@
 <manifest
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	package="com.losthiro.ottohubclient"
-	android:versionCode="2025091408"
-	android:versionName="v1.5.1">
+	android:versionCode="2025092109"
+	android:versionName="v1.5.2">
 
 	<uses-sdk
 		android:minSdkVersion="26"
@@ -101,7 +101,8 @@
 			android:name=".MainActivity"
 			android:label="@string/app_name"
 			android:exported="true"
-			android:launchMode="singleTask">
+			android:launchMode="singleTask"
+			android:screenOrientation="user">
 
 			<intent-filter>
 
@@ -142,9 +143,9 @@
 		<activity
 			android:name=".PlayerActivity"
 			android:exported="true"
+			android:screenOrientation="user"
 			android:hardwareAccelerated="true"
-			android:configChanges="screenSize|keyboardHidden|orientation"
-			android:screenOrientation="portrait">
+			android:configChanges="screenSize|keyboardHidden|orientation">
 
 			<intent-filter>
 

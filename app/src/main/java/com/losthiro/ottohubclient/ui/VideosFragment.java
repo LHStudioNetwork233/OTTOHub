@@ -32,12 +32,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.Observer;
 import android.app.Application;
+import com.losthiro.ottohubclient.crashlogger.*;
+import android.content.res.*;
+import androidx.recyclerview.widget.RecyclerView.*;
+import androidx.recyclerview.widget.RecyclerView.ItemAnimator.*;
+import android.animation.*;
 
 public class VideosFragment extends Fragment {
 	public final static String TAG = "Videos";
 	private final static Handler uiThread = new Handler(Looper.getMainLooper());
 	private static final Semaphore request = new Semaphore(1);
-    private static final HashMap<Integer, Integer> offsetMap = new HashMap<>();
+	private static final HashMap<Integer, Integer> offsetMap = new HashMap<>();
 	private static Runnable mCallback;
 	private Context ctx;
 	private boolean isAuto = true;
@@ -65,12 +70,13 @@ public class VideosFragment extends Fragment {
 		if (savedInstanceState != null) {
 			categoryIndex = savedInstanceState.getInt("category");
 		}
+		int span = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE ? 3 : 2;
 		popularList = parent.findViewById(R.id.popular_list);
 		videoList = parent.findViewById(R.id.videos_list);
 		videoRefresh = parent.findViewById(R.id.video_refresh);
 		userAvatar = parent.findViewById(R.id.main_user_avatar);
 		countView = parent.findViewById(R.id.main_message_count);
-		GridLayoutManager layout = new GridLayoutManager(ctx, 2);
+		GridLayoutManager layout = new GridLayoutManager(ctx, span);
 		layout.setInitialPrefetchItemCount(6);
 		layout.setItemPrefetchEnabled(true);
 		videoList.setLayoutManager(layout);
@@ -169,7 +175,7 @@ public class VideosFragment extends Fragment {
 
 	private void initCategoryView() {
 		View contentView = getView();
-		final int categoryCount = 13;
+		final int categoryCount = 12;
 		categorys = new TextView[categoryCount];
 		categorys[0] = contentView.findViewWithTag("recommend");
 		categorys[1] = contentView.findViewWithTag("new");
@@ -182,13 +188,12 @@ public class VideosFragment extends Fragment {
 		categorys[8] = contentView.findViewWithTag("4");
 		categorys[9] = contentView.findViewWithTag("5");
 		categorys[10] = contentView.findViewWithTag("6");
-		categorys[11] = contentView.findViewWithTag("7");
-		categorys[12] = contentView.findViewWithTag("0");
+		categorys[11] = contentView.findViewWithTag("0");
 		for (int i = 0; i < categoryCount; i++) {
 			final int index = i;//防止越权
-            TextView current = categorys[i];
-            current.setBackgroundResource(i == categoryIndex ? R.drawable.btn_bg : R.drawable.btn_empty_bg);
-            current.setTextColor(i == categoryIndex ? Color.WHITE : ResourceUtils.getColor(R.color.colorSecondary));
+			TextView current = categorys[i];
+			current.setBackgroundResource(i == categoryIndex ? R.drawable.btn_bg : R.drawable.btn_empty_bg);
+			current.setTextColor(i == categoryIndex ? Color.WHITE : ResourceUtils.getColor(R.color.colorSecondary));
 			current.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -233,7 +238,7 @@ public class VideosFragment extends Fragment {
 							@Override
 							public void run() {
 								PopularAdapter popular = new PopularAdapter(ctx, data);
-                                popularList.setAdapter(popular);
+								popularList.setAdapter(popular);
 								updatePopular(parent);
 							}
 						});
@@ -248,6 +253,7 @@ public class VideosFragment extends Fragment {
 			@Override
 			public void onFailed(String cause) {
 				Log.e("Network", cause);
+				NetworkException.getInstance(getContext()).handlerError(cause);
 			}
 		});
 	}
@@ -288,12 +294,12 @@ public class VideosFragment extends Fragment {
 	private void requestCategory(boolean isRefresh) {
 		String uri = APIManager.VideoURI.getRandomVideoURI(12);
 		int index = categoryIndex;
-        int current = offsetMap.getOrDefault(index, 0);
-        if (isRefresh) {
-            offsetMap.put(index, 0);
-        } else {
-            offsetMap.put(index, current + 12);
-        }
+		int current = offsetMap.getOrDefault(index, 0);
+		if (isRefresh) {
+			offsetMap.put(index, 0);
+		} else {
+			offsetMap.put(index, current + 12);
+		}
 		if (index == 1) {
 			uri = APIManager.VideoURI.getNewVideoURI(current, 12);
 		}
@@ -354,21 +360,21 @@ public class VideosFragment extends Fragment {
 							uiThread.post(new Runnable() {
 								@Override
 								public void run() {
-                                    RecyclerView.Adapter adapter = videoList.getAdapter();
-                                    if (adapter == null) {
-                                        adapter = new VideoAdapter(ctx, data);
-                                        videoList.setAdapter(adapter);
-                                        return;
-                                    }
-                                    if (adapter instanceof VideoAdapter) {
-                                        VideoAdapter video = (VideoAdapter) adapter;
-                                        if (isRefresh) {
-                                            video.setData(data);
-                                        } else {
-                                            video.addNewData(data);
-                                            video.stopLoading();
-                                        }
-                                    }
+									RecyclerView.Adapter adapter = videoList.getAdapter();
+									if (adapter == null) {
+										adapter = new VideoAdapter(ctx, data);
+										videoList.setAdapter(adapter);
+										return;
+									}
+									if (adapter instanceof VideoAdapter) {
+										VideoAdapter video = (VideoAdapter) adapter;
+										if (isRefresh) {
+											video.setData(data);
+										} else {
+											video.addNewData(data);
+											video.stopLoading();
+										}
+									}
 								}
 							});
 							videoRefresh.setRefreshing(false);
@@ -383,6 +389,7 @@ public class VideosFragment extends Fragment {
 				@Override
 				public void onFailed(String cause) {
 					Log.e("Network", cause);
+					NetworkException.getInstance(getContext()).handlerError(cause);
 					videoRefresh.setRefreshing(false);
 				}
 			});
@@ -430,6 +437,7 @@ public class VideosFragment extends Fragment {
 					@Override
 					public void onFailed(String cause) {
 						Log.e(TAG, cause);
+						NetworkException.getInstance(getContext()).handlerError(cause);
 					}
 				});
 	}

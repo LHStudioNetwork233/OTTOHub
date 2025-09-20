@@ -22,6 +22,7 @@ import com.losthiro.ottohubclient.adapter.setting.*;
 import java.util.*;
 import android.widget.*;
 import com.losthiro.ottohubclient.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 public class ProfileFragment extends Fragment {
 	public static final String TAG = "Profile";
@@ -86,6 +87,7 @@ public class ProfileFragment extends Fragment {
 					public void onFailed(String cause) {
 						// TODO: Implement this method
 						Log.e("Network", cause);
+                        NetworkException.getInstance(getContext()).handlerError(cause);
 					}
 				});
 	}
@@ -244,6 +246,7 @@ public class ProfileFragment extends Fragment {
 			@Override
 			public void onFailed(String cause) {
 				Log.e(TAG, cause);
+                NetworkException.getInstance(getContext()).handlerError(cause);
 			}
 		});
 	}
@@ -299,6 +302,7 @@ public class ProfileFragment extends Fragment {
 					@Override
 					public void onFailed(String cause) {
 						Log.e(TAG, cause);
+                        NetworkException.getInstance(getContext()).handlerError(cause);
 					}
 				});
 	}
@@ -362,6 +366,7 @@ public class ProfileFragment extends Fragment {
 					public void onFailed(String cause) {
 						// TODO: Implement this method
 						Log.e("Network", cause);
+                        NetworkException.getInstance(getContext()).handlerError(cause);
 					}
 				});
 	}
@@ -407,6 +412,7 @@ public class ProfileFragment extends Fragment {
 					public void onFailed(String cause) {
 						// TODO: Implement this method
 						Log.e("Network", cause);
+                        NetworkException.getInstance(getContext()).handlerError(cause);
 					}
 				});
 	}
@@ -452,6 +458,7 @@ public class ProfileFragment extends Fragment {
 					public void onFailed(String cause) {
 						// TODO: Implement this method
 						Log.e("Network", cause);
+                        NetworkException.getInstance(getContext()).handlerError(cause);
 					}
 				});
 	}
@@ -497,6 +504,7 @@ public class ProfileFragment extends Fragment {
 					public void onFailed(String cause) {
 						// TODO: Implement this method
 						Log.e("Network", cause);
+                        NetworkException.getInstance(getContext()).handlerError(cause);
 					}
 				});
 	}

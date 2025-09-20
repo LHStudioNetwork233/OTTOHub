@@ -16,6 +16,7 @@ import org.json.*;
 import java.util.*;
 import android.content.*;
 import com.losthiro.ottohubclient.adapter.model.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 /**
  * @Author Hiro
@@ -173,16 +174,8 @@ public class AuditActivity extends BasicActivity {
 
 				@Override
 				public void onFailed(String cause) {
-                    if(cause.equals("not_reviewer")&&isFirst){
-                        runOnUiThread(new Runnable(){
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getApplication(), "只有审核员才可查看", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        isFirst = false;
-                    }
 					Log.e("Network", cause);
+                    NetworkException.getInstance(getApplication()).handlerError(cause);
 					auditRefresh.setRefreshing(false);
 				}
 			});

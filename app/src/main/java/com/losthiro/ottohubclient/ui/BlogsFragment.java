@@ -25,6 +25,7 @@ import com.losthiro.ottohubclient.adapter.model.*;
 import com.losthiro.ottohubclient.adapter.*;
 import android.util.*;
 import android.graphics.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 public class BlogsFragment extends Fragment {
 	public static final String TAG = "Blogs";
@@ -35,7 +36,6 @@ public class BlogsFragment extends Fragment {
 	private int categoryIndex = 0;
 	private SwipeRefreshLayout blogRefresh;
 	private RecyclerView blogList;
-	private BlogAdapter adapter;
 	private ImageView userMain;
 	private TextView[] categorys;
 
@@ -51,6 +51,9 @@ public class BlogsFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		// TODO: Implement this method
 		View parent = inflater.inflate(R.layout.fragment_blogs, container, false);
+		if (savedInstanceState != null) {
+			categoryIndex = savedInstanceState.getInt("category");
+		}
 		ctx = parent.getContext();
 		userMain = parent.findViewById(R.id.main_user_avatar);
 		blogRefresh = parent.findViewById(R.id.blog_refresh);
@@ -77,8 +80,9 @@ public class BlogsFragment extends Fragment {
 					int itemCount = view.getLayoutManager().getItemCount();
 					int lastPos = ((LinearLayoutManager) view.getLayoutManager()).findLastVisibleItemPosition();
 					if (lastPos >= itemCount - 1) {
-						if (adapter != null) {
-							adapter.startLoading();
+						RecyclerView.Adapter adapter = view.getAdapter();
+						if (adapter != null && adapter instanceof BlogAdapter) {
+							((BlogAdapter) adapter).startLoading();
 						}
 						requestCategory(false);
 					}
@@ -118,6 +122,13 @@ public class BlogsFragment extends Fragment {
 	}
 
 	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO: Implement this method
+		outState.putInt("category", categoryIndex);
+		super.onSaveInstanceState(outState);
+	}
+
+	@Override
 	public void onResume() {
 		// TODO: Implement this method
 		super.onResume();
@@ -130,12 +141,12 @@ public class BlogsFragment extends Fragment {
 	private void requestCategory(boolean isRefresh) {
 		String uri = APIManager.BlogURI.getRandomBlogURI(12);
 		int index = categoryIndex;
-        int current = offsetMap.getOrDefault(index, 0);
-        if (isRefresh) {
-            offsetMap.put(index, 0);
-        } else {
-            offsetMap.put(index, current + 12);
-        }
+		int current = offsetMap.getOrDefault(index, 0);
+		if (isRefresh) {
+			offsetMap.put(index, 0);
+		} else {
+			offsetMap.put(index, current + 12);
+		}
 		if (index == 1) {
 			uri = APIManager.BlogURI.getNewBlogURI(current, 12);
 		}
@@ -186,16 +197,19 @@ public class BlogsFragment extends Fragment {
 							uiThread.post(new Runnable() {
 								@Override
 								public void run() {
+									RecyclerView.Adapter adapter = blogList.getAdapter();
 									if (adapter == null) {
 										adapter = new BlogAdapter(ctx, data);
 										blogList.setAdapter(adapter);
 										return;
-									}
-									if (isRefresh) {
-										adapter.setData(data);
-									} else {
-										adapter.addNewData(data);
-										adapter.stopLoading();
+									} else if (adapter instanceof BlogAdapter) {
+										BlogAdapter blog = (BlogAdapter) adapter;
+										if (isRefresh) {
+											blog.setData(data);
+										} else {
+											blog.addNewData(data);
+											blog.stopLoading();
+										}
 									}
 								}
 							});
@@ -211,6 +225,7 @@ public class BlogsFragment extends Fragment {
 				@Override
 				public void onFailed(String cause) {
 					Log.e("Network", cause);
+					NetworkException.getInstance(getContext()).handlerError(cause);
 					blogRefresh.setRefreshing(false);
 				}
 			});

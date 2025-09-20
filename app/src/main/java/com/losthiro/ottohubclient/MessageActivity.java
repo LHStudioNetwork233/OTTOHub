@@ -42,6 +42,7 @@ import com.losthiro.ottohubclient.adapter.model.*;
 import com.losthiro.ottohubclient.utils.*;
 import android.app.*;
 import java.util.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 /**
  * @Author Hiro
@@ -154,6 +155,7 @@ public class MessageActivity extends BasicActivity {
                     @Override
                     public void onFailed(String cause) {
                         Log.e("Network", cause);
+                        NetworkException.getInstance(getApplication()).handlerError(cause);
                     }
                 });
         } catch (Exception e) {
@@ -240,6 +242,7 @@ public class MessageActivity extends BasicActivity {
                     @Override
                     public void onFailed(String cause) {
                         Log.e("Network", cause);
+                        NetworkException.getInstance(getApplication()).handlerError(cause);
                         msgRefresh.setRefreshing(false);
                     }
                 });
@@ -326,6 +329,7 @@ public class MessageActivity extends BasicActivity {
                 @Override
                 public void onFailed(String cause) {
                     Log.e("Network", cause);
+                    NetworkException.getInstance(getApplication()).handlerError(cause);
                 }
             });
     }
@@ -359,6 +363,7 @@ public class MessageActivity extends BasicActivity {
                 @Override
                 public void onFailed(String cause) {
                     Log.e("Network", cause);
+                    NetworkException.getInstance(getApplication()).handlerError(cause);
                 }
             });
     }

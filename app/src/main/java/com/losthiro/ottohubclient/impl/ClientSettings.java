@@ -18,6 +18,7 @@ public class ClientSettings {
 	private static final HashMap<String, Object> mainfest = new HashMap<>();
     private static final HashMap<String, Object> defMap = new HashMap<>();
 	private Context ctx;
+    private long lastTime;//不知道该拿来干嘛
 
 	public static final ClientSettings getInstance() {
 		return INSTANCE;
@@ -44,7 +45,8 @@ public class ClientSettings {
 			mainfest.putAll(defMap);
             FileUtils.AssetUtils.copyFileAssets(ctx, MAINFEST, FileUtils.getStorage(ctx, MAINFEST));
 		} else {
-			JSONArray content = new JSONObject(setting).optJSONArray("setting");
+            JSONObject root = new JSONObject(setting);
+			JSONArray content = root.optJSONArray("setting");
 			for (int i = 0; i < content.length(); i++) {
 				JSONObject obj = content.optJSONObject(i);
 				String name = obj.optString("name");
@@ -59,6 +61,7 @@ public class ClientSettings {
 					mainfest.put(name, value);
 				}
 			}
+            lastTime = root.optLong("time");
 		}
 	}
 
@@ -88,17 +91,6 @@ public class ClientSettings {
                 defMap.put(name, current.opt("value"));
             }
 		}
-//		defMap.put(SettingPool.ACCOUNT_AUTO_LOGIN, true);
-//		defMap.put(SettingPool.ACCOUNT_AUTO_REMOVE, false);
-//		defMap.put(SettingPool.MSG_MARKDOWN_SURPPORT, true);
-//		defMap.put(SettingPool.PLAYER_BACKGROUND_PLAY, true);
-//		defMap.put(SettingPool.PLAYER_AUTO_QUIT, true);
-//		defMap.put(SettingPool.PLAYER_IMAGE_DISPLAY, Jzvd.VIDEO_IMAGE_DISPLAY_TYPE_ADAPTER);
-//		defMap.put(SettingPool.SYSTEM_CHECK_PERMISSION, false);
-//		defMap.put(SettingPool.SYSTEM_CLICK_SOUND, true);
-//		defMap.put(SettingPool.SYSTEM_SWITCH_THEME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-//		defMap.put(SettingPool.SYSTEM_STORAGE_EDIT, BasicActivity.OLD_STORAGE);
-//		defMap.put(SettingPool.SYSTEM_SPLASH_BG, null);
 		return def;
 	}
 
@@ -165,8 +157,12 @@ public class ClientSettings {
         }
 		return obj.toString();
 	}
+    
+    public long getLastUpdate() {
+        return lastTime;
+    }
 
-	public static class SettingPool {
+	public static class SettingPool {//设置字典
 		public static final String ACCOUNT_AUTO_LOGIN = "ottohub/account/auto_login";
 		public static final String ACCOUNT_AUTO_REMOVE = "ottohub/account/auto_remove";
 
@@ -184,6 +180,7 @@ public class ClientSettings {
 		public static final String SYSTEM_SWITCH_THEME = "ottohub/system/switch_theme";
 		public static final String SYSTEM_STORAGE_EDIT = "ottohub/system/storage_edit";
 		public static final String SYSTEM_SPLASH_BG = "ottohub/system/splash_bg";
+        public static final String SYSTEM_USE_DECOR = "ottohub/system/use_decor";
 	}
 }
 

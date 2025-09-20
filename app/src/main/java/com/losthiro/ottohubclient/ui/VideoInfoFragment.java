@@ -26,6 +26,9 @@ import android.graphics.*;
 import com.losthiro.ottohubclient.*;
 import android.app.Dialog;
 import com.losthiro.ottohubclient.view.dialog.*;
+import com.losthiro.ottohubclient.crashlogger.*;
+import com.losthiro.ottohubclient.view.*;
+import cn.jzvd.*;
 
 public class VideoInfoFragment extends Fragment {
 	public final static String TAG = "VideoInfo";
@@ -33,7 +36,7 @@ public class VideoInfoFragment extends Fragment {
 	private static final HashMap<String, Object> valueMap = new HashMap<>();
 	private VideoInfo current;
 	private OnRequestVideoListener mListener;
-    private BottomDialog collectionDialog;
+	private BottomDialog collectionDialog;
 	private RecyclerView videoList;
 	private TextView likeCountView;
 	private TextView favouriteView;
@@ -71,15 +74,15 @@ public class VideoInfoFragment extends Fragment {
 		favouriteView = root.findViewById(R.id.video_favorite_count);
 		collectionName = root.findViewWithTag("video_collection");
 		collectionCount = root.findViewWithTag("video_collection_count");
-        ((View)collectionName.getParent()).setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // TODO: Implement this method
-                    if (collectionDialog != null) {
-                        collectionDialog.show();
-                    }
-                }
-            });
+		((View) collectionName.getParent()).setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO: Implement this method
+				if (collectionDialog != null) {
+					collectionDialog.show();
+				}
+			}
+		});
 		return root;
 	}
 
@@ -129,6 +132,7 @@ public class VideoInfoFragment extends Fragment {
 				@Override
 				public void onFailed(String cause) {
 					Log.e("Network", cause);
+					NetworkException.getInstance(getContext()).handlerError(cause);
 				}
 			});
 			NetworkUtils.getNetwork.getNetworkJson(APIManager.VideoURI.getRandomVideoURI(12),
@@ -165,6 +169,7 @@ public class VideoInfoFragment extends Fragment {
 						@Override
 						public void onFailed(String cause) {
 							Log.e("Network", cause);
+							NetworkException.getInstance(getContext()).handlerError(cause);
 						}
 					});
 			NetworkUtils.getNetwork.getNetworkJson(APIManager.CollectionURI.getCollectionGetURI(vid),
@@ -175,10 +180,10 @@ public class VideoInfoFragment extends Fragment {
 							try {
 								int now = 0;
 								JSONObject json = new JSONObject(content);
-                                if (!json.optString("status").equals("success")){
-                                    onFailed(json.optString("message"));
-                                    return;
-                                }
+								if (!json.optString("status").equals("success")) {
+									onFailed(json.optString("message"));
+									return;
+								}
 								JSONArray array = json.optJSONArray("video_list");
 								final String name = json.optString("collection");
 								final List<Video> collectionList = new ArrayList<>();
@@ -201,17 +206,30 @@ public class VideoInfoFragment extends Fragment {
 										collectionName.setText(name);
 										collectionCount.setText(StringUtils
 												.strCat(new Object[]{index, File.separator, collectionList.size()}));
-                                        collectionDialog = new BottomDialog(ctx, R.layout.dialog_video_collection);
-                                        View root = collectionDialog.getContent();
-                                        if (root == null) {
-                                            return;
-                                        }
-                                        TextView countView = root.findViewWithTag("collection_count");
-                                        countView.setText(StringUtils.strCat(new Object[]{countView.getText(), "(", collectionList.size(), ")"}));
-                                        ((TextView) root.findViewWithTag("collection_name")).setText(name);
-                                        RecyclerView list = root.findViewWithTag("collection_list");
-                                        list.setLayoutManager(new GridLayoutManager(ctx, 1));
-                                        list.setAdapter(new VideoAdapter(ctx, collectionList));
+										collectionDialog = new BottomDialog(ctx, R.layout.dialog_video_collection);
+										View root = collectionDialog.getContent();
+										if (root == null) {
+											return;
+										}
+										TextView countView = root.findViewWithTag("collection_count");
+										countView.setText(StringUtils.strCat(
+												new Object[]{countView.getText(), "(", collectionList.size(), ")"}));
+										((TextView) root.findViewWithTag("collection_name")).setText(name);
+										RecyclerView list = root.findViewWithTag("collection_list");
+										list.setLayoutManager(new GridLayoutManager(ctx, 1));
+										list.setAdapter(new VideoAdapter(ctx, collectionList));
+//										FragmentActivity act = getActivity();
+//										if (act != null && act instanceof PlayerActivity) {
+//											((PlayerActivity) act).addCollectionListener(index, collectionList.size(),
+//													new ClientVideoView.VideoListListener() {
+//														@Override
+//														public void onClickIndex(ClientVideoView view, int pos) {
+//															// TODO: Implement this method
+//                                                            Video currentVideo = collectionList.get(pos);
+//                                                            
+//														}
+//													});
+//										}
 									}
 								});
 							} catch (Exception e) {
@@ -223,6 +241,7 @@ public class VideoInfoFragment extends Fragment {
 						public void onFailed(String cause) {
 							// TODO: Implement this method
 							Log.e("Network", cause);
+							NetworkException.getInstance(getContext()).handlerError(cause);
 						}
 					});
 		}
@@ -383,6 +402,7 @@ public class VideoInfoFragment extends Fragment {
 					@Override
 					public void onFailed(String cause) {
 						Log.e("Network", cause);
+						NetworkException.getInstance(getContext()).handlerError(cause);
 					}
 				});
 	}
@@ -436,6 +456,7 @@ public class VideoInfoFragment extends Fragment {
 					@Override
 					public void onFailed(String cause) {
 						Log.e("Network", cause);
+						NetworkException.getInstance(getContext()).handlerError(cause);
 					}
 				});
 	}
@@ -507,6 +528,7 @@ public class VideoInfoFragment extends Fragment {
 					@Override
 					public void onFailed(String cause) {
 						Log.e("Network", cause);
+						NetworkException.getInstance(v.getContext()).handlerError(cause);
 					}
 				});
 	}
@@ -566,6 +588,7 @@ public class VideoInfoFragment extends Fragment {
 					@Override
 					public void onFailed(String cause) {
 						Log.e("Network", cause);
+						NetworkException.getInstance(followingBtn.getContext()).handlerError(cause);
 					}
 				});
 	}
@@ -653,6 +676,7 @@ public class VideoInfoFragment extends Fragment {
 						@Override
 						public void onFailed(String cause) {
 							Log.e("Network", cause);
+							NetworkException.getInstance(getContext()).handlerError(cause);
 						}
 					});
 			Runnable callback = new Runnable() {
@@ -765,8 +789,8 @@ public class VideoInfoFragment extends Fragment {
 					return "其他";
 				case APIManager.VideoURI.CATEGORY_FUN :
 					return "鬼畜";
-				case APIManager.VideoURI.CATEGORY_MAD :
-					return "音MAD";
+				//				case APIManager.VideoURI.CATEGORY_MAD :
+				//					return "音MAD";
 				case APIManager.VideoURI.CATEGORY_VOCALOID :
 					return "人力VOCALOID";
 				case APIManager.VideoURI.CATEGORY_THEATER :

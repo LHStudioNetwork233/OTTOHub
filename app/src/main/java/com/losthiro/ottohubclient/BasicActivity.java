@@ -9,24 +9,23 @@ import java.lang.ref.WeakReference;
 import com.losthiro.ottohubclient.impl.UploadManager;
 import java.io.*;
 import android.os.Build;
+import android.app.AlertDialog;
 import com.losthiro.ottohubclient.utils.*;
 import android.widget.*;
 import com.losthiro.ottohubclient.impl.*;
 import org.json.*;
 import java.util.concurrent.*;
 import android.view.*;
-import androidx.core.view.*;
-import androidx.core.graphics.*;
 import android.content.*;
-import android.app.*;
 import android.graphics.*;
+import android.content.res.*;
 
 public class BasicActivity extends AppCompatActivity {
 	public static final int LOGIN_REQUEST_CODE = 114;
 	public static final int IMAGE_REQUEST_CODE = 514;
 	public static final int VIDEO_REQUEST_CODE = 1919;
 	public static final int AVATAR_REQUEST_CODE = 810;
-    public static final int FILE_REQUEST_CODE = 233;
+	public static final int FILE_REQUEST_CODE = 233;
 
 	public static final long VIDEO_SIZE = 200 * 1024 * 1024;
 	public static final long COVER_SIZE = 1024 * 1024;
@@ -51,17 +50,29 @@ public class BasicActivity extends AppCompatActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		// TODO: Implement this method
 		super.onPostCreate(savedInstanceState);
-		ViewGroup root = findViewById(android.R.id.content);
-		root.setFitsSystemWindows(true);
-		WindowInsets insets = root.getRootWindowInsets();
-        if (insets != null) {
-            int navigationBarHeight = insets.getSystemWindowInsetBottom();
-            Rect visibleFrame = new Rect();
-            root.getGlobalVisibleRect(visibleFrame);
-            if(visibleFrame.bottom > root.getHeight() - navigationBarHeight){
-                root.setBottom(navigationBarHeight);
-            }
-        }
+		View decor = getWindow().getDecorView();
+		decor.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+			@Override
+			public WindowInsets onApplyWindowInsets(View v, WindowInsets insets) {
+				// TODO: Implement this method
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+					int top = insets.getInsets(WindowInsets.Type.statusBars()).top;
+					int bottom = insets.getInsets(WindowInsets.Type.navigationBars()).bottom;
+					if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+						v.setPadding(0, top, 0, bottom);
+					}
+				}
+				v.setFitsSystemWindows(true);
+				return insets;
+			}
+		});
+		Configuration config = getResources().getConfiguration();
+		if (ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.SYSTEM_USE_DECOR)
+				|| config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			setFullscreen(true);
+		} else if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {
+			setFullscreen(false);
+		}
 	}
 
 	@Override
@@ -93,7 +104,8 @@ public class BasicActivity extends AppCompatActivity {
 
 	public static String getCurrentStorage() {
 		if (currentStorage == null) {
-			currentStorage = ClientSettings.getInstance().getString(ClientSettings.SettingPool.SYSTEM_STORAGE_EDIT, OLD_STORAGE);
+			currentStorage = ClientSettings.getInstance().getString(ClientSettings.SettingPool.SYSTEM_STORAGE_EDIT,
+					OLD_STORAGE);
 		}
 		return currentStorage;
 	}
@@ -103,7 +115,7 @@ public class BasicActivity extends AppCompatActivity {
 		boolean isSuccess = DeviceUtils.getAndroidSDK() < Build.VERSION_CODES.R && path.exists() && path.isDirectory();
 		if (isSuccess) {
 			currentStorage = newStorage;
-            ClientSettings.getInstance().putValue(ClientSettings.SettingPool.SYSTEM_STORAGE_EDIT, newStorage);
+			ClientSettings.getInstance().putValue(ClientSettings.SettingPool.SYSTEM_STORAGE_EDIT, newStorage);
 		}
 		return isSuccess;
 	}
@@ -133,10 +145,9 @@ public class BasicActivity extends AppCompatActivity {
 								}
 								String status = json.optString("status", "error");
 								if (status.equals("success")) {
-                                    runOnUiThread(callback);
 									return;
 								}
-								onFailed(content);
+								onFailed(json.optString("message"));
 							} catch (JSONException e) {
 								onFailed(e.toString());
 							}
@@ -145,12 +156,31 @@ public class BasicActivity extends AppCompatActivity {
 						@Override
 						public void onFailed(final String cause) {
 							Log.e("Network", cause);
+							runOnUiThread(callback);
 						}
 					});
 		} catch (Exception e) {
 			Thread.currentThread().interrupt();
 		} finally {
 			request.release();
+		}
+	}
+
+	private void setFullscreen(boolean isEnable) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+			int fullscreen = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+					| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+			getWindow().getDecorView().setSystemUiVisibility(isEnable ? fullscreen : View.SYSTEM_UI_FLAG_VISIBLE);
+		} else {
+			int views = WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars();
+			WindowInsetsController controller = getWindow().getInsetsController();
+			if (controller != null) {
+				if (isEnable) {
+					controller.hide(views);
+				} else {
+					controller.show(views);
+				}
+			}
 		}
 	}
 }

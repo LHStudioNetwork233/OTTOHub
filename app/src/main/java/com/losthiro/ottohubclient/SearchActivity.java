@@ -45,6 +45,7 @@ import com.losthiro.ottohubclient.utils.DeviceUtils;
 import android.os.Build;
 import com.losthiro.ottohubclient.utils.*;
 import java.util.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 /**
  * @Author Hiro
@@ -300,6 +301,7 @@ public class SearchActivity extends BasicActivity {
                         @Override
                         public void onFailed(String cause) {
                             Log.e("Network", cause);
+                            NetworkException.getInstance(getApplication()).handlerError(cause);
                         }
                     });
                 break;
@@ -344,6 +346,7 @@ public class SearchActivity extends BasicActivity {
                         @Override
                         public void onFailed(String cause) {
                             Log.e("Network", cause);
+                            NetworkException.getInstance(getApplication()).handlerError(cause);
                         }
                     });
                 break;
@@ -388,6 +391,7 @@ public class SearchActivity extends BasicActivity {
                         @Override
                         public void onFailed(String cause) {
                             Log.e("Network", cause);
+                            NetworkException.getInstance(getApplication()).handlerError(cause);
                         }
                     });
                 break;
@@ -456,6 +460,7 @@ public class SearchActivity extends BasicActivity {
                                 @Override
                                 public void onFailed(String cause) {
                                     Log.e("Network", cause);
+                                    NetworkException.getInstance(getApplication()).handlerError(cause);
                                 }
                             });
                     }
@@ -496,6 +501,7 @@ public class SearchActivity extends BasicActivity {
                             @Override
                             public void onFailed(String cause) {
                                 Log.e("Network", cause);
+                                NetworkException.getInstance(getApplication()).handlerError(cause);
                             }
                         });
                 }

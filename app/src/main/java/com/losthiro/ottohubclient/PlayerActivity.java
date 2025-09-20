@@ -80,6 +80,7 @@ import com.losthiro.ottohubclient.ui.*;
 import com.losthiro.ottohubclient.ui.VideoInfoFragment.*;
 import com.losthiro.ottohubclient.impl.*;
 import com.losthiro.ottohubclient.function.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 /**
  * @Author Hiro
@@ -88,7 +89,8 @@ import com.losthiro.ottohubclient.function.*;
 public class PlayerActivity extends BasicActivity
 		implements
 			VideoInfoFragment.OnRequestVideoListener,
-			ScreenRotate.OrientationChangeListener {
+			ScreenRotate.OrientationChangeListener,
+            ClientVideoView.DanmakuListener {
 	public static final String TAG = "PlayerActivity";
 	private static final Semaphore request = new Semaphore(1);
 	private static final Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -175,9 +177,11 @@ public class PlayerActivity extends BasicActivity
 		}
 		danmakuEdit = findViewById(R.id.video_danmaku_edit);
 		main = findViewById(R.id.main_video_view);
-        main.setThemeColor(ResourceUtils.getColor(R.color.colorAccent));
-        main.setAutoQuit(ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.PLAYER_AUTO_QUIT));
-        main.setVideoImageDisplayType(ClientSettings.getInstance().getInt(ClientSettings.SettingPool.PLAYER_IMAGE_DISPLAY));
+		main.setThemeColor(ResourceUtils.getColor(R.color.colorAccent));
+		main.setAutoQuit(ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.PLAYER_AUTO_QUIT));
+		main.setVideoImageDisplayType(
+				ClientSettings.getInstance().getInt(ClientSettings.SettingPool.PLAYER_IMAGE_DISPLAY));
+        main.setDanmakuClickable(this);
 	}
 
 	@Override
@@ -226,6 +230,18 @@ public class PlayerActivity extends BasicActivity
 	}
 
 	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO: Implement this method
+		super.onConfigurationChanged(newConfig);
+		if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE && main.screen == Jzvd.SCREEN_NORMAL) {
+			main.gotoFullscreen();
+		} else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT
+				&& main.screen == Jzvd.SCREEN_FULLSCREEN) {
+			main.gotoNormalScreen();
+		}
+	}
+
+	@Override
 	public void orientationChange(int orientation) {
 		if (!ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.PLAYER_AUTO_FULLSCREEN)) {
 			return;
@@ -255,13 +271,77 @@ public class PlayerActivity extends BasicActivity
 				new Share(PlayerActivity.this, msg).run();
 			}
 		});
-        JSONArray array = null;
-        try {
-            array = current.getDanmakuList(PlayerActivity.this);
-        } catch (JSONException unuse) {
-        }
-        loadDanmaku(array);
+		JSONArray array = null;
+		try {
+			array = current.getDanmakuList(PlayerActivity.this);
+		} catch (JSONException unuse) {
+		}
+		loadDanmaku(array);
 	}
+    
+    @Override
+    public void onDelete(long id) {
+        // TODO: Implement this method
+        AccountManager manager = AccountManager.getInstance(this);
+        if(!manager.isLogin()) {
+            Toast.makeText(getApplication(), "那我缺的登录这一块", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        NetworkUtils.getNetwork.getNetworkJson(APIManager.DanmakuURI.getDeleteURI(id, manager.getAccount().getToken()), new NetworkUtils.HTTPCallback() {
+                @Override
+                public void onSuccess(String content) {
+                    // TODO: Implement this method
+                    try {
+                        JSONObject json = new JSONObject(content);
+                        if (json.optString("status").equals("success")) {
+                            return;
+                        }
+                        onFailed(json.optString("message"));
+                    } catch (Exception e) {
+                        onFailed(e.toString());
+                    }
+                }
+
+                @Override
+                public void onFailed(String cause) {
+                    // TODO: Implement this method
+                    Log.e("Network", cause);
+                    NetworkException.getInstance(getApplication()).handlerError(cause);
+                }
+            });
+    }
+
+    @Override
+    public void onReport(long id) {
+        // TODO: Implement this method
+        AccountManager manager = AccountManager.getInstance(this);
+        if(!manager.isLogin()) {
+            Toast.makeText(getApplication(), "那我缺的登录这一块", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        NetworkUtils.getNetwork.getNetworkJson(APIManager.DanmakuURI.getReportURI(id, manager.getAccount().getToken()), new NetworkUtils.HTTPCallback() {
+                @Override
+                public void onSuccess(String content) {
+                    // TODO: Implement this method
+                    try {
+                        JSONObject json = new JSONObject(content);
+                        if (json.optString("status").equals("success")) {
+                            return;
+                        }
+                        onFailed(json.optString("message"));
+                    } catch (Exception e) {
+                        onFailed(e.toString());
+                    }
+                }
+
+                @Override
+                public void onFailed(String cause) {
+                    // TODO: Implement this method
+                    Log.e("Network", cause);
+                    NetworkException.getInstance(getApplication()).handlerError(cause);
+                }
+            });
+    }
 
 	private FragmentStatePagerAdapter initPage(long vid, String rootPath) {
 		PagesAdapter data = new PagesAdapter(this);
@@ -318,6 +398,7 @@ public class PlayerActivity extends BasicActivity
 						@Override
 						public void onFailed(String cause) {
 							Log.e("Network", cause);
+							NetworkException.getInstance(getApplication()).handlerError(cause);
 						}
 					});
 		}
@@ -522,29 +603,18 @@ public class PlayerActivity extends BasicActivity
 				try {
 					JSONObject json = new JSONObject(content);
 					if (json.optString("status", "error").equals("success")) {
-						int type = BaseDanmaku.TYPE_SCROLL_LR;
-						if (danmakuType.equals("bottom")) {
-							type = BaseDanmaku.TYPE_FIX_BOTTOM;
-						}
-						if (danmakuType.equals("top")) {
-							type = BaseDanmaku.TYPE_FIX_TOP;
-						}
-						final BaseDanmaku data = main.getDanmakuController().mDanmakuFactory.createDanmaku(type);
-						if (data == null) {
-							return;
-						}
-						data.text = danmakuContent;
-						data.padding = 5;
-						data.priority = 1;
-						data.setTime((long) pos);
-						data.textSize = currentSize * (main.getDanmakuParser().getDisplayer().getDensity() - 0.6f);
-						data.textColor = currentColor;
-						data.textShadowColor = currentColor <= Color.BLACK ? Color.WHITE : Color.BLACK;
 						runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
 								// TODO: Implement this method
-								main.addNewDanmaku(data);
+                                int type = BaseDanmaku.TYPE_SCROLL_LR;
+                                if (danmakuType.equals("bottom")) {
+                                    type = BaseDanmaku.TYPE_FIX_BOTTOM;
+                                }
+                                if (danmakuType.equals("top")) {
+                                    type = BaseDanmaku.TYPE_FIX_TOP;
+                                }
+								main.addNewDanmaku(type, danmakuContent, currentSize, currentColor);
 								Toast.makeText(getApplication(), "发送成功", Toast.LENGTH_SHORT).show();
 							}
 						});
@@ -560,6 +630,7 @@ public class PlayerActivity extends BasicActivity
 			public void onFailed(final String cause) {
 				// TODO: Implement this method
 				Log.e("Network", cause);
+				NetworkException.getInstance(getApplication()).handlerError(cause);
 			}
 		});
 		main.goOnPlayOnResume();
@@ -590,6 +661,13 @@ public class PlayerActivity extends BasicActivity
 				}).setNegativeButton(android.R.string.cancel, null).create();
 		dialog.show();
 	}
+    
+    public void addCollectionListener(int current, int max, ClientVideoView.VideoListListener listener) {
+        if (main == null) {
+            return;
+        }
+        main.setVideoCollection(current, max, listener);
+    }
 
 	private void reportCurrent() {
 		try {
@@ -624,6 +702,7 @@ public class PlayerActivity extends BasicActivity
 						@Override
 						public void onFailed(String cause) {
 							Log.e("Network", cause);
+							NetworkException.getInstance(getApplication()).handlerError(cause);
 						}
 					});
 		} catch (Exception e) {

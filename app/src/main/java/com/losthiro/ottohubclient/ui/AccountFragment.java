@@ -26,6 +26,7 @@ import android.view.View.*;
 import android.graphics.drawable.*;
 import com.losthiro.ottohubclient.*;
 import com.losthiro.ottohubclient.view.drawer.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 public class AccountFragment extends Fragment {
 	public static final String TAG = "Account";
@@ -212,6 +213,7 @@ public class AccountFragment extends Fragment {
 						@Override
 						public void onFailed(String cause) {
 							Log.e("Network", cause);
+                            NetworkException.getInstance(getContext()).handlerError(cause);
 							historyRefresh.setRefreshing(false);
 						}
 					});

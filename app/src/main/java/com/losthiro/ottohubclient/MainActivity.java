@@ -42,7 +42,6 @@ import java.util.concurrent.Semaphore;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.losthiro.ottohubclient.view.ClientDrawerLayout;
 import android.view.LayoutInflater;
 import android.graphics.drawable.ColorDrawable;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -78,6 +77,8 @@ import androidx.appcompat.app.*;
 import android.content.*;
 import android.util.*;
 import com.losthiro.ottohubclient.view.*;
+import android.content.res.*;
+import com.losthiro.ottohubclient.function.*;
 
 /**
  * @Author Hiro
@@ -140,6 +141,7 @@ public class MainActivity extends BasicActivity {
 		if (!FileUtils.isStorageAvailable()) {
 			Toast.makeText(getApplication(), "你的内存不够保存东西了", Toast.LENGTH_SHORT).show();
 		}
+        new UpdateCheck(this).run();
 		VideosFragment.setOnAccountChangeListener(callback);
 		SlideDrawerManager.getInstance().saveLastParent(findViewById(android.R.id.content));
 		DefDanmakuManager.getInstance(this);
@@ -157,7 +159,10 @@ public class MainActivity extends BasicActivity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		AccountManager.getInstance(getApplicationContext()).saveAccounts();
+		AccountManager manager = AccountManager.getInstance(getApplicationContext());
+		if (manager.isLogin()) {
+			manager.saveAccounts();
+		}
 	}
 
 	@Override
@@ -199,22 +204,19 @@ public class MainActivity extends BasicActivity {
 	}
 
 	@Override
-	public void startActivityForResult(Intent intent, int requestCode) {
-		super.startActivityForResult(intent, requestCode);
-	}
-
-	@Override
-	public void startActivity(Intent intent) {
-		super.startActivity(intent);
+	public void onConfigurationChanged(Configuration newConfig) {
+		// TODO: Implement this method
+		super.onConfigurationChanged(newConfig);
+		Log.i(TAG, "screen orientation change");
 	}
 
 	private FragmentStatePagerAdapter initPager() {
 		PagesAdapter pages = new PagesAdapter(this);
-        VideosFragment video = VideosFragment.newInstance();
-        video.setRetainInstance(true);
+		VideosFragment video = VideosFragment.newInstance();
+		video.setRetainInstance(true);
 		pages.addItem(video);
-        BlogsFragment blog = BlogsFragment.newInstance();
-        blog.setRetainInstance(true);
+		BlogsFragment blog = BlogsFragment.newInstance();
+		blog.setRetainInstance(true);
 		pages.addItem(blog);
 		if (AccountManager.getInstance(this).isLogin()) {
 			pages.addItem(AccountFragment.newInstance());
@@ -273,25 +275,24 @@ public class MainActivity extends BasicActivity {
 
 	private void checkClipBoard() {
 		ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-		if (clipboard.hasPrimaryClip() && ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.SYSTEM_CHECK_CLIPBOARD)) {
+		if (clipboard.hasPrimaryClip()
+				&& ClientSettings.getInstance().getBoolean(ClientSettings.SettingPool.SYSTEM_CHECK_CLIPBOARD)) {
 			String text = clipboard.getPrimaryClip().getItemAt(0).getText().toString();
-			if (Patterns.WEB_URL.matcher(text).matches()) {
-				final String uri = ClientWebView.getLinks(text);
-				if (uri == null) {
-					return;
-				}
-				AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
-				dialog.setTitle("跳转到复制的地址？");
-				dialog.setMessage(StringUtils.strCat("是否跳转到", uri));
-				dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dia, int which) {
-						ClientWebView.praseLinkAndLoad(MainActivity.this, uri);
-					}
-				});
-				dialog.setNegativeButton(android.R.string.cancel, null);
-				dialog.create().show();
+			final String uri = ClientWebView.getLinks(text);
+			if (uri == null) {
+				return;
 			}
+			AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
+			dialog.setTitle("跳转到复制的地址？");
+			dialog.setMessage(StringUtils.strCat("是否跳转到", uri));
+			dialog.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dia, int which) {
+					ClientWebView.praseLinkAndLoad(MainActivity.this, uri);
+				}
+			});
+			dialog.setNegativeButton(android.R.string.cancel, null);
+			dialog.create().show();
 		}
 	}
 

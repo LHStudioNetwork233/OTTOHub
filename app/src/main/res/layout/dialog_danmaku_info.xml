@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="wrap_content"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal"
+	android:gravity="center"
+	android:padding="5dp"
+	android:background="@drawable/text_bg">
+
+	<ImageButton
+		android:layout_width="32dp"
+		style="?android:attr/buttonBarButtonStyle"
+		android:layout_height="32dp"
+		android:src="@drawable/ic_copy"
+		android:id="@+id/danmaku_copy"/>
+
+	<ImageButton
+		android:layout_width="32dp"
+		style="?android:attr/buttonBarButtonStyle"
+		android:layout_height="32dp"
+		android:src="@drawable/ic_report_black"
+		android:id="@+id/danmaku_report"/>
+
+	<ImageButton
+		android:layout_width="32dp"
+		style="?android:attr/buttonBarButtonStyle"
+		android:layout_height="32dp"
+		android:src="@drawable/ic_remove_account"
+		android:id="@+id/danmaku_delete"/>
+
+</LinearLayout>
+

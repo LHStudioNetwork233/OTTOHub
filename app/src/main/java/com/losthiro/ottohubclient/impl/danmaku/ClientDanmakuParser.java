@@ -28,91 +28,104 @@ import com.losthiro.ottohubclient.utils.StringUtils;
  * @Date 2025/06/03 01:02
  */
 public class ClientDanmakuParser extends BaseDanmakuParser {
-    public static final String TAG = "ClientDanmakuParser";
-    private JSONArray danmakuData;
-    private long danmakuDuration=3000L;
-    protected float mDispScaleX;
-    protected float mDispScaleY; 
+	public static final String TAG = "ClientDanmakuParser";
+	private JSONArray danmakuData;
+	private long danmakuDuration = 3000L;
+	protected float mDispScaleX;
+	protected float mDispScaleY;
 
-    public ClientDanmakuParser(JSONArray json) {
-        danmakuData = json;
-    }
+	public ClientDanmakuParser(JSONArray json) {
+		danmakuData = json;
+	}
 
-    @Override
-    protected IDanmakus parse() {
-        Danmakus result = new Danmakus(IDanmakus.ST_BY_TIME, false, mContext.getBaseComparator());
-        for (int i = 0; i < danmakuData.length(); i++) {
-            JSONDanmaku currentData=new JSONDanmaku(danmakuData.optJSONObject(i));
-            BaseDanmaku data=createDanmaku(currentData.getMode());
-            DanmakuUtils.fillText(data, currentData.getContent());
-            mContext.mDanmakuFactory.fillAlphaData(data, AlphaValue.MAX, AlphaValue.MAX, danmakuDuration);
-            data.padding = 5;
-            data.priority = 0;
-            data.isLive = false;
-            data.textColor = currentData.getColor();
-            data.textShadowColor = currentData.getColor() <= Color.BLACK ? Color.WHITE : Color.BLACK;
-            data.textSize = currentData.getSize() * (getDisplayer().getDensity() - 0.6f);
-            data.duration = new Duration(danmakuDuration);
-            data.flags = mContext.mGlobalFlagValues;
-            data.setTime(currentData.getCurrentTime());
-            if (data.text != null && data.duration != null) {
-                data.setTimer(mTimer);
-                synchronized (result.obtainSynchronizer()) {
-                    result.addItem(data);
-                }
-            }
-        }
-        return result;
-    }
+	@Override
+	protected IDanmakus parse() {
+		Danmakus result = new Danmakus(IDanmakus.ST_BY_TIME, false, mContext.getBaseComparator());
+		for (int i = 0; i < danmakuData.length(); i++) {
+			JSONDanmaku currentData = new JSONDanmaku(danmakuData.optJSONObject(i));
+			BaseDanmaku data = createDanmaku(currentData.getMode());
+			DanmakuUtils.fillText(data, currentData.getContent());
+			mContext.mDanmakuFactory.fillAlphaData(data, AlphaValue.MAX, AlphaValue.MAX, danmakuDuration);
+			data.padding = 5;
+			data.priority = 0;
+			data.isLive = false;
+			data.textColor = currentData.getColor();
+			data.textShadowColor = currentData.getColor() <= Color.BLACK ? Color.WHITE : Color.BLACK;
+			data.textSize = currentData.getSize() * (getDisplayer().getDensity() - 0.6f);
+			data.duration = new Duration(danmakuDuration);
+			data.flags = mContext.mGlobalFlagValues;
+			data.userId = (int) currentData.getID();
+			data.setTime(currentData.getCurrentTime());
+			if (data.text != null && data.duration != null) {
+				data.setTimer(mTimer);
+				synchronized (result.obtainSynchronizer()) {
+					result.addItem(data);
+				}
+			}
+		}
+		return result;
+	}
 
-    @Override
-    public BaseDanmakuParser setDisplayer(IDisplayer disp) {
-        super.setDisplayer(disp);
-        mDispScaleX = mDispWidth / DanmakuFactory.BILI_PLAYER_WIDTH;
-        mDispScaleY = mDispHeight / DanmakuFactory.BILI_PLAYER_HEIGHT;
-        return this;
-    }
+	@Override
+	public BaseDanmakuParser setDisplayer(IDisplayer disp) {
+		super.setDisplayer(disp);
+		mDispScaleX = mDispWidth / DanmakuFactory.BILI_PLAYER_WIDTH;
+		mDispScaleY = mDispHeight / DanmakuFactory.BILI_PLAYER_HEIGHT;
+		return this;
+	}
 
-    private BaseDanmaku createDanmaku(String mode) {
-        int type=BaseDanmaku.TYPE_SCROLL_LR;
-        if (mode.equals("bottom")) {
-            type = BaseDanmaku.TYPE_FIX_BOTTOM;
-        }
-        if (mode.equals("top")) {
-            type = BaseDanmaku.TYPE_FIX_TOP;
-        }
-        return mContext.mDanmakuFactory.createDanmaku(type, mContext);
-    }
+	private BaseDanmaku createDanmaku(String mode) {
+		int type = BaseDanmaku.TYPE_SCROLL_LR;
+		if (mode.equals("bottom")) {
+			type = BaseDanmaku.TYPE_FIX_BOTTOM;
+		}
+		if (mode.equals("top")) {
+			type = BaseDanmaku.TYPE_FIX_TOP;
+		}
+		return mContext.mDanmakuFactory.createDanmaku(type, mContext);
+	}
 
-    private static class JSONDanmaku {
-        private JSONObject root;
+	private static class JSONDanmaku {
+		private JSONObject root;
 
-        public JSONDanmaku(JSONObject obj) {
-            root = obj;
-        }
+		public JSONDanmaku(JSONObject obj) {
+			root = obj;
+		}
 
-        public String getContent() {
-            return root.optString("text", "OTTOHub─=≡Σ((( つ•̀ω•́)つ衝刺～♿️♿️♿️");
-        }
+		public String getContent() {
+			return root.optString("text", "OTTOHub─=≡Σ((( つ•̀ω•́)つ衝刺～♿️♿️♿️");
+		}
 
-        public long getCurrentTime() {
-            return (long)root.optDouble("time", 0) * 1000L;
-        }
+		public long getID() {
+			long id = root.optLong("danmaku_id");
+			try {
+				if (id == 0) {
+					id = Long.parseLong(root.optString("danmaku_id"));
+				}
+			} catch (NumberFormatException unuse) {
+			}
+			return id;
+		}
 
-        public String getMode() {
-            return root.optString("mode", "scroll");
-        }
+		public long getCurrentTime() {
+			return (long) root.optDouble("time", 0) * 1000L;
+		}
 
-        public int getColor() {
-            return Color.parseColor(root.optString("color", "#ffffff"));
-        }
+		public String getMode() {
+			return root.optString("mode", "scroll");
+		}
 
-        public int getSize() {
-            return Integer.parseInt(root.optString("font_size", "20px").replace("px", ""));
-        }
+		public int getColor() {
+			return Color.parseColor(root.optString("color", "#ffffff"));
+		}
 
-        public String getRenderCommand() {
-            return root.optString("render", "");
-        }
-    }
+		public int getSize() {
+			return Integer.parseInt(root.optString("font_size", "20px").replace("px", ""));
+		}
+
+		public String getRenderCommand() {
+			return root.optString("render", "");
+		}
+	}
 }
+

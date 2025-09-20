@@ -43,7 +43,7 @@ public class SplashActivity extends BasicActivity {
                 @Override
                 public void run() {
                     // TODO: Implement this method
-                    AccountManager.getInstance(getApplication()).autoLogin();
+                    Toast.makeText(getApplication(), "服务器离线，请稍后再试", Toast.LENGTH_SHORT).show();
                 }
             });
 		super.onCreate(savedInstanceState);
@@ -63,6 +63,7 @@ public class SplashActivity extends BasicActivity {
                 }
             });
 		anim.start();
+        AccountManager.getInstance(getApplication()).autoLogin();
         ClientSettings setting = ClientSettings.getInstance();
 		String path = setting.getString(ClientSettings.SettingPool.SYSTEM_SPLASH_BG);
 		if (path != null) {

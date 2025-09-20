@@ -18,6 +18,7 @@ import android.view.View.*;
 import java.io.File;
 import java.io.*;
 import com.losthiro.ottohubclient.adapter.model.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 /**
  * @Author Hiro
@@ -205,6 +206,7 @@ public class UploadManagerActivity extends BasicActivity {
 				@Override
 				public void onFailed(String cause) {
 					Log.e("Network", cause);
+                    NetworkException.getInstance(getApplication()).handlerError(cause);
 					refresh.setRefreshing(false);
 				}
 			});

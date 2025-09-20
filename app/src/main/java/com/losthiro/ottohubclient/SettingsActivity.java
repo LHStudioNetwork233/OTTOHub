@@ -66,7 +66,10 @@ public class SettingsActivity extends BasicActivity {
 		Log.i(TAG, "setting activity create");
 		setContentView(R.layout.activity_settings);
 		main = findViewById(R.id.settings_list);
-		main.setLayoutManager(new GridLayoutManager(this, 1));
+        main.setLayoutManager(new GridLayoutManager(this, 1));
+        main.setHasFixedSize(true);
+        main.setDrawingCacheEnabled(true);
+		main.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 		//InfoWindow.getInstance(this);
 		//request();
 		initSettings();
@@ -77,7 +80,9 @@ public class SettingsActivity extends BasicActivity {
 	protected void onPostCreate(Bundle savedInstanceState) {
 		// TODO: Implement this method
 		super.onPostCreate(savedInstanceState);
-		main.setAdapter(new SettingsAdapter(this, initSetting()));
+        List<SettingBasic> settings = initSetting();
+		main.setAdapter(new SettingsAdapter(this, settings));
+        main.setItemViewCacheSize(settings.size() - 1);
 	}
 
 	@Override

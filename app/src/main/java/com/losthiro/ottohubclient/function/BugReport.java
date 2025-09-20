@@ -14,6 +14,7 @@ import com.losthiro.ottohubclient.utils.*;
 import org.json.*;
 import android.util.*;
 import android.os.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 public class BugReport implements Runnable {
     public static final String TAG = "ottohub/client/bug_report";
@@ -84,6 +85,7 @@ public class BugReport implements Runnable {
                 @Override
                 public void onFailed(String cause) {
                     Log.e("Network", cause);
+                    NetworkException.getInstance(mContext).handlerError(cause);
                 }
             });
 	}

@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import com.losthiro.ottohubclient.view.drawer.*;
 import android.util.Base64;
 import java.util.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 /**
  * @Author Hiro
@@ -29,7 +30,7 @@ public class AccountManager {
 	private SharedPreferences prefs;
 	private Runnable callback;
 	private Account current;
-//	private int keyUpdateTime = 30;
+	//	private int keyUpdateTime = 30;
 
 	private AccountManager(Context ctx) {
 		main = ctx;
@@ -96,6 +97,7 @@ public class AccountManager {
 					@Override
 					public void onFailed(final String cause) {
 						Log.e("Network", cause);
+						NetworkException.getInstance(main).handlerError(cause);
 					}
 				});
 	}
@@ -173,18 +175,18 @@ public class AccountManager {
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
-				Toast.makeText(main, e.toString(), Toast.LENGTH_SHORT).show();
+				//Toast.makeText(main, e.toString(), Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
 
 	public void saveAccounts() {
 		Set<String> set = new HashSet<>();
-		for (HashMap.Entry<Long, String> entry : data.entrySet()) {
-			long uid = entry.getKey();
-			String pw = entry.getValue();
-			JSONObject account = new JSONObject();
-			try {
+		try {
+			for (HashMap.Entry<Long, String> entry : data.entrySet()) {
+				long uid = entry.getKey();
+				String pw = entry.getValue();
+				JSONObject account = new JSONObject();
 				boolean isCurrent = false;
 				if (isLogin()) {
 					isCurrent = current.getUID() == uid;
@@ -193,18 +195,17 @@ public class AccountManager {
 				account.put("user_password", pw);
 				account.put("is_current", isCurrent);
 				set.add(account.toString());
-			} catch (JSONException e) {
-				Toast.makeText(main, e.toString(), Toast.LENGTH_SHORT).show();
-				e.printStackTrace();
-				break;
 			}
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putStringSet("accounts", set);
+            edit.putLong("last_update", SystemUtils.getTime());
+            edit.commit();
+		} catch (Exception e) {
+			//Toast.makeText(main, e.toString(), Toast.LENGTH_SHORT).show();
+			e.printStackTrace();
 		}
-		SharedPreferences.Editor edit = prefs.edit();
-		edit.putStringSet("accounts", set);
 		//edit.putString("user_password", password);
-		//edit.putLong("key_last_update", SystemUtils.getTime());
 		//		edit.putBoolean("login_saved", true);
-		edit.commit();
 	}
 
 	private void loadUserDetail(long uid, final String token, final String pw) {
@@ -227,14 +228,15 @@ public class AccountManager {
 			@Override
 			public void onFailed(String cause) {
 				Log.e("Network", cause);
+				NetworkException.getInstance(main).handlerError(cause);
 			}
 		});
 	}
 
-//	private boolean isNeedUpdate() {
-//		long lastUpdate = prefs.getLong("key_last_update", 0);
-//		long time = SystemUtils.getTime() - lastUpdate;
-//		return time > keyUpdateTime * 86400000;
-//	}
+	//	private boolean isNeedUpdate() {
+	//		long lastUpdate = prefs.getLong("key_last_update", 0);
+	//		long time = SystemUtils.getTime() - lastUpdate;
+	//		return time > keyUpdateTime * 86400000;
+	//	}
 }
 

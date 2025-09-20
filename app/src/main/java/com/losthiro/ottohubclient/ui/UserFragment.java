@@ -31,6 +31,7 @@ import com.losthiro.ottohubclient.adapter.page.*;
 import androidx.swiperefreshlayout.widget.*;
 import com.losthiro.ottohubclient.adapter.model.*;
 import android.app.AlertDialog;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 public class UserFragment extends Fragment {
 	public final static String TAG = "User";
@@ -57,6 +58,11 @@ public class UserFragment extends Fragment {
 	public void onViewCreated(final View view, Bundle savedInstanceState) {
 		// TODO: Implement this method
 		super.onViewCreated(view, savedInstanceState);
+        TextView name = view.findViewById(R.id.main_user_name);
+		if (Client.rngFun <= 9 || Client.rngFun >= 99) {
+			name.setText("baka");
+            //你在试图找什么？你这个baka (
+		}
 		final long uid = getArguments().getLong("uid", 0);
 		NetworkUtils.getNetwork.getNetworkJson(APIManager.UserURI.getUserDetail(uid), new NetworkUtils.HTTPCallback() {
 			@Override
@@ -91,6 +97,7 @@ public class UserFragment extends Fragment {
 			@Override
 			public void onFailed(String cause) {
 				Log.e("Network", cause);
+                NetworkException.getInstance(getContext()).handlerError(cause);
 			}
 		});
 	}
@@ -216,7 +223,7 @@ public class UserFragment extends Fragment {
 			}
 		});
 		initCategoryView(current.getID());
-        initIfLogin(current, view);
+		initIfLogin(current, view);
 	}
 
 	private PagerAdapter initPager(long uid) {
@@ -228,48 +235,48 @@ public class UserFragment extends Fragment {
 		data.addItem(UserVideo.newInstance(uid, true));
 		return data;
 	}
-    
-    private void initIfLogin(final UserInfo info, View view) {
-        long uid = info.getID();
-        Button followingBtn = view.findViewById(R.id.following_user);
-        followingBtn.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    followingUser(v, info);
-                }
-            });
-        Account account = AccountManager.getInstance(getContext()).getAccount();
-        if (account == null) {
-            Log.i(TAG, "not login");
-            return;
-        }
-        setFollowingStatus(followingBtn, uid);
-        if (uid == account.getUID()) {
-            ImageView avatarEdit = view.findViewById(R.id.avatar_edit);
-            avatarEdit.setVisibility(View.VISIBLE);
-            avatarEdit.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // TODO: Implement this method
-                        Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        requireActivity().startActivityForResult(i, BasicActivity.IMAGE_REQUEST_CODE);
-                        Toast.makeText(getContext(), "请选择头像文件，大小不超过1MB", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            ImageView profileBtn = view.findViewById(R.id.profile_btn);
-            profileBtn.setVisibility(View.VISIBLE);
-            profileBtn.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // TODO: Implement this method
-                        FragmentActivity a = requireActivity();
-                        if (a instanceof AccountDetailActivity) {
-                            ((AccountDetailActivity) a).loadUserProfile();
-                        }
-                    }
-                });
+
+	private void initIfLogin(final UserInfo info, View view) {
+		long uid = info.getID();
+		Button followingBtn = view.findViewById(R.id.following_user);
+		followingBtn.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				followingUser(v, info);
+			}
+		});
+		Account account = AccountManager.getInstance(getContext()).getAccount();
+		if (account == null) {
+			Log.i(TAG, "not login");
+			return;
 		}
-    }
+		setFollowingStatus(followingBtn, uid);
+		if (uid == account.getUID()) {
+			ImageView avatarEdit = view.findViewById(R.id.avatar_edit);
+			avatarEdit.setVisibility(View.VISIBLE);
+			avatarEdit.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO: Implement this method
+					Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+					requireActivity().startActivityForResult(i, BasicActivity.IMAGE_REQUEST_CODE);
+					Toast.makeText(getContext(), "请选择头像文件，大小不超过1MB", Toast.LENGTH_SHORT).show();
+				}
+			});
+			ImageView profileBtn = view.findViewById(R.id.profile_btn);
+			profileBtn.setVisibility(View.VISIBLE);
+			profileBtn.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO: Implement this method
+					FragmentActivity a = requireActivity();
+					if (a instanceof AccountDetailActivity) {
+						((AccountDetailActivity) a).loadUserProfile();
+					}
+				}
+			});
+		}
+	}
 
 	private void initCategoryView(long uid) {
 		boolean isMe = false;
@@ -414,6 +421,7 @@ public class UserFragment extends Fragment {
 					@Override
 					public void onFailed(String cause) {
 						Log.e("Network", cause);
+                        NetworkException.getInstance(getContext()).handlerError(cause);
 					}
 				});
 	}
@@ -421,7 +429,7 @@ public class UserFragment extends Fragment {
 	private void setFollowingStatus(final Button followingBtn, long uid) {
 		AccountManager manager = AccountManager.getInstance(getContext());
 		if (!manager.isLogin()) {
-            Log.i(TAG, "request following status failed: not login");
+			Log.i(TAG, "request following status failed: not login");
 			return;
 		}
 		NetworkUtils.getNetwork.getNetworkJson(
@@ -474,6 +482,7 @@ public class UserFragment extends Fragment {
 					@Override
 					public void onFailed(String cause) {
 						Log.e("Network", cause);
+                        NetworkException.getInstance(getContext()).handlerError(cause);
 					}
 				});
 	}
@@ -689,6 +698,7 @@ public class UserFragment extends Fragment {
 							@Override
 							public void onFailed(String cause) {
 								Log.e("Network", cause);
+                                NetworkException.getInstance(getContext()).handlerError(cause);
 								refresh.setRefreshing(false);
 							}
 						});
@@ -855,6 +865,7 @@ public class UserFragment extends Fragment {
 							@Override
 							public void onFailed(String cause) {
 								Log.e("Network", cause);
+                                NetworkException.getInstance(getContext()).handlerError(cause);
 								refresh.setRefreshing(false);
 							}
 						});
@@ -1048,6 +1059,7 @@ public class UserFragment extends Fragment {
 								@Override
 								public void onFailed(String cause) {
 									Log.e("Network", cause);
+                                    NetworkException.getInstance(getContext()).handlerError(cause);
 									refresh.setRefreshing(false);
 								}
 							});
@@ -1107,6 +1119,7 @@ public class UserFragment extends Fragment {
 								@Override
 								public void onFailed(String cause) {
 									Log.e("Network", cause);
+                                    NetworkException.getInstance(getContext()).handlerError(cause);
 									refresh.setRefreshing(false);
 								}
 							});

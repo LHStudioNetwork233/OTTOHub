@@ -56,6 +56,7 @@ import androidx.fragment.app.*;
 import com.losthiro.ottohubclient.ui.*;
 import android.app.AlertDialog;
 import android.content.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 /**
  * @Author Hiro
@@ -128,21 +129,7 @@ public class AccountDetailActivity extends BasicActivity {
 							public void onFailed(String cause) {
 								// TODO: Implement this method
 								Log.e("Network", cause);
-								String msg = cause;
-								switch (cause) {
-									case "error_file" :
-										msg = "文件格式错误，请正确选择图片";
-										break;
-									case "file_not_found" :
-										msg = "没有选择图片文件";
-										break;
-									case "too_big_file" :
-										msg = "文件太大啦~请选择1MB以内大小的图片";
-										break;
-								}
-								if (msg != null) {
-									Toast.makeText(getApplication(), msg, Toast.LENGTH_SHORT).show();
-								}
+								NetworkException.getInstance(getApplication()).handlerError(cause);
 							}
 						}).execute(uri);
 			}
@@ -195,23 +182,7 @@ public class AccountDetailActivity extends BasicActivity {
 					public void onFailed(final String cause) {
 						// TODO: Implement this method
 						Log.e("Network", cause);
-						runOnUiThread(new Runnable() {
-							@Override
-							public void run() {
-								Context ctx = getApplication();
-								switch (cause) {
-									case "error_username" :
-										Toast.makeText(ctx, "名字输入错误，不能带特殊符号", Toast.LENGTH_SHORT).show();
-										return;
-									case "username_exist" :
-										Toast.makeText(ctx, "名字已经被别人占用了", Toast.LENGTH_SHORT).show();
-										return;
-									case "warn" :
-										Toast.makeText(ctx, "碰也不能碰的滑梯", Toast.LENGTH_SHORT).show();
-										return;
-								}
-							}
-						});
+						NetworkException.getInstance(getApplication()).handlerError(cause);
 					}
 				});
 	}

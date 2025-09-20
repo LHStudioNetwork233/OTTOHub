@@ -51,6 +51,7 @@ import com.losthiro.ottohubclient.adapter.model.*;
 import androidx.fragment.app.*;
 import com.losthiro.ottohubclient.ui.*;
 import java.util.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 /**
  * @Author Hiro
@@ -287,6 +288,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 			@Override
 			public void onFailed(final String cause) {
 				Log.e("Network", cause);
+                NetworkException.getInstance(main).handlerError(cause);
 			}
 		});
 	}
@@ -342,6 +344,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 			public void onFailed(String cause) {
 				// TODO: Implement this method
 				Log.e("Network", cause);
+                NetworkException.getInstance(main).handlerError(cause);
 			}
 		});
 	}

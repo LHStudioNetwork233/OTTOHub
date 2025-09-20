@@ -28,12 +28,14 @@ import android.view.*;
 import cn.jzvd.*;
 import android.webkit.*;
 import android.view.GestureDetector.*;
+import android.view.View.*;
 
-public class ClientVideoView extends JzvdStd {
+public class ClientVideoView extends JzvdStd implements PopupWindow.OnDismissListener, DrawHandler.Callback {
 	public static final int MODE_PAUSE = 0; //播完暂停(无合集视频暂时是这个类型)
-	public static final int MODE_LOOP = 1; //列表循环
-	public static final int MODE_RESTART = 2; //单视频循环
-	public static final int MODE_RANDOM = 3; //随机播放
+	public static final int MODE_AUTO = 1; //顺序播放
+	public static final int MODE_LOOP = 2; //列表循环
+	public static final int MODE_RESTART = 3; //单视频循环
+	public static final int MODE_RANDOM = 4; //随机播放
 
 	public static final float MAX_SPEED = 2.0f;
 	public static final float MIN_SPEED = 0.5f;
@@ -45,12 +47,16 @@ public class ClientVideoView extends JzvdStd {
 	public TextView mTopLongClickText;
 	public TextView mVideoShare;
 	public ImageView mLockScreenBtn;
+	public ImageView mLastVideoBtn;
+	public ImageView mNextVideoBtn;
 	public DanmakuView mDanmakuView;
+	public PopupWindow mDanmakuInfo;
 	private DanmakuContext controller;
 	private ClientDanmakuParser danmakuParser;
 	private VideoListListener collectionListener;
+	private DanmakuListener danmakuListener;
 	private GestureDetector gesture;
-    private String mScriptTag = "ClientVideoBridge";
+	private String mScriptTag = "ClientVideoBridge";
 	private boolean isLocal;
 	private boolean isPosterShow;
 	private boolean isAutoQuit;
@@ -81,85 +87,40 @@ public class ClientVideoView extends JzvdStd {
 	public void init(Context context) {
 		// TODO: Implement this method
 		super.init(context);
+		setFocusable(true);
+		setClickable(true);
 		setLongClickable(true);
 		mSpeedText = findViewById(R.id.video_speed);
-		mSpeedText.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO: Implement this method
-				speedIndex++;
-				speedIndex = speedIndex % speedList.length;
-				float now = speedList[speedIndex];
-				mediaInterface.setSpeed(now);
-				mSpeedText.setText(StringUtils.strCat(StringUtils.toStr(now), "X"));
-				jzDataSource.objects[0] = speedIndex;
-			}
-		});
+		mSpeedText.setOnClickListener(this);
 		mLockScreenBtn = findViewById(R.id.lock_screen);
-		mLockScreenBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				// TODO: Implement this method
-				if (screen == SCREEN_FULLSCREEN) {
-					mLockScreenBtn.setTag(1);
-					if (!isLockScreen) {
-						isLockScreen = true;
-						JZUtils.setRequestedOrientation(getContext(), ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-						mLockScreenBtn.setImageResource(R.drawable.ic_lock);
-						dissmissControlView();
-					} else {
-						JZUtils.setRequestedOrientation(getContext(), ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-						isLockScreen = false;
-						mLockScreenBtn.setImageResource(R.drawable.ic_unlock);
-						bottomContainer.setVisibility(VISIBLE);
-						bottomProgressBar.setVisibility(GONE);
-						topContainer.setVisibility(VISIBLE);
-						startButton.setVisibility(VISIBLE);
-					}
-				}
-			}
-		});
+		mLockScreenBtn.setOnClickListener(this);
+		mLastVideoBtn = findViewById(R.id.last);
+		mLastVideoBtn.setOnClickListener(this);
+		mNextVideoBtn = findViewById(R.id.next);
+		mNextVideoBtn.setOnClickListener(this);
+		mDanmakuInfo = new PopupWindow(LayoutInflater.from(context).inflate(R.layout.dialog_danmaku_info, this, false),
+				LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+		mDanmakuInfo.setTouchable(true);
+		mDanmakuInfo.setOnDismissListener(this);
 		mDanmakuView = findViewById(R.id.main_danmaku);
 		HashMap<Integer, Integer> maxLinesPair = new HashMap<Integer, Integer>();
 		maxLinesPair.put(BaseDanmaku.TYPE_SCROLL_LR, 5);
 		HashMap<Integer, Boolean> overlappingEnablePair = new HashMap<Integer, Boolean>();
-		overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_LR, true);
+		overlappingEnablePair.put(BaseDanmaku.TYPE_SCROLL_LR, false);
 		overlappingEnablePair.put(BaseDanmaku.TYPE_FIX_TOP, true);
 		controller = DanmakuContext.create();
 		controller.setDanmakuStyle(IDisplayer.DANMAKU_STYLE_STROKEN, 3);
-		controller.setDuplicateMergingEnabled(false);
+		controller.setDuplicateMergingEnabled(true);
 		controller.setScrollSpeedFactor(1.2f);
 		controller.setScaleTextSize(1.2f);
 		controller.setMaximumLines(maxLinesPair);
 		controller.preventOverlapping(overlappingEnablePair);
 		controller.setDanmakuMargin(40);
-		mDanmakuView.setCallback(new DrawHandler.Callback() {
-			@Override
-			public void prepared() {
-				// TODO: Implement this method
-				mDanmakuView.start();
-			}
-
-			@Override
-			public void updateTimer(DanmakuTimer timer) {
-				// TODO: Implement this method
-			}
-
-			@Override
-			public void danmakuShown(BaseDanmaku danmaku) {
-				// TODO: Implement this method
-			}
-
-			@Override
-			public void drawingFinished() {
-				// TODO: Implement this method
-			}
-		});
+		mDanmakuView.setCallback(this);
 		mDanmakuView.enableDanmakuDrawingCache(true);
-		mDanmakuView.seekTo(mSeekTimePosition);
 		mTopLongClickText = findViewById(R.id.long_click_view);
 		mVideoShare = findViewById(R.id.video_share);
-		gesture = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+		gesture = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
 			@Override
 			public boolean onDoubleTap(MotionEvent e) {
 				// TODO: Implement this method
@@ -187,6 +148,48 @@ public class ClientVideoView extends JzvdStd {
 						mediaInterface.seekTo(duration);
 					}
 					value = true;
+				}
+				return value;
+			}
+
+			@Override
+			public boolean onSingleTapConfirmed(final MotionEvent e) {
+				//手动实现弹幕点击事件
+				//因为弹幕烈焰使的弹幕视图好像拦截了父视图的点击事件
+				//直接设置弹幕视图点击事件会有问题
+				boolean value = false;
+				if ((isLockScreen || screen != SCREEN_FULLSCREEN)
+						&& (mDanmakuView == null || danmakuListener == null)) {
+					//不进行拦截的条件
+					return value;
+				}
+				IDanmakus danmakuList = mDanmakuView.getCurrentVisibleDanmakus();
+				if (danmakuList == null) {
+					return value;
+				}
+				if (!danmakuList.isEmpty()) {
+					danmakuList.forEachSync(new IDanmakus.DefaultConsumer<BaseDanmaku>() {
+						@Override
+						public int accept(BaseDanmaku danmaku) {
+							if (danmaku != null) {
+								Rect bounds = new Rect();
+								long danmakuId = danmaku.userId;
+								int x = (int) (e.getX() - mDanmakuView.getXOff());
+								int y = (int) (e.getY() - mDanmakuView.getYOff());
+								int offsetX = (int) (e.getX() + mDanmakuView.getXOff());
+								int offsetY = (int) (e.getY() + mDanmakuView.getYOff());
+								bounds.set((int) danmaku.getLeft(), (int) danmaku.getTop(), (int) danmaku.getRight(),
+										(int) danmaku.getBottom());
+								//计算点击的位置是否是弹幕，是什么弹幕
+								//同时还要判断一下弹幕ID(API操作需要这个)
+								if (bounds.intersect(x, y, offsetX, offsetY) && danmakuId != 0) {
+									showDanmakuInfo(danmaku, (int) e.getX(), (int) e.getY());
+									//return ACTION_BREAK;
+								}
+							}
+							return ACTION_CONTINUE;
+						}
+					});
 				}
 				return value;
 			}
@@ -269,6 +272,95 @@ public class ClientVideoView extends JzvdStd {
 	}
 
 	@Override
+	public void onClick(View v) {
+		// TODO: Implement this method
+		switch (v.getId()) {
+			case R.id.video_speed ://播放速度切换控件
+				speedIndex++;
+				speedIndex = speedIndex % speedList.length;
+				float now = speedList[speedIndex];
+				mediaInterface.setSpeed(now);
+				mSpeedText.setText(StringUtils.strCat(StringUtils.toStr(now), "X"));
+				jzDataSource.objects[0] = speedIndex;
+				break;
+			case R.id.lock_screen ://锁屏按钮控件
+				if (screen == SCREEN_FULLSCREEN) {
+					mLockScreenBtn.setTag(1);
+					if (!isLockScreen) {
+						isLockScreen = true;
+						JZUtils.setRequestedOrientation(getContext(), ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+						mLockScreenBtn.setImageResource(R.drawable.ic_lock);
+						dissmissControlView();
+					} else {
+						JZUtils.setRequestedOrientation(getContext(), ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+						isLockScreen = false;
+						mLockScreenBtn.setImageResource(R.drawable.ic_unlock);
+						bottomContainer.setVisibility(VISIBLE);
+						bottomProgressBar.setVisibility(GONE);
+						topContainer.setVisibility(VISIBLE);
+						startButton.setVisibility(VISIBLE);
+					}
+				}
+				break;
+			case R.id.last ://上一个视频
+				if (collectionListener != null) {
+					clickLast();
+				}
+				break;
+			case R.id.next ://下一个视频
+				if (collectionListener != null) {
+					clickNext();
+				}
+				break;
+			case R.id.danmaku_copy ://复制弹幕文本
+				Object tag = v.getTag();
+				if (tag != null && tag instanceof CharSequence) {
+					String text = tag.toString();
+					if (!text.isEmpty()) {
+						((ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE)).setText(text);
+						Toast.makeText(getContext(), "弹幕复制成功~", Toast.LENGTH_SHORT).show();
+						mDanmakuInfo.dismiss();
+					}
+				}
+				break;
+			case R.id.danmaku_delete ://删除已发弹幕
+				Object delete = v.getTag();
+				if (delete != null && delete instanceof Integer) {
+					final long id = Integer.valueOf(delete);
+					if (id != 0 && danmakuListener != null) {
+						mDanmakuView.getCurrentVisibleDanmakus()
+								.forEachSync(new IDanmakus.DefaultConsumer<BaseDanmaku>() {
+									@Override
+									public int accept(BaseDanmaku danmaku) {
+										if (danmaku != null && danmaku.userId == id) {
+											danmaku.isLive = true;
+											mDanmakuView.removeAllLiveDanmakus();
+											danmakuListener.onDelete(id);
+										}
+										return ACTION_CONTINUE;
+									}
+								});
+						mDanmakuInfo.dismiss();
+					}
+				}
+				break;
+			case R.id.danmaku_report ://举报弹幕
+				Object report = v.getTag();
+				if (report != null && report instanceof Integer) {
+					long id = Integer.valueOf(report);
+					if (id != 0 && danmakuListener != null) {
+						danmakuListener.onReport(id);
+						mDanmakuInfo.dismiss();
+					}
+				}
+				break;
+			default :
+				super.onClick(v);//其他控件点击事件交给vdview处理
+				break;
+		}
+	}
+
+	@Override
 	public void onVideoSizeChanged(int width, int height) {
 		// TODO: Implement this method
 		super.onVideoSizeChanged(width, height);
@@ -294,18 +386,28 @@ public class ClientVideoView extends JzvdStd {
 					super.onCompletion();
 				}
 				break;
-			case MODE_LOOP :
+			case MODE_AUTO :
 				if (hasNext && collectionListener != null) {
-					collectionListener.onClickNext();
+					clickNextDelay();
+				} else {
+					super.onCompletion();
+				}
+				break;
+			case MODE_LOOP :
+				if (collectionListener != null) {
+					clickNextDelay();
+				} else {
+					super.onCompletion();
 				}
 				break;
 			case MODE_RESTART :
-				onStateAutoComplete();
 				startVideoDelay();
 				break;
 			case MODE_RANDOM :
 				if (collectionListener != null && (hasNext || hasLast)) {
-					collectionListener.onClickIndex(StringUtils.rng(0, count - 1));
+					clickRandomDelay();
+				} else {
+					startVideoDelay();
 				}
 				break;
 		}
@@ -354,6 +456,7 @@ public class ClientVideoView extends JzvdStd {
 	public void onStateAutoComplete() {
 		// TODO: Implement this method
 		super.onStateAutoComplete();
+		mDanmakuInfo.dismiss();
 		mDanmakuView.stop();
 		mDanmakuView.clear();
 		mDanmakuView.clearDanmakusOnScreen();
@@ -408,6 +511,8 @@ public class ClientVideoView extends JzvdStd {
 			bottomContainer.setVisibility(GONE);
 			topContainer.setVisibility(GONE);
 			startButton.setVisibility(GONE);
+			mLastVideoBtn.setVisibility(GONE);
+			mNextVideoBtn.setVisibility(GONE);
 		}
 	}
 
@@ -427,12 +532,18 @@ public class ClientVideoView extends JzvdStd {
 		if (isPosterShow) {
 			posterImageView.setVisibility(View.VISIBLE);
 		}
+		if ((index > 0 || count - 1 > index) && collectionListener != null) {
+			mLastVideoBtn.setVisibility(VISIBLE);
+			mNextVideoBtn.setVisibility(VISIBLE);
+		}
 		if (screen == SCREEN_FULLSCREEN) {
 			bottomProgressBar.setVisibility(GONE);
 			if (isLockScreen) {
 				topContainer.setVisibility(GONE);
 				bottomContainer.setVisibility(GONE);
 				startButton.setVisibility(GONE);
+				mLastVideoBtn.setVisibility(GONE);
+				mNextVideoBtn.setVisibility(GONE);
 			} else {
 				topContainer.setVisibility(VISIBLE);
 				bottomContainer.setVisibility(VISIBLE);
@@ -451,6 +562,8 @@ public class ClientVideoView extends JzvdStd {
 		if (screen == SCREEN_FULLSCREEN) {
 			bottomProgressBar.setVisibility(GONE);
 			mLockScreenBtn.setVisibility(View.GONE);
+			mLastVideoBtn.setVisibility(GONE);
+			mNextVideoBtn.setVisibility(GONE);
 		}
 	}
 
@@ -466,8 +579,19 @@ public class ClientVideoView extends JzvdStd {
 					mLockScreenBtn.setVisibility(View.GONE);
 					bottomProgressBar.setVisibility(View.GONE);
 				}
+				mLastVideoBtn.setVisibility(GONE);
+				mNextVideoBtn.setVisibility(GONE);
 			}
 		});
+	}
+
+	@Override
+	public void onDismiss() {
+		// TODO: Implement this method
+		if (state == STATE_PAUSE) {
+			goOnPlayOnResume();//如果此时videoview是暂停状态，别忘记启用播放
+		}
+		mDanmakuView.resume();
 	}
 
 	@Override
@@ -484,6 +608,28 @@ public class ClientVideoView extends JzvdStd {
 		titleTextView.setVisibility(View.INVISIBLE);
 	}
 
+	@Override
+	public void prepared() {
+		// TODO: Implement this method
+		mDanmakuView.start(mSeekTimePosition);
+	}
+
+	@Override
+	public void updateTimer(DanmakuTimer timer) {
+		// TODO: Implement this method
+
+	}
+
+	@Override
+	public void danmakuShown(BaseDanmaku danmaku) {
+		// TODO: Implement this method
+	}
+
+	@Override
+	public void drawingFinished() {
+		// TODO: Implement this method
+	}
+
 	public void init(VideoInfoFragment.VideoInfo video, String title, boolean localMode) {
 		if (video == null) {
 			return;
@@ -491,15 +637,15 @@ public class ClientVideoView extends JzvdStd {
 		isLocal = localMode;
 		init(video.getVideo(), video.getCover(), title);
 	}
-    
-    public void init(String videoUri, String coverUri, String title) {
-        if (title == null) {
-            title = "棍母";
-        }
-        setUp(videoUri, title, SCREEN_NORMAL);
-        initView(coverUri);
+
+	public void init(String videoUri, String coverUri, String title) {
+		if (title == null) {
+			title = "棍母";
+		}
+		setUp(videoUri, title, SCREEN_NORMAL);
+		initView(coverUri);
 		startPreloading();
-    }
+	}
 
 	public void initDanmaku(ClientDanmakuParser parser) {
 		danmakuParser = parser;
@@ -519,9 +665,14 @@ public class ClientVideoView extends JzvdStd {
 		isAutoQuit = enabled;
 	}
 
-	public void setVideoCollection(int current, int max) {
+	public void setVideoCollection(int current, int max, VideoListListener listener) {
 		index = current;
 		count = max;
+		collectionListener = listener;
+	}
+
+	public void setDanmakuClickable(DanmakuListener listener) {
+		danmakuListener = listener;
 	}
 
 	public void setThemeColor(int color) {
@@ -541,7 +692,7 @@ public class ClientVideoView extends JzvdStd {
 	}
 
 	public void setWebViewBridge(WebView view, String name) {
-        mScriptTag = name;
+		mScriptTag = name;
 		view.getSettings().setJavaScriptEnabled(true);
 		view.addJavascriptInterface(new ViewBridge(this, view), name);
 	}
@@ -550,20 +701,28 @@ public class ClientVideoView extends JzvdStd {
 		setWebViewBridge(view, mScriptTag);
 	}
 
-	public void setCollectionListener(VideoListListener listener) {
-		collectionListener = listener;
-	}
-
-	public void addNewDanmaku(BaseDanmaku data) {
+	public void addNewDanmaku(int type, String content, int size, int color) {
+		BaseDanmaku data = controller.mDanmakuFactory.createDanmaku(type);
+		if (data == null) {
+			return;
+		}
+		data.text = content;
+		data.padding = 5;
+		data.priority = 1;
+		data.setTime(mSeekTimePosition);
+        data.userId = (int)mSeekTimePosition;//还没想好，先以当前时间做ID吧
+		data.textSize = size * (danmakuParser.getDisplayer().getDensity() - 0.6f);
+		data.textColor = color;
+		data.textShadowColor = color <= Color.BLACK ? Color.WHITE : Color.BLACK;
 		mDanmakuView.addDanmaku(data);
 	}
 
 	public void showDanmaku() {
-		mDanmakuView.show();
+		mDanmakuView.showAndResumeDrawTask(mSeekTimePosition);
 	}
 
 	public void hideDanmaku() {
-		mDanmakuView.hide();
+		mDanmakuView.hideAndPauseDrawTask();
 	}
 
 	public void release() {
@@ -575,17 +734,50 @@ public class ClientVideoView extends JzvdStd {
 	public boolean isShowDanmaku() {
 		return mDanmakuView.isShown();
 	}
-    
-    public String getScriptTag() {
-        return mScriptTag;
-    }
 
-	public DanmakuContext getDanmakuController() {
-		return controller;
+	public String getScriptTag() {
+		return mScriptTag;
 	}
 
-	public ClientDanmakuParser getDanmakuParser() {
-		return danmakuParser;
+	protected void clickNext() {
+		index++;
+		index = index % count;
+		collectionListener.onClickIndex(this, index);
+	}
+
+	protected void clickLast() {
+		index--;
+		index = (index + count) % count;
+		collectionListener.onClickIndex(this, index);
+	}
+
+	private void clickNextDelay() {
+		Toast.makeText(getContext(), "五秒钟后播放下一集", Toast.LENGTH_SHORT).show();
+		postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				clickNext();
+			}
+		}, 5000L);
+		onStateAutoComplete();
+	}
+
+	private void clickRandomDelay() {
+		Toast.makeText(getContext(), "五秒钟后继续播放", Toast.LENGTH_SHORT).show();
+		postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				// TODO: Implement this method
+				int rng = StringUtils.rng(0, count - 1);
+				if (rng == index) {
+					rng = StringUtils.rng(0, count - 1); //重新取随机数，确保不会重复播放
+				}
+				collectionListener.onClickIndex(ClientVideoView.this, rng);
+				index = rng;
+			}
+		}, 5000L);
+		onStateAutoComplete();
 	}
 
 	private void initView(String source) {
@@ -626,8 +818,30 @@ public class ClientVideoView extends JzvdStd {
 		}
 	}
 
+	private void showDanmakuInfo(BaseDanmaku danmaku, int x, int y) {
+		//设置内容
+		View root = mDanmakuInfo.getContentView();
+		if (root == null) {
+			return;
+		}
+		ImageButton copyBtn = root.findViewById(R.id.danmaku_copy);
+		copyBtn.setColorFilter(Color.WHITE);
+		copyBtn.setTag(danmaku.text);
+		copyBtn.setOnClickListener(this);
+		ImageButton deleteBtn = root.findViewById(R.id.danmaku_delete);
+		deleteBtn.setColorFilter(Color.WHITE);
+		deleteBtn.setTag(danmaku.userId);
+		deleteBtn.setOnClickListener(this);
+		ImageButton reportBtn = root.findViewById(R.id.danmaku_report);
+		reportBtn.setColorFilter(Color.WHITE);
+		reportBtn.setTag(danmaku.userId);
+		reportBtn.setOnClickListener(this);
+		mDanmakuInfo.showAtLocation(mDanmakuView, Gravity.NO_GRAVITY, x, y);
+		mDanmakuView.pause();
+	}
+
 	private void startVideoDelay() {
-        Toast.makeText(getContext(), "五秒后重新播放", Toast.LENGTH_SHORT).show();
+		Toast.makeText(getContext(), "五秒后重新播放", Toast.LENGTH_SHORT).show();
 		postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -635,6 +849,7 @@ public class ClientVideoView extends JzvdStd {
 				startVideo();
 			}
 		}, 5000L);//五秒后跳转，可以新增view显示逻辑
+		onStateAutoComplete();
 	}
 
 	private Drawable color(Drawable progress) {//专门针对progressbar修改颜色
@@ -661,11 +876,11 @@ public class ClientVideoView extends JzvdStd {
 		}
 
 		@JavascriptInterface
-		public void addVideoViewToHTML(final int width, final int height, final int top, final int left) {
+		public void addVideoViewToHTML(final int width, final int height, final int top, final int left) {//自定义JS代码将该view添加到web
 			if (mVideoView == null) {
 				return;
 			}
-			mVideoView.post(new Runnable() {
+			mVideoView.post(new Runnable() {//保证在主线程中
 				@Override
 				public void run() {
 					// TODO: Implement this method
@@ -686,9 +901,12 @@ public class ClientVideoView extends JzvdStd {
 	}
 
 	public static interface VideoListListener {
-		void onClickNext();
-		void onClickLast();
-		void onClickIndex(int index);
+		void onClickIndex(ClientVideoView view, int index);
+	}
+
+	public static interface DanmakuListener {
+		void onDelete(long id);
+		void onReport(long id);
 	}
 }
 

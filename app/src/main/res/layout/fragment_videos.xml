@@ -165,21 +165,11 @@
 
 				<TextView
 					android:layout_marginRight="5dp"
-					android:padding="5dp"
-					android:textColor="@color/colorSecondary"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:text="音mad"
+					android:padding="5dp"
+					android:textColor="@color/colorSecondary"
 					android:tag="2"
-					android:background="@drawable/btn_empty_bg"/>
-
-				<TextView
-					android:layout_marginRight="5dp"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:padding="5dp"
-					android:textColor="@color/colorSecondary"
-					android:tag="3"
 					android:text="人力vocaloid"
 					android:background="@drawable/btn_empty_bg"/>
 
@@ -190,7 +180,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="剧场"
-					android:tag="4"
+					android:tag="3"
 					android:background="@drawable/btn_empty_bg"/>
 
 				<TextView
@@ -200,7 +190,7 @@
 					android:textColor="@color/colorSecondary"
 					android:layout_height="wrap_content"
 					android:text="游戏"
-					android:tag="5"
+					android:tag="4"
 					android:background="@drawable/btn_empty_bg"/>
 
 				<TextView
@@ -210,7 +200,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="怀旧"
-					android:tag="6"
+					android:tag="5"
 					android:background="@drawable/btn_empty_bg"/>
 
 				<TextView
@@ -220,7 +210,7 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:text="音乐"
-					android:tag="7"
+					android:tag="6"
 					android:background="@drawable/btn_empty_bg"/>
 
 				<TextView

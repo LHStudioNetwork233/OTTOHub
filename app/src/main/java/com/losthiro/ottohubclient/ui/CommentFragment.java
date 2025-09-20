@@ -21,6 +21,7 @@ import java.util.concurrent.*;
 import android.widget.*;
 import android.content.*;
 import android.graphics.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 public class CommentFragment extends Fragment {
 	public final static String TAG = "Comments";
@@ -161,6 +162,7 @@ public class CommentFragment extends Fragment {
 				@Override
 				public void onFailed(String cause) {
 					Log.e("Network", cause);
+                    NetworkException.getInstance(getContext()).handlerError(cause);
 					commentRefresh.setRefreshing(false);
 				}
 			});

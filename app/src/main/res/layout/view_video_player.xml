@@ -230,17 +230,36 @@
 
 	<LinearLayout
 		android:id="@+id/start_layout"
+        android:orientation="horizontal"
+        android:gravity="center"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_centerHorizontal="true"
 		android:layout_centerVertical="true"
 		android:layout_gravity="center_vertical">
+        
+        <com.losthiro.ottohubclient.view.RoundImageView
+            android:id="@+id/last"
+            android:layout_width="@dimen/jz_start_button_w_h_normal"
+            android:layout_height="@dimen/jz_start_button_w_h_normal"
+            android:visibility="gone"
+            android:background="#BB161616"
+			android:src="@drawable/ic_video_last"/>
 
 		<ImageView
 			android:id="@+id/start"
-			android:layout_width="@dimen/jz_start_button_w_h_normal"
-			android:layout_height="@dimen/jz_start_button_w_h_normal"
+            android:layout_margin="6dp"
+			android:layout_width="@dimen/jz_start_button_w_h_fullscreen"
+			android:layout_height="@dimen/jz_start_button_w_h_fullscreen"
 			android:src="@drawable/jz_click_play_selector"/>
+        
+        <com.losthiro.ottohubclient.view.RoundImageView
+            android:id="@+id/next"
+            android:layout_width="@dimen/jz_start_button_w_h_normal"
+            android:layout_height="@dimen/jz_start_button_w_h_normal"
+            android:visibility="gone"
+            android:background="#BB161616"
+			android:src="@drawable/ic_video_next"/>
 
 	</LinearLayout>
 
@@ -256,14 +275,15 @@
 		android:textSize="12sp"
 		android:visibility="invisible"/>
 
-	<ImageView
+	<com.losthiro.ottohubclient.view.RoundImageView
 		android:id="@+id/lock_screen"
-		android:layout_width="35dp"
-		android:layout_height="35dp"
+		android:layout_width="@dimen/jz_start_button_w_h_normal"
+		android:layout_height="@dimen/jz_start_button_w_h_normal"
 		android:layout_centerVertical="true"
 		android:layout_marginLeft="80dp"
 		android:src="@drawable/ic_unlock"
 		android:scaleType="centerInside"
+        android:background="#BB161616"
 		android:visibility="gone"/>
 
 	<LinearLayout

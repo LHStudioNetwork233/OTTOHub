@@ -25,6 +25,7 @@ import android.view.View.*;
 import android.app.*;
 import android.graphics.drawable.*;
 import android.content.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 /**
  * @Author Hiro
@@ -95,6 +96,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 					public void onFailed(String cause) {
 						// TODO: Implement this method
 						Log.e("Network", cause);
+                        NetworkException.getInstance(ctx).handlerError(cause);
 					}
 				});
 	}

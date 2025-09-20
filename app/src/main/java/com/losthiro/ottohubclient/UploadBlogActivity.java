@@ -21,6 +21,7 @@ import android.text.*;
 import androidx.fragment.app.*;
 import android.app.AlertDialog;
 import com.losthiro.ottohubclient.ui.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 /**
  * @Author Hiro
@@ -194,6 +195,7 @@ public class UploadBlogActivity extends BasicActivity
 					public void onFailed(String cause) {
 						// TODO: Implement this method
 						Log.e("Metwork", cause);
+                        NetworkException.getInstance(getApplication()).handlerError(cause);
 					}
 				});
 	}
@@ -231,6 +233,7 @@ public class UploadBlogActivity extends BasicActivity
 					public void onFailed(final String cause) {
 						// TODO: Implement this method
 						Log.e("Network", cause);
+                        NetworkException.getInstance(getApplication()).handlerError(cause);
 					}
 				});
 	}
@@ -278,6 +281,7 @@ public class UploadBlogActivity extends BasicActivity
 					public void onFailed(String cause) {
 						// TODO: Implement this method
 						Log.e("Network", cause);
+                        NetworkException.getInstance(getApplication()).handlerError(cause);
 					}
 				});
 		dialog.show();

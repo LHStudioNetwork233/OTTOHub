@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.losthiro.ottohubclient.view.ClientWebView;
 import com.losthiro.ottohubclient.view.dialog.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 
 /**
  * @Author Hiro
@@ -78,6 +79,7 @@ public class MessageDetailActivity extends BasicActivity {
                 @Override
                 public void onFailed(String cause) {
                     Log.e("Network", cause);
+                    NetworkException.getInstance(getApplication()).handlerError(cause);
                 }
             });
         ((TextView)findViewById(R.id.message_time)).setText(time);
@@ -148,6 +150,7 @@ public class MessageDetailActivity extends BasicActivity {
                 @Override
                 public void onFailed(String cause) {
                     Log.e("Network", cause);
+                    NetworkException.getInstance(getApplication()).handlerError(cause);
                 }
             });
     }
@@ -219,6 +222,7 @@ public class MessageDetailActivity extends BasicActivity {
                     @Override
                     public void onFailed(String cause) {
                         Log.e("Network", cause);
+                        NetworkException.getInstance(getApplication()).handlerError(cause);
                     }
                 });
         } catch (NumberFormatException e) {

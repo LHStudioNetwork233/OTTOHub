@@ -12,14 +12,14 @@ import android.view.*;
 import android.widget.*;
 import androidx.recyclerview.widget.*;
 import androidx.swiperefreshlayout.widget.*;
-import com.losthiro.ottohubclient.*;
 import com.losthiro.ottohubclient.adapter.*;
+import com.losthiro.ottohubclient.adapter.model.*;
+import com.losthiro.ottohubclient.crashlogger.*;
 import com.losthiro.ottohubclient.impl.*;
 import com.losthiro.ottohubclient.utils.*;
 import java.util.*;
 import java.util.concurrent.*;
 import org.json.*;
-import com.losthiro.ottohubclient.adapter.model.*;
 
 public class FansActivity extends BasicActivity {
 	private static final Semaphore request = new Semaphore(1);
@@ -157,6 +157,7 @@ public class FansActivity extends BasicActivity {
 						@Override
 						public void onFailed(String cause) {
 							Log.e("Network", cause);
+                            NetworkException.getInstance(getApplication()).handlerError(cause);
 							refresh.setRefreshing(false);
 						}
 					});
